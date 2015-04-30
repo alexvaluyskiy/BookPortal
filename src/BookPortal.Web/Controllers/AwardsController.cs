@@ -3,6 +3,7 @@ using BookPortal.Web.Domain.Models;
 using BookPortal.Web.Models;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Mvc;
+using Microsoft.AspNet.Mvc.ModelBinding;
 
 namespace BookPortal.Web.Controllers
 {
@@ -38,6 +39,9 @@ namespace BookPortal.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]AwardRequest request)
         {
+            if (!ModelState.IsValid)
+                return new BadRequestResult();
+
             Award award = await _awardsService.AddAwardAsync(request);
 
             if (award == null)
@@ -49,6 +53,9 @@ namespace BookPortal.Web.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody]AwardRequest request)
         {
+            if (!ModelState.IsValid)
+                return new BadRequestResult();
+
             Award award = await _awardsService.UpdateAwardAsync(id, request);
 
             if (award == null)
