@@ -25,6 +25,8 @@ namespace BookPortal.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
+
             services.AddMvc().Configure<MvcOptions>(options =>
             {
                 // setup json output serializer
@@ -51,6 +53,8 @@ namespace BookPortal.Web
             loggerFactory.AddTraceSource(sourceSwitch, traceListener);
 
             app.UseStaticFiles();
+
+            app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseErrorHandler(builder => builder.Run(ErrorRequestHandler.HandleErrorRequest));
 
