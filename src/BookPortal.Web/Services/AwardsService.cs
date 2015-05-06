@@ -25,22 +25,24 @@ namespace BookPortal.Web.Services
 
             result = result.OrderBy(c => c.RusName);
 
-            // TODO: doesn't work in beta 4
-            //if (request.IncludeNominations)
-            //    result = result.Include(c => c.Nominations);
-
-        
-            // TODO: doesn't work in beta 4
-            //if (request.IncludeContests)
-            //    result = result.Include(c => c.Contests);
-
             if (request.Offset.HasValue && request.Offset.Value > 0)
                 result = result.Skip(request.Offset.Value);
 
             if (request.Limit.HasValue && request.Limit > 0)
                 result = result.Take(request.Limit.Value);
 
-            return await result.ToListAsync();
+            IReadOnlyCollection<Award> awards = await result.ToListAsync();
+
+            // TODO: workaround for EF7 beta 4 bug
+            if (request.IncludeNominations || request.IncludeContests)
+            {
+                foreach (var award in awards)
+                {
+                    await PopulateChildren(request, award);
+                }
+            }
+
+            return awards;
         }
 
         public virtual async Task<Award> GetAwardAsync(int awardId)
@@ -87,6 +89,50 @@ namespace BookPortal.Web.Services
             }
 
             return award;
+        }
+
+        private async Task PopulateChildren(AwardRequest request, Award award)
+        {
+            if (request.IncludeNominations)
+            {
+                var nominations = await _bookContext.Nominations
+                    .Where(n => n.AwardId == award.Id)
+                    .ToListAsync();
+
+                foreach (var nomination in nominations)
+                {
+                    nomination.ContestWorks = null;
+                    award.Nominations.Add(nomination);
+                }
+            }
+
+            if (request.IncludeContests)
+            {
+                var contests = await _bookContext.Contests
+                    .Where(c => c.AwardId == award.Id)
+                    .ToListAsync();
+
+                foreach (var contest in contests)
+                {
+                    if (request.IncludeContestsWorks)
+                    {
+                        var contestWorksQuery = _bookContext.ContestWorks.Where(c => c.ContestId == contest.Id);
+
+                        if (request.IsWinnersOnly)
+                            contestWorksQuery = contestWorksQuery.Where(c => c.IsWinner);
+
+                        var contestWorks = await contestWorksQuery.ToListAsync();
+
+                        foreach (var contestWork in contestWorks)
+                        {
+                            contestWork.Nomination = null;
+                            contest.ContestWorks.Add(contestWork);
+                        }
+                    }
+
+                    award.Contests.Add(contest);
+                }
+            }
         }
     }
 }

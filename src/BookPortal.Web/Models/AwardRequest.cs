@@ -11,5 +11,7 @@
         public bool IncludeNominations { get; set; }
 
         public bool IncludeContestsWorks { get; set; }
+
+        public bool IsWinnersOnly { get; set; }
     }
 }
