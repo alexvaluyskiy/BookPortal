@@ -78,7 +78,7 @@ namespace BookPortal.Web.Tests
             AwardsController controller = new AwardsController(awardsService.Object);
 
             IActionResult actionResult = await controller.Get(5);
-            var contentResult = actionResult as HttpStatusCodeResult;
+            var contentResult = actionResult as ObjectResult;
 
             Assert.NotNull(contentResult);
             Assert.Equal(404, contentResult.StatusCode);
@@ -97,7 +97,7 @@ namespace BookPortal.Web.Tests
             Award request = new Award {Name = "Nebula"};
 
             IActionResult actionResult = await controller.Post(request);
-            var contentResult = actionResult as HttpStatusCodeResult;
+            var contentResult = actionResult as ObjectResult;
 
             Assert.NotNull(contentResult);
             Assert.Equal(201, contentResult.StatusCode);
@@ -114,7 +114,7 @@ namespace BookPortal.Web.Tests
             Award request = new Award {Name = "Nebula"};
 
             IActionResult actionResult = await controller.Post(request);
-            var contentResult = actionResult as HttpStatusCodeResult;
+            var contentResult = actionResult as ObjectResult;
 
             Assert.NotNull(contentResult);
             Assert.Equal(400, contentResult.StatusCode);
@@ -150,7 +150,7 @@ namespace BookPortal.Web.Tests
             Award request = new Award { Name = "Nebula" };
 
             IActionResult actionResult = await controller.Put(1, request);
-            var contentResult = actionResult as HttpStatusCodeResult;
+            var contentResult = actionResult as ObjectResult;
 
             Assert.NotNull(contentResult);
             Assert.Equal(400, contentResult.StatusCode);
@@ -182,7 +182,7 @@ namespace BookPortal.Web.Tests
             AwardsController controller = new AwardsController(awardsService.Object);
 
             IActionResult actionResult = await controller.Delete(1);
-            var contentResult = actionResult as HttpStatusCodeResult;
+            var contentResult = actionResult as ObjectResult;
 
             Assert.NotNull(contentResult);
             Assert.Equal(400, contentResult.StatusCode);
