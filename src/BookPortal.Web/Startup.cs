@@ -43,6 +43,7 @@ namespace BookPortal.Web
                     options.UseSqlServer(Configuration.Get("Data:DefaultConnection:ConnectionString")));
 
             services.AddScoped<AwardsService>();
+            services.AddScoped<NominationsService>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
