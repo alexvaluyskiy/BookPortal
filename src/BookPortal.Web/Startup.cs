@@ -1,4 +1,5 @@
-﻿using BookPortal.Web.Domain;
+﻿using System.Diagnostics;
+using BookPortal.Web.Domain;
 using BookPortal.Web.Infrastructure;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Builder;
@@ -7,6 +8,8 @@ using Microsoft.AspNet.Mvc;
 using Microsoft.Data.Entity;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.DependencyInjection;
+using Microsoft.Framework.Logging;
+using Newtonsoft.Json;
 
 namespace BookPortal.Web
 {
@@ -26,6 +29,7 @@ namespace BookPortal.Web
             {
                 // setup json output serializer
                 var jsonOutputFormatter = new JsonOutputFormatter();
+                jsonOutputFormatter.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 
                 options.OutputFormatters.RemoveTypesOf<JsonOutputFormatter>();
                 options.OutputFormatters.Add(jsonOutputFormatter);
@@ -36,18 +40,21 @@ namespace BookPortal.Web
                 .AddDbContext<BookContext>(options => 
                     options.UseSqlServer(Configuration.Get("Data:DefaultConnection:ConnectionString")));
 
-            services.AddSingleton<AwardsService>();
+            services.AddScoped<AwardsService>();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            Trace.AutoFlush = true;
+            var sourceSwitch = new SourceSwitch("") { Level = SourceLevels.All };
+            var traceListener = new TextWriterTraceListener(Configuration.Get("LogFilePath"));
+            loggerFactory.AddTraceSource(sourceSwitch, traceListener);
+
             app.UseStaticFiles();
 
             app.UseErrorHandler(builder => builder.Run(ErrorRequestHandler.HandleErrorRequest));
 
             app.UseMvc();
         }
-
-        
     }
 }

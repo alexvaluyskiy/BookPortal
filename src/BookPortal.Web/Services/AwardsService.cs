@@ -20,11 +20,19 @@ namespace BookPortal.Web.Services
         {
             var result = _bookContext.Awards.AsQueryable();
 
-            if (request.IncludeNominations)
-                result = result.Include(c => c.Nominations);
+            result = result.Include(c => c.Country);
+            result = result.Include(c => c.Language);
 
-            if (request.IncludeContests)
-                result = result.Include(c => c.Contests);
+            result = result.OrderBy(c => c.RusName);
+
+            // TODO: doesn't work in beta 4
+            //if (request.IncludeNominations)
+            //    result = result.Include(c => c.Nominations);
+
+        
+            // TODO: doesn't work in beta 4
+            //if (request.IncludeContests)
+            //    result = result.Include(c => c.Contests);
 
             if (request.Offset.HasValue && request.Offset.Value > 0)
                 result = result.Skip(request.Offset.Value);
@@ -37,7 +45,14 @@ namespace BookPortal.Web.Services
 
         public virtual async Task<Award> GetAwardAsync(int awardId)
         {
-            return await _bookContext.Awards.Where(a => a.Id == awardId).SingleOrDefaultAsync();
+            var result = _bookContext.Awards.AsQueryable();
+
+            result = result.Include(c => c.Country);
+            result = result.Include(c => c.Language);
+
+            result = result.Where(a => a.Id == awardId);
+
+            return await result.SingleOrDefaultAsync();
         }
 
         public virtual async Task<Award> AddAwardAsync(Award request)

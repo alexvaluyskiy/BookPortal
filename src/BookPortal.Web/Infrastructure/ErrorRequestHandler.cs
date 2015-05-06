@@ -48,12 +48,12 @@ namespace BookPortal.Web.Infrastructure
 
                     var errorText = JsonConvert.SerializeObject(apiErrorItem);
 
-                    if (error.Error is ArgumentException)
+                    if (exception is ArgumentException || exception is ArgumentNullException)
                     {
                         context.Response.StatusCode = 400;
                         await context.Response.WriteAsync(errorText);
                     }
-                    else if (error.Error is NotImplementedException || error.Error is NotSupportedException)
+                    else if (exception is NotImplementedException || exception is NotSupportedException)
                     {
                         context.Response.StatusCode = 405;
                         await context.Response.WriteAsync(errorText);

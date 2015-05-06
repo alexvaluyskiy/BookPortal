@@ -102,7 +102,7 @@ namespace BookPortal.Web.Migrations
                     Id = table.Column(type: "int", nullable: false),
                     Name = table.Column(type: "nvarchar(max)", nullable: true),
                     Number = table.Column(type: "int", nullable: false),
-                    RusName = table.Column(type: "int", nullable: false)
+                    RusName = table.Column(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {

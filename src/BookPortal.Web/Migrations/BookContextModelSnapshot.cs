@@ -143,7 +143,7 @@ namespace BookPortal.Web.Migrations
                             .Annotation("OriginalValueIndex", 3);
                         b.Property<int>("Number")
                             .Annotation("OriginalValueIndex", 4);
-                        b.Property<int>("RusName")
+                        b.Property<string>("RusName")
                             .Annotation("OriginalValueIndex", 5);
                         b.Key("Id");
                     });

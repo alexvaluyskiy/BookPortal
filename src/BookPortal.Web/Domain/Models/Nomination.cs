@@ -16,7 +16,7 @@ namespace BookPortal.Web.Domain.Models
         public string Name { get; set; }
 
         [Column("rusname")]
-        public int RusName { get; set; }
+        public string RusName { get; set; }
 
         [Column("description")]
         public string Description { get; set; }
