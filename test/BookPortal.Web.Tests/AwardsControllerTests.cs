@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BookPortal.Web.Controllers;
@@ -31,11 +29,11 @@ namespace BookPortal.Web.Tests
             }
 
             var awardsService = new Mock<AwardsService>(null);
-            awardsService.Setup(c => c.GetAwardsAsync()).ReturnsAsync(awards);
+            awardsService.Setup(c => c.GetAwardsAsync(It.IsAny<AwardRequest>())).ReturnsAsync(awards);
 
             AwardsController controller = new AwardsController(awardsService.Object);
 
-            IActionResult actionResult = await controller.Get();
+            IActionResult actionResult = await controller.Index(null);
             var contentResult = actionResult as ObjectResult;
 
             Assert.NotNull(contentResult);
@@ -92,11 +90,11 @@ namespace BookPortal.Web.Tests
             Award award = _fixture.Build<Award>().Without(c => c.Contests).Without(c => c.Nominations).Create();
 
             var awardsService = new Mock<AwardsService>(null);
-            awardsService.Setup(c => c.AddAwardAsync(It.IsAny<AwardRequest>())).ReturnsAsync(award);
+            awardsService.Setup(c => c.AddAwardAsync(It.IsAny<Award>())).ReturnsAsync(award);
 
             AwardsController controller = new AwardsController(awardsService.Object);
 
-            AwardRequest request = new AwardRequest {Name = "Nebula"};
+            Award request = new Award {Name = "Nebula"};
 
             IActionResult actionResult = await controller.Post(request);
             var contentResult = actionResult as HttpStatusCodeResult;
@@ -109,11 +107,11 @@ namespace BookPortal.Web.Tests
         public async Task AwardsControllerAddAwardFailedTest()
         {
             var awardsService = new Mock<AwardsService>(null);
-            awardsService.Setup(c => c.AddAwardAsync(It.IsAny<AwardRequest>())).ReturnsAsync(null);
+            awardsService.Setup(c => c.AddAwardAsync(It.IsAny<Award>())).ReturnsAsync(null);
 
             AwardsController controller = new AwardsController(awardsService.Object);
 
-            AwardRequest request = new AwardRequest {Name = "Nebula"};
+            Award request = new Award {Name = "Nebula"};
 
             IActionResult actionResult = await controller.Post(request);
             var contentResult = actionResult as HttpStatusCodeResult;
@@ -128,11 +126,11 @@ namespace BookPortal.Web.Tests
             Award award = _fixture.Build<Award>().Without(c => c.Contests).Without(c => c.Nominations).Create();
 
             var awardsService = new Mock<AwardsService>(null);
-            awardsService.Setup(c => c.UpdateAwardAsync(It.IsAny<int>(), It.IsAny<AwardRequest>())).ReturnsAsync(award);
+            awardsService.Setup(c => c.UpdateAwardAsync(It.IsAny<int>(), It.IsAny<Award>())).ReturnsAsync(award);
 
             AwardsController controller = new AwardsController(awardsService.Object);
 
-            AwardRequest request = new AwardRequest { Name = "Nebula" };
+            Award request = new Award { Name = "Nebula" };
 
             IActionResult actionResult = await controller.Put(award.Id, request);
             var contentResult = actionResult as HttpStatusCodeResult;
@@ -145,11 +143,11 @@ namespace BookPortal.Web.Tests
         public async Task AwardsControllerUpdateAwardFailedTest()
         {
             var awardsService = new Mock<AwardsService>(null);
-            awardsService.Setup(c => c.UpdateAwardAsync(It.IsAny<int>(), It.IsAny<AwardRequest>())).ReturnsAsync(null);
+            awardsService.Setup(c => c.UpdateAwardAsync(It.IsAny<int>(), It.IsAny<Award>())).ReturnsAsync(null);
 
             AwardsController controller = new AwardsController(awardsService.Object);
 
-            AwardRequest request = new AwardRequest { Name = "Nebula" };
+            Award request = new Award { Name = "Nebula" };
 
             IActionResult actionResult = await controller.Put(1, request);
             var contentResult = actionResult as HttpStatusCodeResult;

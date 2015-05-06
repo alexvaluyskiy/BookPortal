@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Mvc;
-
-namespace BookPortal.Web.Models
+﻿namespace BookPortal.Web.Models
 {
     public class AwardRequest
     {
-        public int Id { get; set; }
+        public int? Limit { get; set; } = 25;
 
-        [Required]
-        public string Name { get; set; }
+        public int? Offset { get; set; }
+
+        public bool IncludeContests { get; set; }
+
+        public bool IncludeNominations { get; set; }
+
+        public bool IncludeContestsWorks { get; set; }
     }
 }

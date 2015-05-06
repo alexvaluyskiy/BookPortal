@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using BookPortal.Web.Domain.Models;
+using BookPortal.Web.Infrastructure;
 using BookPortal.Web.Models;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Mvc;
-using Microsoft.AspNet.Mvc.ModelBinding;
 
 namespace BookPortal.Web.Controllers
 {
@@ -18,11 +18,11 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Index(AwardRequest request)
         {
-            var awards = await _awardsService.GetAwardsAsync();
+            var awards = await _awardsService.GetAwardsAsync(request);
 
-            return new ObjectResult(awards);
+            return new WrappedObjectResult(awards);
         }
 
         [HttpGet("{id}")]
@@ -31,35 +31,35 @@ namespace BookPortal.Web.Controllers
             var award = await _awardsService.GetAwardAsync(id);
 
             if (award == null)
-                return new HttpNotFoundResult();
+                return new WrappedErrorResult(404, $"Award (id: {id}) is not found");
 
-            return new ObjectResult(award);
+            return new WrappedObjectResult(award);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]AwardRequest request)
+        public async Task<IActionResult> Post([FromBody]Award request)
         {
             if (!ModelState.IsValid)
-                return new BadRequestResult();
+                return new WrappedErrorResult(400);
 
             Award award = await _awardsService.AddAwardAsync(request);
 
             if (award == null)
-                return new BadRequestResult();
+                return new WrappedErrorResult(400);
 
-            return new HttpStatusCodeResult(201);
+            return new CreatedAtActionResult("Index", "Awards", new { id = award.Id }, award);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody]AwardRequest request)
+        public async Task<IActionResult> Put(int id, [FromBody]Award request)
         {
             if (!ModelState.IsValid)
-                return new BadRequestResult();
+                return new WrappedErrorResult(400);
 
             Award award = await _awardsService.UpdateAwardAsync(id, request);
 
             if (award == null)
-                return new BadRequestResult();
+                return new WrappedErrorResult(400);
 
             return new NoContentResult();
         }
@@ -70,7 +70,7 @@ namespace BookPortal.Web.Controllers
             Award award = await _awardsService.DeleteAwardAsync(id);
 
             if (award == null)
-                return new BadRequestResult();
+                return new WrappedErrorResult(400);
 
             return new NoContentResult();
         }

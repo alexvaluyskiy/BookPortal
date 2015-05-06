@@ -1,9 +1,8 @@
 using System;
-using Microsoft.Data.Entity;
+using BookPortal.Web.Domain;
 using Microsoft.Data.Entity.Metadata;
 using Microsoft.Data.Entity.Metadata.Builders;
 using Microsoft.Data.Entity.Relational.Migrations.Infrastructure;
-using BookPortal.Web.Domain;
 
 namespace BookPortal.Web.Migrations
 {

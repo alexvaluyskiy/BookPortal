@@ -1,7 +1,5 @@
-using System.Collections.Generic;
 using Microsoft.Data.Entity.Relational.Migrations;
 using Microsoft.Data.Entity.Relational.Migrations.Builders;
-using Microsoft.Data.Entity.Relational.Migrations.Operations;
 
 namespace BookPortal.Web.Migrations
 {
