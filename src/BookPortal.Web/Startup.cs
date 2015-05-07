@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using Autofac;
 using Autofac.Dnx;
+using BookPortal.Web.Controllers;
 using BookPortal.Web.Domain;
 using BookPortal.Web.Infrastructure;
 using BookPortal.Web.Services;
@@ -55,6 +56,7 @@ namespace BookPortal.Web
             builder.RegisterType<AwardsService>();
             builder.RegisterType<NominationsService>();
             builder.RegisterType<ImporterService>();
+            builder.RegisterType<CountriesService>();
 
             builder.Populate(services);
             var container = builder.Build();
