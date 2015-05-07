@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using BookPortal.Web.Models;
 using BookPortal.Web.Services;
-using HtmlAgilityPack;
 using Microsoft.AspNet.Mvc;
+using Microsoft.Framework.OptionsModel;
 
 namespace BookPortal.Web.Controllers
 {
@@ -15,10 +11,12 @@ namespace BookPortal.Web.Controllers
     public class ImportersController : Controller
     {
         private readonly ImporterService _importerService;
+        private readonly IOptions<AppSettings> _appSettings;
 
-        public ImportersController(ImporterService importerService)
+        public ImportersController(ImporterService importerService, IOptions<AppSettings> appSettings)
         {
             _importerService = importerService;
+            _appSettings = appSettings;
         }
 
         [HttpGet("ozon/{bookid}")]
@@ -26,11 +24,9 @@ namespace BookPortal.Web.Controllers
         {
             using (var client = new HttpClient())
             {
-                HttpRequestMessage request = new HttpRequestMessage();
-                request.Method = HttpMethod.Get;
-                request.RequestUri = new Uri(new Uri("http://www.ozon.ru/context/detail/id/"), bookid.ToString());
+                var requestUrl = new Uri($"{_appSettings.Options.ImportOzonUrl}{bookid}");
 
-                HttpResponseMessage response = await client.SendAsync(request);
+                HttpResponseMessage response = await client.GetAsync(requestUrl);
                 string html = await response.Content.ReadAsStringAsync();
 
                 var importEdition = _importerService.ParseOzonPage(html);

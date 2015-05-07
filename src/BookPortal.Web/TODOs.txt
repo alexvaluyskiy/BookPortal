@@ -9,3 +9,9 @@ NET Core
 2. HtmlAgilityPack is not supported
 3. Moq is not supported
 4. AutoFixture is not supported
+
+Bugs in Asp.Net Mvc 6.0.0-beta 3 (check)
+--------------------------
+1. Problems in MemoryCache
++2. Can't use Cors
+3. Unit tests in Visual Studio is not working

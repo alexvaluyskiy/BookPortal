@@ -20,14 +20,15 @@ namespace BookPortal.Web
     {
         public Startup(IHostingEnvironment env)
         {
-            Configuration = new Configuration()
-                .AddJsonFile("config.json");
+            Configuration = new Configuration().AddJsonFile("config.json");
         }
 
         public IConfiguration Configuration { get; set; }
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.Configure<AppSettings>(Configuration.GetSubKey("AppSettings"));
+
             services.AddCors();
 
             services.AddMvc().Configure<MvcOptions>(options =>
@@ -59,7 +60,7 @@ namespace BookPortal.Web
         {
             Trace.AutoFlush = true;
             var sourceSwitch = new SourceSwitch("") { Level = SourceLevels.All };
-            var traceListener = new TextWriterTraceListener(Configuration.Get("LogFilePath"));
+            var traceListener = new TextWriterTraceListener(Configuration.Get("AppSettings:LogFilePath"));
             loggerFactory.AddTraceSource(sourceSwitch, traceListener);
 
             app.UseStaticFiles();
