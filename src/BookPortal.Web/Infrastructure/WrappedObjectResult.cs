@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using BookPortal.Web.Models.Api;
 using Microsoft.AspNet.Mvc;
 
-namespace BookPortal.Web.Infrastructure
+namespace Microsoft.AspNet.Mvc
 {
     public class WrappedObjectResult : ObjectResult
     {

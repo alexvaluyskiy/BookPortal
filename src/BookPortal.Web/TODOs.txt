@@ -1,9 +1,11 @@
-Basic
+Basic bugs
 --------------------------
 1. Attribute based model configuration is not working in EF 7.0 beta 4
 2. Xunit 2.0 is not working in Visual Studio 2015 RC
 
-
 NET Core
 --------------------------
-1. TextWriterTraceListener is not supported by NET Core
+1. System.Diagnostics.TextWriterTraceListener is not supported
+2. HtmlAgilityPack is not supported
+3. Moq is not supported
+4. AutoFixture is not supported

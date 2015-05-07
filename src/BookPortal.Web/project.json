@@ -21,7 +21,8 @@
         "EntityFramework.SqlServer": "7.0.0-beta4",
         "EntityFramework.Commands": "7.0.0-beta4",
         "Autofac.Dnx": "4.0.0-*",
-        "AutoMapper":  "4.0.0-*"
+        "AutoMapper": "4.0.0-*",
+        "HtmlAgilityPack": "1.4.9"
     },
 
     "commands": {
@@ -30,8 +31,11 @@
     },
 
     "frameworks": {
-        "dnx451": { },
-        "dnxcore50": { }
+        "dnx451": {
+            "frameworkAssemblies": {
+                "System.Net.Http": ""
+            }
+        }
     },
 
     "exclude": [

@@ -2,7 +2,7 @@
 using BookPortal.Web.Models.Api;
 using Microsoft.AspNet.Mvc;
 
-namespace BookPortal.Web.Infrastructure
+namespace Microsoft.AspNet.Mvc
 {
     public class WrappedErrorResult : ObjectResult
     {
