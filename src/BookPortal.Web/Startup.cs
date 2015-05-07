@@ -36,9 +36,13 @@ namespace BookPortal.Web
                 // setup json output serializer
                 var jsonOutputFormatter = new JsonOutputFormatter();
                 jsonOutputFormatter.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                jsonOutputFormatter.SerializerSettings.Formatting = Formatting.Indented;
 
                 options.OutputFormatters.RemoveTypesOf<JsonOutputFormatter>();
                 options.OutputFormatters.Add(jsonOutputFormatter);
+
+                // add filters
+                options.Filters.Add(new ValidateModelAttribute());
             });
 
             services.AddEntityFramework()

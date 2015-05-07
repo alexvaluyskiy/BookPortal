@@ -38,9 +38,6 @@ namespace BookPortal.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]Award request)
         {
-            if (!ModelState.IsValid)
-                return new WrappedErrorResult(400);
-
             Award award = await _awardsService.AddAwardAsync(request);
 
             if (award == null)
@@ -52,9 +49,6 @@ namespace BookPortal.Web.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody]Award request)
         {
-            if (!ModelState.IsValid)
-                return new WrappedErrorResult(400);
-
             Award award = await _awardsService.UpdateAwardAsync(id, request);
 
             if (award == null)
