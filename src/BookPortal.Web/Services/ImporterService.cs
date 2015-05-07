@@ -16,45 +16,56 @@ namespace BookPortal.Web.Services
 
             // book name
             var name = document.DocumentNode.SelectSingleNode("//h1[@itemprop='name']");
-            importEdition.Name = name.InnerText.Trim();
+            if (name != null)
+                importEdition.Name = name.InnerText.Trim();
 
             // book authors
             var authors = document.DocumentNode.SelectNodes("//p[@itemprop='author']/a");
-            importEdition.Authors = string.Join(", ", authors.Select(c => c.InnerText));
+            if (authors != null)
+                importEdition.Authors = string.Join(", ", authors.Select(c => c.InnerText));
 
             // publishers
             var publishers = document.DocumentNode.SelectNodes("//p[@itemprop='publisher']/a");
-            importEdition.Publishers = string.Join(", ", publishers.Select(c => c.InnerText));
+            if (publishers != null)
+                importEdition.Publishers = string.Join(", ", publishers.Select(c => c.InnerText));
 
             // ISBN and year
             var isbns = document.DocumentNode.SelectSingleNode("//p[@itemprop='isbn']");
-            var matchYear = Regex.Match(isbns.InnerText, @"ISBN(.+?);(.*)г\.", RegexOptions.Singleline);
-            if (matchYear.Groups.Count > 0)
+            if (isbns != null)
             {
-                importEdition.Isbn = matchYear.Groups[1].Value.Trim();
-                importEdition.Year = matchYear.Groups[2].Value.Trim();
+                var matchYear = Regex.Match(isbns.InnerText, @"ISBN(.+?);(.*)г\.", RegexOptions.Singleline);
+                if (matchYear.Groups.Count > 0)
+                {
+                    importEdition.Isbn = matchYear.Groups[1].Value.Trim();
+                    importEdition.Year = matchYear.Groups[2].Value.Trim();
+                }
             }
 
             // pages
             var pages = document.DocumentNode.SelectSingleNode("//span[@itemprop='numberOfPages']");
-            importEdition.Pages = pages.InnerText.Trim();
+            if (pages != null)
+                importEdition.Pages = pages.InnerText.Trim();
 
             // language
             var language = document.DocumentNode.SelectSingleNode("//p[@itemprop='inLanguage']");
-            var matchLanguage = Regex.Match(language.InnerText, @"Язык:(.*)", RegexOptions.Singleline);
-            if (matchLanguage.Groups.Count > 0)
-                importEdition.Language = matchLanguage.Groups[1].Value.Trim().ToLowerInvariant();
+            if (language != null)
+            {
+                var matchLanguage = Regex.Match(language.InnerText, @"Язык(?:и|):(.*)", RegexOptions.Singleline);
+                if (matchLanguage.Groups.Count > 0)
+                    importEdition.Language = matchLanguage.Groups[1].Value.Trim().ToLowerInvariant();
+            }
 
-            // book format
+            // cover type
             var coverType = document.DocumentNode.SelectSingleNode("//span[@itemprop='bookFormat']");
-            importEdition.CoverType = coverType.InnerText.Trim().ToLowerInvariant();
+            if (coverType != null)
+                importEdition.CoverType = coverType.InnerText.Trim().ToLowerInvariant();
 
             // serie
-            var matchSerie = Regex.Match(html, @"Серия:\s+<a href=\'\/context\/detail\/id\/([0-9]+)\/\'[^>]+?>(.+?)<\/a>");
+            var matchSerie = Regex.Match(html, @"Серия:\s+<a.*?>(.+?)<\/a>");
             if (matchSerie.Groups.Count > 0)
-                importEdition.Serie = matchSerie.Groups[2].Value;
+                importEdition.Serie = matchSerie.Groups[1].Value;
 
-            // format
+            // book format
             var matchFormat = Regex.Match(html, @"Формат.*?\<span.*?>(.*?)(\s|\<\/span>)", RegexOptions.Singleline);
             if (matchFormat.Groups.Count > 0)
                 importEdition.Format = matchFormat.Groups[1].Value;
