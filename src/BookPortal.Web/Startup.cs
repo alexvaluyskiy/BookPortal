@@ -58,7 +58,13 @@ namespace BookPortal.Web
         {
             Trace.AutoFlush = true;
             var sourceSwitch = new SourceSwitch("") { Level = SourceLevels.All };
+#if DNX451
             var traceListener = new TextWriterTraceListener(Configuration.Get("LogFilePath"));
+#endif
+#if DNXCORE50
+            var traceListener = new DefaultTraceListener();
+#endif
+
             loggerFactory.AddTraceSource(sourceSwitch, traceListener);
 
             app.UseStaticFiles();
