@@ -19,7 +19,8 @@
         "Microsoft.Framework.ConfigurationModel.Json": "1.0.0-beta4",
         "Microsoft.Framework.Logging.TraceSource": "1.0.0-beta4",
         "EntityFramework.SqlServer": "7.0.0-beta4",
-        "EntityFramework.Commands": "7.0.0-beta4"
+        "EntityFramework.Commands": "7.0.0-beta4",
+        "Autofac.Dnx": "4.0.0-alpha2"
     },
 
     "commands": {

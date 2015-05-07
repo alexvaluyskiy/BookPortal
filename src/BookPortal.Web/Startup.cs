@@ -1,4 +1,7 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using Autofac;
+using Autofac.Dnx;
 using BookPortal.Web.Domain;
 using BookPortal.Web.Infrastructure;
 using BookPortal.Web.Services;
@@ -23,7 +26,7 @@ namespace BookPortal.Web
 
         public IConfiguration Configuration { get; set; }
 
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
 
@@ -42,8 +45,13 @@ namespace BookPortal.Web
                 .AddDbContext<BookContext>(options => 
                     options.UseSqlServer(Configuration.Get("Data:DefaultConnection:ConnectionString")));
 
-            services.AddScoped<AwardsService>();
-            services.AddScoped<NominationsService>();
+            ContainerBuilder builder = new ContainerBuilder();
+            builder.RegisterType<AwardsService>();
+            builder.RegisterType<NominationsService>();
+
+            builder.Populate(services);
+            var container = builder.Build();
+            return container.Resolve<IServiceProvider>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
