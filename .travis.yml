@@ -1,8 +1,6 @@
 language: csharp
-sudo: false
 solution: BookPortal.sln
 mono:
-  - latest
   - 4.0.0
   - 3.12.0
   - 3.10.0
