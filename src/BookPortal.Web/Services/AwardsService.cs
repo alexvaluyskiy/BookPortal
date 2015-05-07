@@ -33,7 +33,7 @@ namespace BookPortal.Web.Services
 
             IReadOnlyCollection<Award> awards = await result.ToListAsync();
 
-            // TODO: workaround for EF7 beta 4 bug
+            // TODO: workaround for EF7 beta 4
             if (request.IncludeNominations || request.IncludeContests)
             {
                 foreach (var award in awards)

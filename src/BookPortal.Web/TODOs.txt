@@ -12,6 +12,6 @@ NET Core
 
 Bugs in Asp.Net Mvc 6.0.0-beta 3 (check)
 --------------------------
-1. Problems in MemoryCache
+1. Problems with MemoryCache
 +2. Can't use Cors
 3. Unit tests in Visual Studio is not working

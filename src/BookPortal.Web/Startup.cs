@@ -6,6 +6,7 @@ using BookPortal.Web.Domain;
 using BookPortal.Web.Infrastructure;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Builder;
+using Microsoft.AspNet.Diagnostics;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Data.Entity;

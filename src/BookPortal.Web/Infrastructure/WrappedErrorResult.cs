@@ -1,18 +1,21 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using BookPortal.Web.Models.Api;
-using Microsoft.AspNet.Mvc;
+using Microsoft.AspNet.Mvc.ModelBinding;
 
 namespace Microsoft.AspNet.Mvc
 {
+    // TODO: accept list of errors
     public class WrappedErrorResult : ObjectResult
     {
+        private readonly IEnumerable<ModelError> _modelErrors;
         private readonly string _errorMessage;
 
         public WrappedErrorResult() : base(true)
         {
         }
 
-        public WrappedErrorResult(int httpStatusCode) : this(httpStatusCode, null)
+        public WrappedErrorResult(int httpStatusCode) : this(httpStatusCode, errorMessage: null)
         {
             StatusCode = httpStatusCode;
         }
@@ -23,12 +26,31 @@ namespace Microsoft.AspNet.Mvc
             _errorMessage = errorMessage;
         }
 
+        public WrappedErrorResult(int httpStatusCode, IEnumerable<ModelError> modelErrors) : base(true)
+        {
+            _modelErrors = modelErrors;
+            StatusCode = httpStatusCode;
+        }
+
         public override Task ExecuteResultAsync(ActionContext context)
         {
-            ApiErrorItem apiErrorItem = new ApiErrorItem();
-            apiErrorItem.Message = !string.IsNullOrEmpty(_errorMessage) ? _errorMessage : "unexpected error";
+            ApiError apiError = new ApiError();
 
-            Value = apiErrorItem;
+            if (_modelErrors != null)
+            {
+                apiError.Message = "The model submitted was invalid. Please correct the specified errors and try again.";
+                apiError.ModelErrors = _modelErrors;
+            }
+            else if (!string.IsNullOrEmpty(_errorMessage))
+            {
+                apiError.Message = _errorMessage;
+            }
+            else
+            {
+                apiError.Message = "Unexpected error";
+            }
+
+            Value = apiError;
             return base.ExecuteResultAsync(context);
         }
     }

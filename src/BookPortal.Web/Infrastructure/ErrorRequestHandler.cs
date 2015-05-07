@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using BookPortal.Web.Models.Api;
 using Microsoft.AspNet.Diagnostics;
@@ -29,6 +30,7 @@ namespace BookPortal.Web.Infrastructure
                         apiErrorItem.Message = exception.Message;
                         apiErrorItem.Details = exception.StackTrace;
                         apiErrorItem.ErrorCode = exception.GetType().Name;
+                        apiError.Errors = new List<ApiErrorItem>();
                         apiError.Errors.Add(apiErrorItem);
                     }
 
