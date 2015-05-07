@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AA6617E5-C2C8-4A06-A4AD-62583F04F455}"
 	ProjectSection(SolutionItems) = preProject
 		global.json = global.json
+		NuGet.Config = NuGet.Config
 	EndProjectSection
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BookPortal.Web", "src\BookPortal.Web\BookPortal.Web.xproj", "{9F9F7E93-7B54-4C81-B826-0C0EFAAD9AB7}"
