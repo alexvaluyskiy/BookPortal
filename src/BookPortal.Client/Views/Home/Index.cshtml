@@ -1,0 +1,53 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html ng-app="awardCatApp">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.js"></script>
+    <script src="/scripts/controllers.js"></script>
+    <link href="/styles/controllers.css" rel="stylesheet" type="text/css" />
+    <meta charset="utf-8" />
+    <title>Awards List</title>
+</head>
+<body ng-controller="AwardListCtrl">
+    <p>
+        Сортировка:
+        <select ng-options="i.sortName for i in sortTypes" ng-model="currentSort" ng-change='changeSort()'></select>
+    </p>
+    <table class="tableaward" ng-show="awards.length > 0">
+        <thead>
+            <tr>
+                <td>&nbsp;</td>
+                <td>Награда</td>
+                <td>Жанр</td>
+                <td class="tableaward-nominations">Номинации / </td>
+                <td class="tableaward-contests">&nbsp;Конкурсы</td>
+                <td>Годы</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="award in awards">
+                <td class="award-icon"><img ng-src='{{award.iconScr}}' alt=''></td>
+                <td>
+                    <a href="{{award.awardUrl}}">{{award.rusname}}</a>
+                    <br>
+                    <span>
+                        <img ng-src='{{award.countryImageScr}}' alt=''>
+                        <span>{{award.countryName}}</span>
+                    </span>
+                </td>
+                <td>{{award.awardType}}</td>
+                <td>{{award.nominationsCount}}</td>
+                <td>{{award.contestsCount}}</td>
+                <td>
+                    <img ng-src="{{award.awardClose}}" alt=''>
+                    <span>{{award.minDate}} - {{award.maxDate}}</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
