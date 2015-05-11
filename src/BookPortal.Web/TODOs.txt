@@ -1,7 +1,9 @@
 Basic bugs
 --------------------------
 1. Attribute based model configuration is not working in EF 7.0 beta 4
-2. Xunit 2.0 is not working in Visual Studio 2015 RC (PS: it is working with bugs)
+2. Problems with unit test debugging in  Visual Studio 2015 RC
+3. Problems with unit test discovering in  Visual Studio 2015 RC
+4. Can't run commands (like ef), when I separate my solution into multiple projects
 
 NET Core
 --------------------------
@@ -14,4 +16,4 @@ Bugs in Asp.Net Mvc 6.0.0-beta 3 (check)
 --------------------------
 1. Problems with MemoryCache
 +2. Can't use Cors
-3. Unit tests in Visual Studio is not working
++3. Unit tests in Visual Studio is not working

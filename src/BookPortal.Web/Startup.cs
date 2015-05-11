@@ -39,6 +39,7 @@ namespace BookPortal.Web
                 var jsonOutputFormatter = new JsonOutputFormatter();
                 jsonOutputFormatter.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 jsonOutputFormatter.SerializerSettings.Formatting = Formatting.Indented;
+                jsonOutputFormatter.SerializerSettings.ContractResolver = new LowerCasePropertyNamesContractResolver();
 
                 options.OutputFormatters.RemoveTypesOf<JsonOutputFormatter>();
                 options.OutputFormatters.Add(jsonOutputFormatter);
@@ -67,7 +68,7 @@ namespace BookPortal.Web
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             Trace.AutoFlush = true;
-            var sourceSwitch = new SourceSwitch("") { Level = SourceLevels.All };
+            var sourceSwitch = new SourceSwitch("") { Level = SourceLevels.Warning };
             var traceListener = new TextWriterTraceListener(Configuration.Get("AppSettings:LogFilePath"));
             loggerFactory.AddTraceSource(sourceSwitch, traceListener);
 

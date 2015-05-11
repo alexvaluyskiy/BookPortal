@@ -1,6 +1,8 @@
 ﻿using System;
 using BookPortal.Web.Models;
 using BookPortal.Web.Services;
+using Microsoft.Framework.Logging;
+using Moq;
 using Xunit;
 
 namespace BookPortal.Web.Tests.Services
@@ -11,7 +13,8 @@ namespace BookPortal.Web.Tests.Services
 
         public ImporterServiceTests()
         {
-            _service = new ImportersService();
+            var loggerMock = new Mock<ILoggerFactory>();
+            _service = new ImportersService(loggerMock.Object);
         }
 
         [Fact]

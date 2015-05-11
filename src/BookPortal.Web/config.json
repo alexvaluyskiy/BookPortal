@@ -1,6 +1,6 @@
 ﻿{
     "AppSettings": {
-        "LogFilePath": "C:\\ravenger.log",
+        "LogFilePath": "D:\\ravenger.log",
         "ImportOzonUrl": "http://www.ozon.ru/context/detail/id/",
     },
     "Data": {
