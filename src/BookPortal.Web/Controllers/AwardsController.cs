@@ -2,6 +2,7 @@
 using BookPortal.Web.Domain.Models;
 using BookPortal.Web.Models;
 using BookPortal.Web.Services;
+using Microsoft.AspNet.Http.Extensions;
 using Microsoft.AspNet.Mvc;
 
 namespace BookPortal.Web.Controllers
@@ -24,7 +25,7 @@ namespace BookPortal.Web.Controllers
             return new WrappedObjectResult(awards);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetAward")]
         public async Task<IActionResult> Get(int id)
         {
             var award = await _awardsService.GetAwardAsync(id);
@@ -43,7 +44,7 @@ namespace BookPortal.Web.Controllers
             if (award == null)
                 return new WrappedErrorResult(400);
 
-            return new CreatedAtActionResult("Index", "Awards", new { id = award.Id }, award);
+            return new CreatedAtRouteResult("GetAward", new {id = award.Id}, award);
         }
 
         [HttpPut("{id}")]
