@@ -18,7 +18,7 @@ namespace BookPortal.Web.Models
 
         public string Publishers { get; set; }
 
-        public int Year { get; set; }
+        public int? Year { get; set; }
 
         public int Pages { get; set; }
 

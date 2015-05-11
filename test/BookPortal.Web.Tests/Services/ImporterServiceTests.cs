@@ -73,6 +73,17 @@ namespace BookPortal.Web.Tests.Services
         }
 
         [Fact]
+        public void BookYearParseSuccessTest()
+        {
+            string html = @"<p itemprop=""isbn""> 2013 г.</p>";
+            int expectedYear = 2013;
+
+            ImportEditionDto importEdition = _service.ParseOzonPage(html);
+
+            Assert.Equal(expectedYear, importEdition.Year);
+        }
+
+        [Fact]
         public void BookPagesParseSuccessTest()
         {
             string html = @"<span itemprop=""numberOfPages"">224</span>";

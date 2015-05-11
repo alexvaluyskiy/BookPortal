@@ -33,10 +33,19 @@ namespace BookPortal.Web.Services
             var isbns = document.DocumentNode.SelectSingleNode("//p[@itemprop='isbn']");
             if (isbns != null)
             {
-                var matchYear = Regex.Match(isbns.InnerText, @"ISBN(?<isbn>.+?);(?<year>.*)г\.", RegexOptions.Singleline);
+                var matchYearIsbn = Regex.Match(isbns.InnerText, @"ISBN(?<isbn>.+?);(?<year>.*)г\.");
 
-                importEdition.Isbn = matchYear.Groups["isbn"].Value.Trim();
-                importEdition.Year = int.Parse(matchYear.Groups["year"].Value);
+                if (matchYearIsbn.Success)
+                {
+                    importEdition.Isbn = matchYearIsbn.Groups["isbn"].Value.Trim();
+                    importEdition.Year = int.Parse(matchYearIsbn.Groups["year"].Value);
+                }
+                else
+                {
+                    var matchYear = Regex.Match(isbns.InnerText, @"(?<year>.*)г\.");
+                    if (matchYear.Success)
+                        importEdition.Year = int.Parse(matchYear.Groups["year"].Value);
+                }
             }
 
             // pages
