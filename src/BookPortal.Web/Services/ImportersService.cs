@@ -141,8 +141,10 @@ namespace BookPortal.Web.Services
                 var canUrl = document.DocumentNode.SelectSingleNode("//link[@rel='canonical']");
                 var canonicalUrl = canUrl.Attributes["href"].Value;
 
-                _logger.LogError($"Can't parse Ozon book (book url: {canonicalUrl})");
-                throw new SerializationException("Can't parse Ozon book", ex);
+                string message = $"Can't parse Ozon book (book url: {canonicalUrl})";
+
+                _logger.LogError(message);
+                throw new SerializationException(message, ex);
             }
 
             return importEdition;

@@ -2,7 +2,6 @@
 using BookPortal.Web.Domain.Models;
 using BookPortal.Web.Models;
 using BookPortal.Web.Services;
-using Microsoft.AspNet.Http.Extensions;
 using Microsoft.AspNet.Mvc;
 
 namespace BookPortal.Web.Controllers

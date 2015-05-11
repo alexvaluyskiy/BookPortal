@@ -57,6 +57,7 @@ namespace BookPortal.Web
 
             builder.RegisterType<AwardsService>();
             builder.RegisterType<NominationsService>();
+            builder.RegisterType<ContestsService>();
             builder.RegisterType<ImportersService>();
             builder.RegisterType<CountriesService>();
             builder.RegisterType<LanguagesService>();
