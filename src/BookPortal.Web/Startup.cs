@@ -53,9 +53,10 @@ namespace BookPortal.Web
                     options.UseSqlServer(Configuration.Get("Data:DefaultConnection:ConnectionString")));
 
             ContainerBuilder builder = new ContainerBuilder();
+
             builder.RegisterType<AwardsService>();
             builder.RegisterType<NominationsService>();
-            builder.RegisterType<ImporterService>();
+            builder.RegisterType<ImportersService>();
             builder.RegisterType<CountriesService>();
 
             builder.Populate(services);

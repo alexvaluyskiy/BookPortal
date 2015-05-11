@@ -10,12 +10,12 @@ namespace BookPortal.Web.Controllers
     [Route("api/[controller]")]
     public class ImportersController : Controller
     {
-        private readonly ImporterService _importerService;
+        private readonly ImportersService _importersService;
         private readonly IOptions<AppSettings> _appSettings;
 
-        public ImportersController(ImporterService importerService, IOptions<AppSettings> appSettings)
+        public ImportersController(ImportersService importersService, IOptions<AppSettings> appSettings)
         {
-            _importerService = importerService;
+            _importersService = importersService;
             _appSettings = appSettings;
         }
 
@@ -29,7 +29,7 @@ namespace BookPortal.Web.Controllers
                 HttpResponseMessage response = await client.GetAsync(requestUrl);
                 string html = await response.Content.ReadAsStringAsync();
 
-                var importEdition = _importerService.ParseOzonPage(html);
+                var importEdition = _importersService.ParseOzonPage(html);
                 return new WrappedObjectResult(importEdition);
             }
         }

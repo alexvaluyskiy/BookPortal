@@ -1,7 +1,7 @@
 Basic bugs
 --------------------------
 1. Attribute based model configuration is not working in EF 7.0 beta 4
-2. Xunit 2.0 is not working in Visual Studio 2015 RC
+2. Xunit 2.0 is not working in Visual Studio 2015 RC (PS: it is working with bugs)
 
 NET Core
 --------------------------

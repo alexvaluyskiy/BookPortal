@@ -1,4 +1,5 @@
-﻿using BookPortal.Web.Models;
+﻿using System;
+using BookPortal.Web.Models;
 using BookPortal.Web.Services;
 using Xunit;
 
@@ -6,11 +7,11 @@ namespace BookPortal.Web.Tests.Services
 {
     public class ImporterServiceTests
     {
-        private readonly ImporterService _service;
+        private readonly ImportersService _service;
 
         public ImporterServiceTests()
         {
-            _service = new ImporterService();
+            _service = new ImportersService();
         }
 
         [Fact]
@@ -22,6 +23,7 @@ namespace BookPortal.Web.Tests.Services
             ImportEditionDto importEdition = _service.ParseOzonPage(html);
 
             Assert.Equal(expectedString, importEdition.Name);
+            Assert.Equal(BookType.Normal, importEdition.BookType);
         }
 
         [Fact]
@@ -62,7 +64,7 @@ namespace BookPortal.Web.Tests.Services
         {
             string html = @"<p itemprop=""isbn"">ISBN 978-5-386-05405-2; 2013 г.</p>";
             string expectedIsbn = "978-5-386-05405-2";
-            string expectedYear = "2013";
+            int expectedYear = 2013;
 
             ImportEditionDto importEdition = _service.ParseOzonPage(html);
 
@@ -74,7 +76,7 @@ namespace BookPortal.Web.Tests.Services
         public void BookPagesParseSuccessTest()
         {
             string html = @"<span itemprop=""numberOfPages"">224</span>";
-            string expectedString = "224";
+            int expectedString = 224;
 
             ImportEditionDto importEdition = _service.ParseOzonPage(html);
 
@@ -84,6 +86,7 @@ namespace BookPortal.Web.Tests.Services
         [Theory]
         [InlineData(@"<p itemprop=""inLanguage"">Язык: Русский</p>")]
         [InlineData(@"<p itemprop=""inLanguage"">Языки: Русский</p>")]
+        [InlineData(@"<span itemprop=""inLanguage"">Русский</span>")]
         public void BookLanguageParseSuccessTest(string html)
         {
             string expectedString = "русский";
@@ -94,14 +97,36 @@ namespace BookPortal.Web.Tests.Services
         }
 
         [Fact]
-        public void BookCoverTypeParseSuccessTest()
+        public void BookCoverTypeHardcoverParseSuccessTest()
         {
             string html = @"<span itemprop=""bookFormat"">Твердый переплет</span>";
-            string expectedString = "твердый переплет";
 
             ImportEditionDto importEdition = _service.ParseOzonPage(html);
 
-            Assert.Equal(expectedString, importEdition.CoverType);
+            Assert.Equal(CoverType.Hardcover, importEdition.CoverType);
+            Assert.False(importEdition.SuperCover);
+        }
+
+        [Fact]
+        public void BookCoverTypePaperbackParseSuccessTest()
+        {
+            string html = @"<span itemprop=""bookFormat"">Мягкая обложка</span>";
+
+            ImportEditionDto importEdition = _service.ParseOzonPage(html);
+
+            Assert.Equal(CoverType.Paperback, importEdition.CoverType);
+            Assert.False(importEdition.SuperCover);
+        }
+
+        [Fact]
+        public void BookCoverTypeHardcoverSuperParseSuccessTest()
+        {
+            string html = @"<span itemprop=""bookFormat"">Твердый переплет, суперобложка</span>";
+
+            ImportEditionDto importEdition = _service.ParseOzonPage(html);
+
+            Assert.Equal(CoverType.Hardcover, importEdition.CoverType);
+            Assert.True(importEdition.SuperCover);
         }
 
         [Theory]
@@ -131,11 +156,53 @@ namespace BookPortal.Web.Tests.Services
         public void BookCountParseSuccessTest()
         {
             string html = @"<div><span>Тираж</span></div><div><span>27004 экз.</span></div>";
-            string expectedString = "27004";
+            int expectedString = 27004;
 
             ImportEditionDto importEdition = _service.ParseOzonPage(html);
 
             Assert.Equal(expectedString, importEdition.Count);
+        }
+
+        [Fact]
+        public void BookAnnotationParseSuccessTest()
+        {
+            string html = @"<!-- Data[ANNOTATION] --> Сорок лет назад это считалось фантастикой. Сорок лет назад это читалось как фантастика.</td>";
+            string expectedString = "Сорок лет назад это считалось фантастикой. Сорок лет назад это читалось как фантастика.";
+
+            ImportEditionDto importEdition = _service.ParseOzonPage(html);
+
+            Assert.Equal(expectedString, importEdition.Annotation);
+        }
+
+        [Fact]
+        public void BookTypeCollectionParseSuccessTest()
+        {
+            string html = @"<p>Авторский сборник</p>";
+
+            ImportEditionDto importEdition = _service.ParseOzonPage(html);
+
+            Assert.Equal(BookType.Collection, importEdition.BookType);
+        }
+
+        [Fact]
+        public void BookTypeAntologyParseSuccessTest()
+        {
+            string html = @"<p>Антология</p>";
+
+            ImportEditionDto importEdition = _service.ParseOzonPage(html);
+
+            Assert.Equal(BookType.Antology, importEdition.BookType);
+        }
+
+        [Fact]
+        public void BookCoverParseSuccessTest()
+        {
+            string html = @"<link rel=""image_src"" href=""//static1.ozone.ru/multimedia/books_covers/c300/1009507913.jpg""></link>";
+            Uri expectedUri = new Uri("http://static.ozone.ru/multimedia/books_covers/1009507913.jpg");
+
+            ImportEditionDto importEdition = _service.ParseOzonPage(html);
+
+            Assert.Equal(expectedUri, importEdition.CoverUri);
         }
     }
 }
