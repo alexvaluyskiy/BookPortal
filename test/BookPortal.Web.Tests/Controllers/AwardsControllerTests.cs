@@ -11,7 +11,7 @@ using Moq.Language.Flow;
 using Ploeh.AutoFixture;
 using Xunit;
 
-namespace BookPortal.Web.Tests
+namespace BookPortal.Web.Tests.Controllers
 {
     public class AwardsControllerTests
     {
