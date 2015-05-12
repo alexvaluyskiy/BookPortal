@@ -116,7 +116,7 @@ namespace BookPortal.Web.Services
                 {
                     if (request.IncludeContestsWorks)
                     {
-                        var contestWorksQuery = _bookContext.ContestWorks.Where(c => c.ContestId == contest.Id);
+                        var contestWorksQuery = _bookContext.ContestsWorks.Where(c => c.ContestId == contest.Id);
 
                         if (request.IsWinnersOnly)
                             contestWorksQuery = contestWorksQuery.Where(c => c.IsWinner);

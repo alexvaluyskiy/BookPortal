@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace BookPortal.Web.Domain.Models
 {
@@ -25,33 +26,15 @@ namespace BookPortal.Web.Domain.Models
         [DataType(DataType.MultilineText)]
         public string Description { get; set; }
 
-        [Column("copyright")]
-        public string Copyright { get; set; }
-
-        [Column("copyrightlink")]
-        public string CopyrightLink { get; set; }
-
-        [Column("type")]
-        public int AwardType { get; set; }
-
-        [Column("award_close")]
-        public bool IsClosed { get; set; }
-
-        [Column("show_in_list")]
-        public bool ShowInList { get; set; }
+        [Column("description_copyright")]
+        public string DescriptionCopyright { get; set; }
 
         [Column("notes")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
 
-        [Column("compiler")]
-        public string Compiler { get; set; }
-
-        [Column("process_status")]
-        public string ProcessStatus { get; set; }
-
-        [Column("comment")]
-        public string Comment { get; set; }
+        [Column("award_close")]
+        public bool AwardClosed { get; set; }
 
         [Column("is_opened")]
         public bool IsOpened { get; set; }
@@ -64,8 +47,10 @@ namespace BookPortal.Web.Domain.Models
         public int? CountryId { get; set; }
         public virtual Country Country { get; set; }
 
+        [JsonIgnore]
         public virtual ICollection<Contest> Contests { get; set; } = new HashSet<Contest>();
 
+        [JsonIgnore]
         public virtual ICollection<Nomination> Nominations { get; set; } = new HashSet<Nomination>();
     }
 }

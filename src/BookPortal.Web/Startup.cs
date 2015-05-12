@@ -2,12 +2,10 @@
 using System.Diagnostics;
 using Autofac;
 using Autofac.Dnx;
-using BookPortal.Web.Controllers;
 using BookPortal.Web.Domain;
 using BookPortal.Web.Infrastructure;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Builder;
-using Microsoft.AspNet.Diagnostics;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Data.Entity;
@@ -48,22 +46,26 @@ namespace BookPortal.Web
                 options.Filters.Add(new ValidateModelAttribute());
             });
 
-            services.AddEntityFramework()
-                .AddSqlServer()
-                .AddDbContext<BookContext>(options => 
-                    options.UseSqlServer(Configuration.Get("Data:DefaultConnection:ConnectionString")));
+            //services.AddEntityFramework()
+            //    .AddSqlServer()
+            //    .AddDbContext<BookContext>(options => 
+            //        options.UseSqlServer(Configuration.Get("Data:DefaultConnection:ConnectionString")));
+
+            services.AddEntityFramework().AddInMemoryStore().AddDbContext<BookContext>();
 
             ContainerBuilder builder = new ContainerBuilder();
 
             builder.RegisterType<AwardsService>();
             builder.RegisterType<NominationsService>();
             builder.RegisterType<ContestsService>();
+            builder.RegisterType<ContestsWorksService>();
             builder.RegisterType<ImportersService>();
             builder.RegisterType<CountriesService>();
             builder.RegisterType<LanguagesService>();
 
             builder.Populate(services);
             var container = builder.Build();
+
             return container.Resolve<IServiceProvider>();
         }
 
@@ -81,6 +83,9 @@ namespace BookPortal.Web
             app.UseErrorHandler(builder => builder.Run(ErrorRequestHandler.HandleErrorRequest));
 
             app.UseMvc();
+
+            //Populates the BookContext sample data
+            SampleData.InitializeMusicStoreDatabaseAsync(app.ApplicationServices).Wait();
         }
     }
 }

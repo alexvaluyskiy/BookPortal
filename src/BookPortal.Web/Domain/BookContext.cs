@@ -8,7 +8,7 @@ namespace BookPortal.Web.Domain
         public DbSet<Award> Awards { get; set; }
         public DbSet<Contest> Contests { get; set; }
         public DbSet<Nomination> Nominations { get; set; }
-        public DbSet<ContestWork> ContestWorks { get; set; }
+        public DbSet<ContestWork> ContestsWorks { get; set; }
 
         public DbSet<Language> Languages { get; set; }
         public DbSet<Country> Countries { get; set; } 

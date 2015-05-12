@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace BookPortal.Web.Domain.Models
 {
@@ -38,8 +39,11 @@ namespace BookPortal.Web.Domain.Models
 
         [Column("award_id")]
         public int AwardId { get; set; }
+
+        [JsonIgnore]
         public virtual Award Award { get; set; }
 
+        [JsonIgnore]
         public virtual ICollection<ContestWork> ContestWorks { get; set; } = new HashSet<ContestWork>();
     }
 }
