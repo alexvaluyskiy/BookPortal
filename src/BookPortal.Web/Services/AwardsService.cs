@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using BookPortal.Web.Domain;
 using BookPortal.Web.Domain.Models;
 using BookPortal.Web.Models;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 
 namespace BookPortal.Web.Services
 {
@@ -18,72 +17,112 @@ namespace BookPortal.Web.Services
             _bookContext = bookContext;
         }
 
-        public virtual async Task<IReadOnlyCollection<Award>> GetAwardsAsync(AwardRequest request)
+        public virtual async Task<IReadOnlyList<AwardResponse>> GetAwardsAsync(AwardRequest request)
         {
-            var result = _bookContext.Awards.AsQueryable();
+            var query = from a in _bookContext.Awards
+                        join l in _bookContext.Languages on a.LanguageId equals l.Id
+                        join c in _bookContext.Countries on a.CountryId equals c.Id
+                        select new AwardResponse
+                        {
+                            Id = a.Id,
+                            RusName = a.RusName,
+                            Name = a.Name,
+                            Homepage = a.Homepage,
+                            Description = a.Description,
+                            DescriptionCopyright = a.DescriptionCopyright,
+                            Notes = a.Notes,
+                            AwardClosed = a.AwardClosed,
+                            IsOpened = a.IsOpened,
+                            LanguageId = l.Id,
+                            LanguageName = l.Name,
+                            CountryId = c.Id,
+                            CountryName = c.Name,
+                            FirstContestDate = _bookContext.Contests.Where(f => f.AwardId == a.Id).Min(f => f.Date),
+                            LastContestDate = _bookContext.Contests.Where(f => f.AwardId == a.Id).Max(f => f.Date)
+                        };
 
-            result = result.Include(c => c.Country);
-            result = result.Include(c => c.Language);
-
-            result = result.OrderBy(c => c.RusName);
+            if (request.IsOpened)
+                query = query.Where(a => a.IsOpened);
 
             if (request.Offset.HasValue && request.Offset.Value > 0)
-                result = result.Skip(request.Offset.Value);
+                query = query.Skip(request.Offset.Value);
 
             if (request.Limit.HasValue && request.Limit > 0)
-                result = result.Take(request.Limit.Value);
+                query = query.Take(request.Limit.Value);
 
-            IReadOnlyCollection<Award> awards = await result.ToListAsync();
-
-            // TODO: workaround for EF7 beta 4
-            if (request.IncludeNominations || request.IncludeContests)
+            switch (request.Sort)
             {
-                foreach (var award in awards)
-                {
-                    await PopulateChildren(request, award);
-                }
+                case AwardSort.Id:
+                    query = query.OrderBy(c => c.Id).ThenBy(c => c.RusName); ;
+                    break;
+                case AwardSort.Rusname:
+                    query = query.OrderBy(c => c.RusName);
+                    break;
+                case AwardSort.Language:
+                    query = query.OrderBy(c => c.LanguageName).ThenBy(c => c.RusName);
+                    break;
+                case AwardSort.Country:
+                    query = query.OrderBy(c => c.CountryName).ThenBy(c => c.RusName);
+                    break;
             }
 
-            return awards;
+            return await query.ToListAsync();
         }
 
         public virtual async Task<AwardResponse> GetAwardAsync(int awardId)
         {
-            var maxDate = await _bookContext.Contests.Where(a => a.AwardId == awardId).MaxAsync(c => c.Date);
-            var minDate = await _bookContext.Contests.Where(a => a.AwardId == awardId).MinAsync(c => c.Date);
+            var query = from a in _bookContext.Awards
+                        where a.Id == awardId
+                        join l in _bookContext.Languages on a.LanguageId equals l.Id
+                        join c in _bookContext.Countries on a.CountryId equals c.Id
+                        select new AwardResponse
+                        {
+                            Id = a.Id,
+                            RusName = a.RusName,
+                            Name = a.Name,
+                            Homepage = a.Homepage,
+                            Description = a.Description,
+                            DescriptionCopyright = a.DescriptionCopyright,
+                            Notes = a.Notes,
+                            AwardClosed = a.AwardClosed,
+                            IsOpened = a.IsOpened,
+                            LanguageId = l.Id,
+                            LanguageName = l.Name,
+                            CountryId = c.Id,
+                            CountryName = c.Name,
+                            FirstContestDate = _bookContext.Contests.Min(f => f.Date),
+                            LastContestDate = _bookContext.Contests.Max(f => f.Date)
+                        };
 
-            var result = _bookContext.Awards.AsQueryable();
-
-            result = result.Include(c => c.Country);
-            result = result.Include(c => c.Language);
-
-            result = result.Where(a => a.Id == awardId);
-
-            return await result.Project().To<AwardResponse>().SingleOrDefaultAsync();
+            return await query.SingleOrDefaultAsync();
         }
 
-        public virtual async Task<Award> AddAwardAsync(Award request)
+        public virtual async Task<AwardResponse> AddAwardAsync(Award request)
         {
-            _bookContext.Add(request);
+            var added = _bookContext.Add(request);
             await _bookContext.SaveChangesAsync();
 
-            return request;
+
+            var a = Mapper.Map<AwardResponse>(added.Entity);
+            return a;
         }
 
-        public virtual async Task<Award> UpdateAwardAsync(int awardId, Award request)
+        public virtual async Task<AwardResponse> UpdateAwardAsync(int awardId, Award request)
         {
             Award award = await _bookContext.Awards.Where(a => a.Id == awardId).SingleOrDefaultAsync();
 
-            if (award == null)
-                return await Task.FromResult(default(Award));
+            if (award != null)
+            {
+                _bookContext.Update(request);
+                await _bookContext.SaveChangesAsync();
 
-            _bookContext.Update(request);
-            await _bookContext.SaveChangesAsync();
+                return Mapper.Map<AwardResponse>(award);
+            }
 
-            return request;
+            return null;
         }
 
-        public virtual async Task<Award> DeleteAwardAsync(int awardId)
+        public virtual async Task<AwardResponse> DeleteAwardAsync(int awardId)
         {
             Award award = await _bookContext.Awards.Where(a => a.Id == awardId).SingleOrDefaultAsync();
 
@@ -91,53 +130,11 @@ namespace BookPortal.Web.Services
             {
                 _bookContext.Remove(award);
                 await _bookContext.SaveChangesAsync();
+
+                return Mapper.Map<AwardResponse>(award);
             }
 
-            return award;
-        }
-
-        private async Task PopulateChildren(AwardRequest request, Award award)
-        {
-            if (request.IncludeNominations)
-            {
-                var nominations = await _bookContext.Nominations
-                    .Where(n => n.AwardId == award.Id)
-                    .ToListAsync();
-
-                foreach (var nomination in nominations)
-                {
-                    nomination.ContestWorks = null;
-                    award.Nominations.Add(nomination);
-                }
-            }
-
-            if (request.IncludeContests)
-            {
-                var contests = await _bookContext.Contests
-                    .Where(c => c.AwardId == award.Id)
-                    .ToListAsync();
-
-                foreach (var contest in contests)
-                {
-                    if (request.IncludeContestsWorks)
-                    {
-                        var contestWorksQuery = _bookContext.ContestsWorks.Where(c => c.ContestId == contest.Id);
-
-                        if (request.IsWinnersOnly)
-                            contestWorksQuery = contestWorksQuery.Where(c => c.IsWinner);
-
-                        var contestWorks = await contestWorksQuery.ToListAsync();
-
-                        foreach (var contestWork in contestWorks)
-                        {
-                            contestWork.Nomination = null;
-                            contest.ContestWorks.Add(contestWork);
-                        }
-                    }
-
-                    award.Contests.Add(contest);
-                }
-            }
+            return null;
         }
     }
 }

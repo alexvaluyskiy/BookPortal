@@ -33,8 +33,8 @@ namespace BookPortal.Web.Models
 
         public string CountryName { get; set; }
 
-        public int FirstContestYear { get; set; }
+        public DateTime? FirstContestDate { get; set; }
 
-        public int LastContestYear { get; set; }
+        public DateTime? LastContestDate { get; set; }
     }
 }

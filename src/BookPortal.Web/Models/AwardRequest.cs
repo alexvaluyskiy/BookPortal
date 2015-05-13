@@ -8,12 +8,16 @@ namespace BookPortal.Web.Models
 
         public int? Offset { get; set; }
 
-        public bool IncludeContests { get; set; }
+        public AwardSort Sort { get; set; } = AwardSort.Rusname;
 
-        public bool IncludeNominations { get; set; }
+        public bool IsOpened { get; set; }
+    }
 
-        public bool IncludeContestsWorks { get; set; }
-
-        public bool IsWinnersOnly { get; set; }
+    public enum AwardSort
+    {
+        Id = 1,
+        Rusname = 2,
+        Language = 3,
+        Country = 4
     }
 }

@@ -38,7 +38,7 @@ namespace BookPortal.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]Award request)
         {
-            Award award = await _awardsService.AddAwardAsync(request);
+            AwardResponse award = await _awardsService.AddAwardAsync(request);
 
             if (award == null)
                 return new WrappedErrorResult(400);
@@ -49,7 +49,7 @@ namespace BookPortal.Web.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody]Award request)
         {
-            Award award = await _awardsService.UpdateAwardAsync(id, request);
+            AwardResponse award = await _awardsService.UpdateAwardAsync(id, request);
 
             if (award == null)
                 return new WrappedErrorResult(400);
@@ -60,7 +60,7 @@ namespace BookPortal.Web.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            Award award = await _awardsService.DeleteAwardAsync(id);
+            AwardResponse award = await _awardsService.DeleteAwardAsync(id);
 
             if (award == null)
                 return new WrappedErrorResult(400);

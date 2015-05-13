@@ -1,11 +1,13 @@
 Basic bugs and questions
 --------------------------
 1. Attribute based model configuration is not working in EF 7.0 beta 4
-2. Problems with unit test debugging in  Visual Studio 2015 RC
-3. Problems with unit test discovering in  Visual Studio 2015 RC
+2. Cant use unit test debugging in Visual Studio 2015 RC
+3. Problems with unit test discovering in Visual Studio 2015 RC
+4. Can't use code coverage for unit tests in Visual Studio 2015 RC
 4. Can't run commands (like ef), when I separate my solution into multiple projects
 5. How to log something in ErrorHandler?
-6. How to handle router errors (404 statuse)?
+6. How to handle router errors (404 status)?
+7. EF7 MemoryStorage orderby strange behavior
 
 NET Core
 --------------------------

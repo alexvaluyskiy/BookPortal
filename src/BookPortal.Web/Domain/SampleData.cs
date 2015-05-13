@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BookPortal.Web.Domain.Models;
+using Microsoft.Data.Entity.SqlServer;
 using Microsoft.Framework.DependencyInjection;
 
 namespace BookPortal.Web.Domain
@@ -9,6 +10,11 @@ namespace BookPortal.Web.Domain
     public static class SampleData
     {
         public static async Task InitializeMusicStoreDatabaseAsync(IServiceProvider serviceProvider)
+        {
+            await InsertTestData(serviceProvider);
+        }
+
+        private static async Task InsertTestData(IServiceProvider serviceProvider)
         {
             using (var db = serviceProvider.GetService<BookContext>())
             {
@@ -117,6 +123,20 @@ namespace BookPortal.Web.Domain
                 Date = new DateTime(2014, 8, 16),
                 Place = "LonCon 3, Лондон",
                 ShortDescription = "Конвент проходил с 14 по 18 августа"
+            };
+
+            yield return new Contest
+            {
+                AwardId = 2,
+                Name = "1992",
+                Date = new DateTime(1992, 8, 16),
+            };
+
+            yield return new Contest
+            {
+                AwardId = 2,
+                Name = "2015",
+                Date = new DateTime(2015, 8, 16),
             };
         }
 

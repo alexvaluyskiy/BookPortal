@@ -20,6 +20,14 @@ namespace BookPortal.Web.Domain
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Award>().Key(c => c.Id);
+            modelBuilder.Entity<Contest>().Key(c => c.Id);
+            modelBuilder.Entity<Nomination>().Key(c => c.Id);
+            modelBuilder.Entity<ContestWork>().Key(c => c.Id);
+
+            modelBuilder.Entity<Language>().Key(c => c.Id);
+            modelBuilder.Entity<Country>().Key(c => c.Id);
+
             base.OnModelCreating(modelBuilder);
         }
     }
