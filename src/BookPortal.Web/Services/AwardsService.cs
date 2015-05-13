@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using BookPortal.Web.Domain;
 using BookPortal.Web.Domain.Models;
 using BookPortal.Web.Models;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 
 namespace BookPortal.Web.Services
 {
@@ -45,8 +47,11 @@ namespace BookPortal.Web.Services
             return awards;
         }
 
-        public virtual async Task<Award> GetAwardAsync(int awardId)
+        public virtual async Task<AwardResponse> GetAwardAsync(int awardId)
         {
+            var maxDate = await _bookContext.Contests.Where(a => a.AwardId == awardId).MaxAsync(c => c.Date);
+            var minDate = await _bookContext.Contests.Where(a => a.AwardId == awardId).MinAsync(c => c.Date);
+
             var result = _bookContext.Awards.AsQueryable();
 
             result = result.Include(c => c.Country);
@@ -54,7 +59,7 @@ namespace BookPortal.Web.Services
 
             result = result.Where(a => a.Id == awardId);
 
-            return await result.SingleOrDefaultAsync();
+            return await result.Project().To<AwardResponse>().SingleOrDefaultAsync();
         }
 
         public virtual async Task<Award> AddAwardAsync(Award request)

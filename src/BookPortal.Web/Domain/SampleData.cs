@@ -105,7 +105,8 @@ namespace BookPortal.Web.Domain
             yield return new Contest
             {
                 AwardId = 1,
-                Name = "1953"
+                Name = "1953",
+                Date = new DateTime(1953, 8, 16),
             };
 
             yield return new Contest

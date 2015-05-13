@@ -84,6 +84,9 @@ namespace BookPortal.Web
 
             app.UseMvc();
 
+            // create mappings
+            MapperInitialization.Initialize();
+
             //Populates the BookContext sample data
             SampleData.InitializeMusicStoreDatabaseAsync(app.ApplicationServices).Wait();
         }
