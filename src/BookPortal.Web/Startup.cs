@@ -47,8 +47,8 @@ namespace BookPortal.Web
             });
 
             services.AddEntityFramework()
-                .AddSqlServer()
-                .AddDbContext<BookContext>(options => 
+               .AddSqlServer()
+               .AddDbContext<BookContext>(options => 
                     options.UseSqlServer(Configuration.Get("Data:DefaultConnection:ConnectionString")));
 
             //services.AddEntityFramework().AddInMemoryStore().AddDbContext<BookContext>();
@@ -59,9 +59,14 @@ namespace BookPortal.Web
             builder.RegisterType<NominationsService>();
             builder.RegisterType<ContestsService>();
             builder.RegisterType<ContestsWorksService>();
-            builder.RegisterType<ImportersService>();
+
+            builder.RegisterType<PersonsService>();
+            builder.RegisterType<WorksService>();
+
             builder.RegisterType<CountriesService>();
             builder.RegisterType<LanguagesService>();
+
+            builder.RegisterType<ImportersService>();
 
             builder.Populate(services);
             var container = builder.Build();
@@ -88,7 +93,7 @@ namespace BookPortal.Web
             MapperInitialization.Initialize();
 
             //Populates the BookContext sample data
-            // SampleData.InitializeMusicStoreDatabaseAsync(app.ApplicationServices).Wait();
+            //SampleData.InitializeMusicStoreDatabaseAsync(app.ApplicationServices).Wait();
         }
     }
 }

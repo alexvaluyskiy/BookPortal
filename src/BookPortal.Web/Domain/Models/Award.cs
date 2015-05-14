@@ -23,15 +23,12 @@ namespace BookPortal.Web.Domain.Models
         public bool IsOpened { get; set; }
 
         public int? LanguageId { get; set; }
-
-        public virtual Language Language { get; set; }
+        public Language Language { get; set; }
 
         public int? CountryId { get; set; }
+        public Country Country { get; set; }
 
-        public virtual Country Country { get; set; }
-
-        public virtual ICollection<Contest> Contests { get; set; } = new HashSet<Contest>();
-
-        public virtual ICollection<Nomination> Nominations { get; set; } = new HashSet<Nomination>();
+        public ICollection<Contest> Contests { get; set; } = new HashSet<Contest>();
+        public ICollection<Nomination> Nominations { get; set; } = new HashSet<Nomination>();
     }
 }

@@ -15,9 +15,8 @@ namespace BookPortal.Web.Domain.Models
         public int Number { get; set; }
 
         public int AwardId { get; set; }
-
         public Award Award { get; set; }
 
-        public virtual ICollection<ContestWork> ContestWorks { get; set; } = new HashSet<ContestWork>();
+        public ICollection<ContestWork> ContestWorks { get; set; } = new HashSet<ContestWork>();
     }
 }

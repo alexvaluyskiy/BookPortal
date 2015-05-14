@@ -22,32 +22,48 @@ namespace BookPortal.Web.Domain
                 {
                     db.Countries.Add(country);
                 }
+                await db.SaveChangesAsync();
 
                 foreach (var language in GetLanguages())
                 {
                     db.Languages.Add(language);
                 }
+                await db.SaveChangesAsync();
 
                 foreach (var award in GetAwards())
                 {
                     db.Awards.Add(award);
                 }
+                await db.SaveChangesAsync();
 
                 foreach (var nomination in GetNominations())
                 {
                     db.Nominations.Add(nomination);
                 }
+                await db.SaveChangesAsync();
 
                 foreach (var contest in GetContests())
                 {
                     db.Contests.Add(contest);
                 }
+                await db.SaveChangesAsync();
 
                 foreach (var contestWork in GetContestsWorks())
                 {
                     db.ContestsWorks.Add(contestWork);
                 }
+                await db.SaveChangesAsync();
 
+                foreach (var person in GetPersons())
+                {
+                    db.Persons.Add(person);
+                }
+                await db.SaveChangesAsync();
+
+                foreach (var work in GetWorks())
+                {
+                    db.Works.Add(work);
+                }
                 await db.SaveChangesAsync();
             }
         }
@@ -152,6 +168,37 @@ namespace BookPortal.Web.Domain
                 IsWinner = true,
                 LinkType = ContestWorkType.Work,
                 LinkId = 483569
+            };
+        }
+
+        private static IEnumerable<Person> GetPersons()
+        {
+            yield return new Person
+            {
+                Name = "Ден Симмонс",
+                NameOriginal = "Дена Симмонс",
+                Biography = "биография",
+                Gender = GenderType.Male,
+                Birthdate = new DateTime(1931, 9, 9)
+            };
+
+            yield return new Person
+            {
+                Name = "Лев Толстой",
+                NameOriginal = "Льва Толстого",
+                Biography = "биография",
+                Gender = GenderType.Male,
+                Birthdate = new DateTime(1828, 9, 9),
+                Deathdate = new DateTime(1910, 11, 20)
+            };
+        }
+
+        private static IEnumerable<Work> GetWorks()
+        {
+            yield return new Work
+            {
+                Name = "Война и мир",
+                Year = 1866
             };
         }
     }

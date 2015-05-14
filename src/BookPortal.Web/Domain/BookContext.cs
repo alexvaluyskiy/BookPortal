@@ -14,6 +14,16 @@ namespace BookPortal.Web.Domain
         public DbSet<Nomination> Nominations { get; set; }
         public DbSet<ContestWork> ContestsWorks { get; set; }
 
+        public DbSet<Person> Persons { get; set; }
+        public DbSet<Work> Works { get; set; }
+        public DbSet<Edition> Editions { get; set; }
+        public DbSet<Serie> Series { get; set; }
+        public DbSet<Publisher> Publisher { get; set; }
+
+        public DbSet<TranslationWork> TranslationWorks { get; set; }
+        public DbSet<TranslationWorkPerson> TranslationWorkPersons { get; set; }
+        public DbSet<TranslationEdition> TranslationEditions { get; set; }
+
         public DbSet<Language> Languages { get; set; }
         public DbSet<Country> Countries { get; set; }
 
@@ -84,8 +94,8 @@ namespace BookPortal.Web.Domain
                 builder.Property(c => c.IsWinner).ForRelational().Column("is_winner");
                 builder.Property(c => c.LinkType).ForRelational().Column("link_type");
                 builder.Property(c => c.LinkId).ForRelational().Column("link_id");
-                builder.Property(c => c.Id).ForRelational().Column("nomination_id");
-                builder.Property(c => c.Id).ForRelational().Column("contest_id");
+                builder.Property(c => c.NominationId).ForRelational().Column("nomination_id");
+                builder.Property(c => c.ContestId).ForRelational().Column("contest_id");
 
                 builder.Property(c => c.Id).ForSqlServer().UseIdentity();
             });
@@ -104,6 +114,70 @@ namespace BookPortal.Web.Domain
             {
                 builder.Property(c => c.Id).ForRelational().Column("language_id");
                 builder.Property(c => c.Name).Required().ForRelational().Column("name");
+
+                builder.Property(c => c.Id).ForSqlServer().UseIdentity();
+            });
+
+            modelBuilder.Entity<Person>().ForRelational().Table("persons");
+            modelBuilder.Entity<Person>(builder =>
+            {
+                builder.Property(c => c.Id).ForRelational().Column("person_id");
+
+                builder.Property(c => c.Id).ForSqlServer().UseIdentity();
+            });
+
+            modelBuilder.Entity<Work>().ForRelational().Table("works");
+            modelBuilder.Entity<Work>(builder =>
+            {
+                builder.Property(c => c.Id).ForRelational().Column("work_id");
+
+                builder.Property(c => c.Id).ForSqlServer().UseIdentity();
+            });
+
+            modelBuilder.Entity<Edition>().ForRelational().Table("editions");
+            modelBuilder.Entity<Edition>(builder =>
+            {
+                builder.Property(c => c.Id).ForRelational().Column("edition_id");
+
+                builder.Property(c => c.Id).ForSqlServer().UseIdentity();
+            });
+
+            modelBuilder.Entity<Serie>().ForRelational().Table("series");
+            modelBuilder.Entity<Serie>(builder =>
+            {
+                builder.Property(c => c.Id).ForRelational().Column("serie_id");
+
+                builder.Property(c => c.Id).ForSqlServer().UseIdentity();
+            });
+
+            modelBuilder.Entity<Publisher>().ForRelational().Table("publishers");
+            modelBuilder.Entity<Publisher>(builder =>
+            {
+                builder.Property(c => c.Id).ForRelational().Column("publisher_id");
+
+                builder.Property(c => c.Id).ForSqlServer().UseIdentity();
+            });
+
+            modelBuilder.Entity<TranslationWork>().ForRelational().Table("translation_works");
+            modelBuilder.Entity<TranslationWork>(builder =>
+            {
+                builder.Property(c => c.Id).ForRelational().Column("translation_work_id");
+
+                builder.Property(c => c.Id).ForSqlServer().UseIdentity();
+            });
+
+            modelBuilder.Entity<TranslationWorkPerson>().ForRelational().Table("translation_work_persons");
+            modelBuilder.Entity<TranslationWorkPerson>(builder =>
+            {
+                builder.Property(c => c.Id).ForRelational().Column("translation_work_person_id");
+
+                builder.Property(c => c.Id).ForSqlServer().UseIdentity();
+            });
+
+            modelBuilder.Entity<TranslationEdition>().ForRelational().Table("translation_editions");
+            modelBuilder.Entity<TranslationEdition>(builder =>
+            {
+                builder.Property(c => c.Id).ForRelational().Column("translation_editions");
 
                 builder.Property(c => c.Id).ForSqlServer().UseIdentity();
             });

@@ -16,16 +16,14 @@
 
         public bool IsWinner { get; set; }
 
-        public ContestWorkType? LinkType { get; set; }
+        public ContestWorkType LinkType { get; set; }
 
         public int? LinkId { get; set; }
 
         public int ContestId { get; set; }
-
-        public virtual Contest Contest { get; set; }
+        public Contest Contest { get; set; }
 
         public int NominationId { get; set; }
-
-        public virtual Nomination Nomination { get; set; }
+        public Nomination Nomination { get; set; }
     }
 }

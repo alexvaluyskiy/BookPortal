@@ -8,9 +8,19 @@ using BookPortal.Web.Domain;
 namespace BookPortal.Web.Migrations
 {
     [ContextType(typeof(BookContext))]
-    partial class BookContextModelSnapshot : ModelSnapshot
+    partial class Init
     {
-        public override IModel Model
+        public override string Id
+        {
+            get { return "20150514165059_Init"; }
+        }
+        
+        public override string ProductVersion
+        {
+            get { return "7.0.0-beta4-12943"; }
+        }
+        
+        public override IModel Target
         {
             get
             {
