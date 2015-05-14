@@ -46,12 +46,12 @@ namespace BookPortal.Web
                 options.Filters.Add(new ValidateModelAttribute());
             });
 
-            //services.AddEntityFramework()
-            //    .AddSqlServer()
-            //    .AddDbContext<BookContext>(options => 
-            //        options.UseSqlServer(Configuration.Get("Data:DefaultConnection:ConnectionString")));
+            services.AddEntityFramework()
+                .AddSqlServer()
+                .AddDbContext<BookContext>(options => 
+                    options.UseSqlServer(Configuration.Get("Data:DefaultConnection:ConnectionString")));
 
-            services.AddEntityFramework().AddInMemoryStore().AddDbContext<BookContext>();
+            //services.AddEntityFramework().AddInMemoryStore().AddDbContext<BookContext>();
 
             ContainerBuilder builder = new ContainerBuilder();
 
@@ -88,7 +88,7 @@ namespace BookPortal.Web
             MapperInitialization.Initialize();
 
             //Populates the BookContext sample data
-            SampleData.InitializeMusicStoreDatabaseAsync(app.ApplicationServices).Wait();
+            // SampleData.InitializeMusicStoreDatabaseAsync(app.ApplicationServices).Wait();
         }
     }
 }

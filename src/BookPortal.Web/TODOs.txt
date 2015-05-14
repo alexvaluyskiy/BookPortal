@@ -1,13 +1,16 @@
 Basic bugs and questions
 --------------------------
-1. Attribute based model configuration is not working in EF 7.0 beta 4
-2. Cant use unit test debugging in Visual Studio 2015 RC
-3. Problems with unit test discovering in Visual Studio 2015 RC
-4. Can't use code coverage for unit tests in Visual Studio 2015 RC
+1. EF 7.0 beta 4: Attribute based model configuration is not working
+2. VS 2015 RC: Cant use unit test debugging
+3. VS 2015 RC: Problems with unit test discovering
+4. VS 2015 RC: Can't use code coverage for unit tests
 4. Can't run commands (like ef), when I separate my solution into multiple projects
-5. How to log something in ErrorHandler?
-6. How to handle router errors (404 status)?
-7. EF7 MemoryStorage orderby strange behavior
+5. MVC 6.0 beta 4: How to log something in ErrorHandler?
+6. MVC 6.0 beta 4: How to handle router errors (404 status)?
+7. EF 7.0 beta 4: MemoryStorage orderby strange behavior
+8. EF 7.0 beta 4: Column method in SqlServerPropertyBuilder in not working. Fix: just use RelationalPropertyBuilder
+9. EF 7.0 beta 4: Migration is not add all namespaces
+10. EF 7.0 beta 4: Migration doesnt keep properties order
 
 NET Core
 --------------------------
@@ -15,9 +18,3 @@ NET Core
 2. HtmlAgilityPack is not supported
 3. Moq is not supported
 4. AutoFixture is not supported
-
-Bugs in Asp.Net Mvc 6.0.0-beta 3 (check)
---------------------------
-1. Problems with MemoryCache
-+2. Can't use Cors
-+3. Unit tests in Visual Studio is not working

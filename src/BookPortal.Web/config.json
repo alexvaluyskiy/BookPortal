@@ -5,7 +5,7 @@
     },
     "Data": {
         "DefaultConnection": {
-            "ConnectionString": "Server=(localdb)\\mssqllocaldb;Database=BooksDatabase;Trusted_Connection=True;"
+            "ConnectionString": "Server=(localdb)\\mssqllocaldb;Database=BookDatabase;Integrated Security=true"
         }
     }
 }
