@@ -34,7 +34,9 @@ namespace BookPortal.Web.Domain
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            
             modelBuilder.Entity<Award>().ForRelational().Table("awards");
+            modelBuilder.Entity<Award>().Index(c => c.IsOpened);
             modelBuilder.Entity<Award>(builder =>
             {
                 builder.Property(c => c.Id).ForRelational().Column("award_id");

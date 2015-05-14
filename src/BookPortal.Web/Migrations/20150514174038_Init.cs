@@ -151,7 +151,7 @@ namespace BookPortal.Web.Migrations
                 columns: table => new
                 {
                     award_id = table.Column(type: "int", nullable: false),
-                    date = table.Column(type: "datetime2", nullable: true),
+                    date = table.Column(type: "datetime2", nullable: false),
                     description = table.Column(type: "nvarchar(max)", nullable: true),
                     contest_id = table.Column(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGeneration", "Identity"),
@@ -331,6 +331,10 @@ namespace BookPortal.Web.Migrations
                         referencedTable: "translation_works",
                         referencedColumn: "translation_work_id");
                 });
+            migration.CreateIndex(
+                name: "IX_awards_is_opened",
+                table: "awards",
+                column: "is_opened");
         }
         
         public override void Down(MigrationBuilder migration)

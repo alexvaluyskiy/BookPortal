@@ -12,7 +12,7 @@ namespace BookPortal.Web.Migrations
     {
         public override string Id
         {
-            get { return "20150514165059_Init"; }
+            get { return "20150514174038_Init"; }
         }
         
         public override string ProductVersion
@@ -73,7 +73,7 @@ namespace BookPortal.Web.Migrations
                         b.Property<int>("AwardId")
                             .Annotation("OriginalValueIndex", 0)
                             .Annotation("Relational:ColumnName", "award_id");
-                        b.Property<DateTime?>("Date")
+                        b.Property<DateTime>("Date")
                             .Annotation("OriginalValueIndex", 1)
                             .Annotation("Relational:ColumnName", "date");
                         b.Property<string>("Description")

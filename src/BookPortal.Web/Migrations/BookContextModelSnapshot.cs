@@ -63,7 +63,7 @@ namespace BookPortal.Web.Migrations
                         b.Property<int>("AwardId")
                             .Annotation("OriginalValueIndex", 0)
                             .Annotation("Relational:ColumnName", "award_id");
-                        b.Property<DateTime?>("Date")
+                        b.Property<DateTime>("Date")
                             .Annotation("OriginalValueIndex", 1)
                             .Annotation("Relational:ColumnName", "date");
                         b.Property<string>("Description")

@@ -77,7 +77,7 @@ namespace BookPortal.Web
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             Trace.AutoFlush = true;
-            var sourceSwitch = new SourceSwitch("") { Level = SourceLevels.Warning };
+            var sourceSwitch = new SourceSwitch("") { Level = SourceLevels.All };
             var traceListener = new TextWriterTraceListener(Configuration.Get("AppSettings:LogFilePath"));
             loggerFactory.AddTraceSource(sourceSwitch, traceListener);
 

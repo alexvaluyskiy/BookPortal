@@ -11,6 +11,7 @@ Basic bugs and questions
 8. EF 7.0 beta 4: Column method in SqlServerPropertyBuilder in not working. Fix: just use RelationalPropertyBuilder
 9. EF 7.0 beta 4: Migration is not add all namespaces
 10. EF 7.0 beta 4: Migration doesnt keep properties order
+10. EF 7.0 beta 4: Does not support subqueries in SqlServer Provider
 
 NET Core
 --------------------------

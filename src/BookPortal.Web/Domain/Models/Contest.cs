@@ -15,7 +15,7 @@ namespace BookPortal.Web.Domain.Models
 
         public string Place { get; set; }
 
-        public DateTime? Date { get; set; }
+        public DateTime Date { get; set; }
 
         public string Description { get; set; }
 

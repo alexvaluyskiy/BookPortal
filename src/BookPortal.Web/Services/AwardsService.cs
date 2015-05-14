@@ -36,19 +36,11 @@ namespace BookPortal.Web.Services
                             LanguageId = l.Id,
                             LanguageName = l.Name,
                             CountryId = c.Id,
-                            CountryName = c.Name,
-                            FirstContestDate = _bookContext.Contests.Where(f => f.AwardId == a.Id).Min(f => f.Date),
-                            LastContestDate = _bookContext.Contests.Where(f => f.AwardId == a.Id).Max(f => f.Date)
+                            CountryName = c.Name
                         };
 
             if (request.IsOpened)
                 query = query.Where(a => a.IsOpened);
-
-            if (request.Offset.HasValue && request.Offset.Value > 0)
-                query = query.Skip(request.Offset.Value);
-
-            if (request.Limit.HasValue && request.Limit > 0)
-                query = query.Take(request.Limit.Value);
 
             switch (request.Sort)
             {
@@ -66,7 +58,21 @@ namespace BookPortal.Web.Services
                     break;
             }
 
-            return await query.ToListAsync();
+            if (request.Offset.HasValue && request.Offset.Value > 0)
+                query = query.Skip(request.Offset.Value);
+
+            if (request.Limit.HasValue && request.Limit > 0)
+                query = query.Take(request.Limit.Value);
+
+            // TODO: workaround for EF7 bug
+            var queryResults = await query.ToListAsync();
+            foreach (var queryResult in queryResults)
+            {
+                queryResult.FirstContestDate = _bookContext.Contests.Where(f => f.AwardId == queryResult.Id).Min(f => f.Date);
+                queryResult.LastContestDate = _bookContext.Contests.Where(f => f.AwardId == queryResult.Id).Max(f => f.Date);
+            }
+
+            return queryResults;
         }
 
         public virtual async Task<AwardResponse> GetAwardAsync(int awardId)
@@ -89,12 +95,15 @@ namespace BookPortal.Web.Services
                             LanguageId = l.Id,
                             LanguageName = l.Name,
                             CountryId = c.Id,
-                            CountryName = c.Name,
-                            FirstContestDate = _bookContext.Contests.Where(f => f.AwardId == a.Id).Min(f => f.Date),
-                            LastContestDate = _bookContext.Contests.Where(f => f.AwardId == a.Id).Max(f => f.Date)
+                            CountryName = c.Name
                         };
 
-            return await query.SingleOrDefaultAsync();
+            // TODO: workaround for EF7 bug
+            var queryResult = await query.SingleOrDefaultAsync();
+            queryResult.FirstContestDate = _bookContext.Contests.Where(f => f.AwardId == awardId).Min(f => f.Date);
+            queryResult.LastContestDate = _bookContext.Contests.Where(f => f.AwardId == awardId).Max(f => f.Date);
+
+            return queryResult;
         }
 
         public virtual async Task<AwardResponse> AddAwardAsync(Award request)
