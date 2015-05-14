@@ -90,8 +90,8 @@ namespace BookPortal.Web.Services
                             LanguageName = l.Name,
                             CountryId = c.Id,
                             CountryName = c.Name,
-                            FirstContestDate = _bookContext.Contests.Min(f => f.Date),
-                            LastContestDate = _bookContext.Contests.Max(f => f.Date)
+                            FirstContestDate = _bookContext.Contests.Where(f => f.AwardId == a.Id).Min(f => f.Date),
+                            LastContestDate = _bookContext.Contests.Where(f => f.AwardId == a.Id).Max(f => f.Date)
                         };
 
             return await query.SingleOrDefaultAsync();
@@ -102,9 +102,7 @@ namespace BookPortal.Web.Services
             var added = _bookContext.Add(request);
             await _bookContext.SaveChangesAsync();
 
-
-            var a = Mapper.Map<AwardResponse>(added.Entity);
-            return a;
+            return Mapper.Map<AwardResponse>(added.Entity);
         }
 
         public virtual async Task<AwardResponse> UpdateAwardAsync(int awardId, Award request)

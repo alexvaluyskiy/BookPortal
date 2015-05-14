@@ -14,13 +14,7 @@ namespace BookPortal.Web.Infrastructure
         {
             Mapper.Initialize(cfg =>
             {
-                int FirstContestYear = 0, LastContestYear = 0;
-                cfg.CreateMap<Award, AwardResponse>()
-                   // .ForMember(d => d.FirstContestYear, opt => opt.MapFrom(src => FirstContestYear))
-                    //.ForMember(d => d.LastContestYear, opt => opt.MapFrom(src => LastContestYear))
-                    //.ForMember(d => d.CountryName, opt => opt.MapFrom(src => src.Country.Name))
-                    //.ForMember(d => d.LanguageName, opt => opt.MapFrom(src => src.Language.Name))
-                    ;
+                cfg.CreateMap<Award, AwardResponse>();
             });
         }
     }

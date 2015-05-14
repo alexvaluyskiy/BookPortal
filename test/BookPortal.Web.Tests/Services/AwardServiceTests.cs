@@ -8,7 +8,6 @@ using BookPortal.Web.Infrastructure;
 using BookPortal.Web.Models;
 using BookPortal.Web.Services;
 using Microsoft.Framework.DependencyInjection;
-using Ploeh.AutoFixture;
 using Xunit;
 
 namespace BookPortal.Web.Tests.Services
@@ -16,7 +15,6 @@ namespace BookPortal.Web.Tests.Services
     public class AwardServiceTests
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly Fixture _fixture = new Fixture();
 
         public AwardServiceTests()
         {
@@ -46,9 +44,14 @@ namespace BookPortal.Web.Tests.Services
             Assert.Equal(3, response.Count);
             Assert.Equal(1, response[0].Id);
             Assert.Equal("Nebula", response[0].Name);
+
+            Assert.NotNull(response[0].FirstContestDate);
+            Assert.Equal(1992, response[0].FirstContestDate.Value.Year);
+            Assert.NotNull(response[0].LastContestDate);
+            Assert.Equal(2015, response[0].LastContestDate.Value.Year);
         }
 
-        //[Fact]
+        [Fact(Skip = "strange behavior of MemoryStorage")]
         public async Task GetAwardsLimitTest()
         {
             var dbContext = _serviceProvider.GetRequiredService<BookContext>();
@@ -65,7 +68,7 @@ namespace BookPortal.Web.Tests.Services
             Assert.Equal("Nebula", response[0].Name);
         }
 
-        //[Fact]
+        [Fact(Skip = "strange behavior of MemoryStorage")]
         public async Task GetAwardsLimitOffsetTest()
         {
             var dbContext = _serviceProvider.GetRequiredService<BookContext>();
@@ -134,6 +137,25 @@ namespace BookPortal.Web.Tests.Services
             Assert.Equal("Hugo", response[0].Name);
             Assert.Equal("Nebula", response[1].Name);
             Assert.Equal("Oscar", response[2].Name);
+        }
+
+        [Fact]
+        public async Task GetAwardTest()
+        {
+            var dbContext = _serviceProvider.GetRequiredService<BookContext>();
+            await CreateSampleTask(dbContext);
+
+            var service = new AwardsService(dbContext);
+
+            var award = await service.GetAwardAsync(1);
+
+            Assert.NotNull(award);
+            Assert.Equal(1, award.Id);
+            Assert.Equal("Nebula", award.Name);
+            Assert.NotNull(award.FirstContestDate);
+            Assert.Equal(1992, award.FirstContestDate.Value.Year);
+            Assert.NotNull(award.LastContestDate);
+            Assert.Equal(2015, award.LastContestDate.Value.Year);
         }
 
         [Fact]
@@ -213,6 +235,15 @@ namespace BookPortal.Web.Tests.Services
                 new Award { Id = 3, Name = "Oscar", RusName = "Оскар", LanguageId = 2, CountryId = 1, IsOpened = false }
             };
             dbContext.Awards.AddRange(awards);
+            await dbContext.SaveChangesAsync();
+
+            var contests = new List<Contest>
+            {
+                new Contest { AwardId = 1, Name = "1992", Date = new DateTime(1992, 10, 15) },
+                new Contest { AwardId = 1, Name = "1998", Date = new DateTime(1998, 10, 15) },
+                new Contest { AwardId = 1,  Name = "2015", Date = new DateTime(2015, 10, 15) },
+            };
+            dbContext.Contests.AddRange(contests);
             await dbContext.SaveChangesAsync();
         }
     }

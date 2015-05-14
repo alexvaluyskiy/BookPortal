@@ -12,12 +12,4 @@ namespace BookPortal.Web.Models
 
         public bool IsOpened { get; set; }
     }
-
-    public enum AwardSort
-    {
-        Id = 1,
-        Rusname = 2,
-        Language = 3,
-        Country = 4
-    }
 }
