@@ -16,7 +16,7 @@
 
         public string Format { get; set; }
 
-        public int Page { get; set; }
+        public int Pages { get; set; }
 
         public int WorkId { get; set; }
         public Work Work { get; set; }

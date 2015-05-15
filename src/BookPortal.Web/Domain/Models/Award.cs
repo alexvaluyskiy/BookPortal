@@ -14,7 +14,7 @@ namespace BookPortal.Web.Domain.Models
 
         public string Description { get; set; }
 
-        public string DescriptionCopyright { get; set; }
+        public string DescriptionSource { get; set; }
 
         public string Notes { get; set; }
 

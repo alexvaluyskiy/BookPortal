@@ -11,7 +11,16 @@ namespace BookPortal.Web.Domain
     {
         public static async Task InitializeMusicStoreDatabaseAsync(IServiceProvider serviceProvider)
         {
-            await InsertTestData(serviceProvider);
+            using (var db = serviceProvider.GetService<BookContext>())
+            {
+                var sqlServerDatabase = db.Database as SqlServerDatabase;
+                if (sqlServerDatabase != null)
+                {
+                    await sqlServerDatabase.EnsureDeletedAsync();
+                    await sqlServerDatabase.EnsureCreatedAsync();
+                }
+                await InsertTestData(serviceProvider);
+            }
         }
 
         private static async Task InsertTestData(IServiceProvider serviceProvider)
@@ -60,9 +69,39 @@ namespace BookPortal.Web.Domain
                 }
                 await db.SaveChangesAsync();
 
+                foreach (var work in GetWorksTypes())
+                {
+                    db.WorkTypes.Add(work);
+                }
+                await db.SaveChangesAsync();
+
                 foreach (var work in GetWorks())
                 {
                     db.Works.Add(work);
+                }
+                await db.SaveChangesAsync();
+
+                foreach (var edition in GetEditions())
+                {
+                    db.Editions.Add(edition);
+                }
+                await db.SaveChangesAsync();
+
+                foreach (var work in GetTranslationWorks())
+                {
+                    db.TranslationWorks.Add(work);
+                }
+                await db.SaveChangesAsync();
+
+                foreach (var work in GetTranslationWorksPersons())
+                {
+                    db.TranslationWorkPersons.Add(work);
+                }
+                await db.SaveChangesAsync();
+
+                foreach (var edition in GetTranslationEditions())
+                {
+                    db.TranslationEditions.Add(edition);
                 }
                 await db.SaveChangesAsync();
             }
@@ -91,14 +130,20 @@ namespace BookPortal.Web.Domain
                 Homepage = "http://www.thehugoawards.org/",
                 AwardClosed = false,
                 Description = "Премия основана в 1960 году",
-                DescriptionCopyright = "(с) fantmagaz",
+                DescriptionSource = "(с) fantmagaz",
                 Notes = "Самая известная премия",
                 IsOpened = true,
                 CountryId = 2,
                 LanguageId = 2
             };
 
-            yield return new Award { RusName = "Небьюла", Name = "Nebula", CountryId = 2, LanguageId = 2 };
+            yield return new Award
+            {
+                RusName = "Небьюла",
+                Name = "Nebula",
+                CountryId = 2,
+                LanguageId = 2
+            };
         }
 
         private static IEnumerable<Nomination> GetNominations()
@@ -177,28 +222,114 @@ namespace BookPortal.Web.Domain
             {
                 Name = "Ден Симмонс",
                 NameOriginal = "Дена Симмонс",
+                NameSort = "Симмонса, Дена",
                 Biography = "биография",
                 Gender = GenderType.Male,
-                Birthdate = new DateTime(1931, 9, 9)
+                Birthdate = new DateTime(1931, 9, 9),
+                CountryId = 2,
+                LanguageId = 2
             };
 
             yield return new Person
             {
+
                 Name = "Лев Толстой",
                 NameOriginal = "Льва Толстого",
+                NameSort = "Толстого Льва",
                 Biography = "биография",
                 Gender = GenderType.Male,
                 Birthdate = new DateTime(1828, 9, 9),
-                Deathdate = new DateTime(1910, 11, 20)
+                Deathdate = new DateTime(1910, 11, 20),
+                CountryId = 1,
+                LanguageId = 1
             };
+
+            yield return new Person
+            {
+                Name = "А. Коротков",
+                NameOriginal = "А. Короткова",
+                NameSort = "Коротков, А.",
+                Biography = "биография переводчика",
+                Gender = GenderType.Male
+            };
+        }
+
+        private static IEnumerable<WorkType> GetWorksTypes()
+        {
+            yield return new WorkType { Name = "Романы", NameSingle = "Роман", Level = 6 };
+            yield return new WorkType { Name = "Повести", NameSingle = "Повесть", Level = 7 };
+            yield return new WorkType { Name = "Рассказы", NameSingle = "Рассказ", Level = 8 };
         }
 
         private static IEnumerable<Work> GetWorks()
         {
             yield return new Work
             {
-                Name = "Война и мир",
-                Year = 1866
+                PersonId = 2,
+                RusName = "Анна Каренина",
+                Year = 1866,
+                WorkTypeId = 1
+            };
+
+            yield return new Work
+            {
+                PersonId = 1,
+                RusName = "Гиперион",
+                Name = "Hyperion",
+                Year = 1989,
+                WorkTypeId = 1
+            };
+        }
+
+        public static IEnumerable<Edition> GetEditions()
+        {
+            yield return new Edition
+            {
+                Name = "Гиперион",
+                WorkId = 2
+            };
+        } 
+
+        public static IEnumerable<TranslationWork> GetTranslationWorks()
+        {
+            yield return new TranslationWork
+            {
+                LanguageId = 1,
+                WorkId = 2,
+                Year = 1995
+            };
+        }
+
+        public static IEnumerable<TranslationWorkPerson> GetTranslationWorksPersons()
+        {
+            yield return new TranslationWorkPerson
+            {
+                PersonId = 3,
+                TranslationWorkId = 1
+            };
+        }
+
+        public static IEnumerable<TranslationEdition> GetTranslationEditions()
+        {
+            yield return new TranslationEdition
+            {
+                TranslationWorkId = 1,
+                Name = "Гиперион",
+                EditionId = 1
+            };
+
+            yield return new TranslationEdition
+            {
+                TranslationWorkId = 1,
+                Name = "Хиперион",
+                EditionId = 1
+            };
+
+            yield return new TranslationEdition
+            {
+                TranslationWorkId = 1,
+                Name = "Гиперион",
+                EditionId = 1
             };
         }
     }

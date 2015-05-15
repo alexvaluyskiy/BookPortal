@@ -18,12 +18,17 @@ namespace BookPortal.Web.Services
 
         public virtual async Task<IReadOnlyList<Work>> GetWorksAsync()
         {
-            return await _bookContext.Works.ToListAsync();
+            return await _bookContext.Works
+                .Include(c => c.WorkType)
+                .ToListAsync();
         }
 
         public virtual async Task<Work> GetWorkAsync(int workId)
         {
-            return await _bookContext.Works.Where(c => c.Id == workId).SingleOrDefaultAsync();
+            return await _bookContext.Works
+                .Include(c => c.WorkType)
+                .Where(c => c.Id == workId)
+                .SingleOrDefaultAsync();
         }
     }
 }

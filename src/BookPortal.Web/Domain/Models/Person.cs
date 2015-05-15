@@ -12,16 +12,18 @@ namespace BookPortal.Web.Domain.Models
 
         public string NameOriginal { get; set; }
 
+        public string NameSort { get; set; }
+
         public GenderType Gender { get; set; }
 
         public DateTime? Birthdate { get; set; }
 
         public DateTime? Deathdate { get; set; }
 
-        public int CountryId { get; set; }
+        public int? CountryId { get; set; }
         public Country Country { get; set; }
 
-        public int LanguageId { get; set; }
+        public int? LanguageId { get; set; }
         public Language Language { get; set; }
 
         public string Biography { get; set; }

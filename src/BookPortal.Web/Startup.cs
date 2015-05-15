@@ -62,6 +62,7 @@ namespace BookPortal.Web
 
             builder.RegisterType<PersonsService>();
             builder.RegisterType<WorksService>();
+            builder.RegisterType<TranslationsService>();
 
             builder.RegisterType<CountriesService>();
             builder.RegisterType<LanguagesService>();
@@ -93,7 +94,7 @@ namespace BookPortal.Web
             MapperInitialization.Initialize();
 
             //Populates the BookContext sample data
-            //SampleData.InitializeMusicStoreDatabaseAsync(app.ApplicationServices).Wait();
+            SampleData.InitializeMusicStoreDatabaseAsync(app.ApplicationServices).Wait();
         }
     }
 }
