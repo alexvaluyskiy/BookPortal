@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BookPortal.Web.Domain;
@@ -16,11 +15,16 @@ namespace BookPortal.Web.Services
             _bookContext = bookContext;
         }
 
-        public virtual async Task<IReadOnlyList<Work>> GetWorksAsync()
+        public virtual async Task<IReadOnlyList<Work>> GetWorksAsync(int personId)
         {
-            return await _bookContext.Works
-                .Include(c => c.WorkType)
-                .ToListAsync();
+            // TODO: workaround for EF7 bug, which haven't supported selectmany yet
+            var workIds = _bookContext.PersonWorks.Where(c => c.PersonId == personId).Select(c => c.WorkId).ToList();
+
+            var query = from c in _bookContext.Works
+                        where workIds.Contains(c.Id)
+                        select c;
+
+            return await query.ToListAsync();
         }
 
         public virtual async Task<Work> GetWorkAsync(int workId)

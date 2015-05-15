@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Mvc;
 
 namespace BookPortal.Web.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/persons/{personId}/[controller]")]
     public class WorksController : Controller
     {
         private readonly WorksService _worksService;
@@ -18,9 +15,9 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int personId)
         {
-            var countries = await _worksService.GetWorksAsync();
+            var countries = await _worksService.GetWorksAsync(personId);
 
             return new WrappedObjectResult(countries);
         }

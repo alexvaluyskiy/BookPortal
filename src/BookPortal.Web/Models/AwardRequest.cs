@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace BookPortal.Web.Models
+﻿namespace BookPortal.Web.Models
 {
     public class AwardRequest
     {

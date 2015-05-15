@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Threading.Tasks;
 using BookPortal.Web.Models.Api;
-using Microsoft.AspNet.Mvc;
 
 namespace Microsoft.AspNet.Mvc
 {

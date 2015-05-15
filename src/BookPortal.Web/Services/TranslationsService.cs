@@ -15,7 +15,7 @@ namespace BookPortal.Web.Services
             _bookContext = bookContext;
         }
 
-        public async Task<List<TranslationResponse>> GetTranslationsAsync(TranslationRequest request)
+        public async Task<IReadOnlyList<TranslationResponse>> GetTranslationsAsync(TranslationRequest request)
         {
             // get translations lsit
             var translationWorksList = await _bookContext.TranslationWorkPersons

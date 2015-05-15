@@ -15,9 +15,9 @@ namespace BookPortal.Web.Services
             _bookContext = bookContext;
         }
 
-        public Task<List<Contest>> GetContestsAsync(int awardId)
+        public async Task<IReadOnlyList<Contest>> GetContestsAsync(int awardId)
         {
-            return _bookContext.Contests.Where(c => c.AwardId == awardId).ToListAsync();
+            return await _bookContext.Contests.Where(c => c.AwardId == awardId).ToListAsync();
         }
 
         public Task<Contest> GetContestAsync(int awardId, int contestId)

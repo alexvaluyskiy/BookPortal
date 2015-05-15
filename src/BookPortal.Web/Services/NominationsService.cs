@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BookPortal.Web.Domain;
 using BookPortal.Web.Domain.Models;
-using BookPortal.Web.Models;
 
 namespace BookPortal.Web.Services
 {
@@ -17,9 +15,9 @@ namespace BookPortal.Web.Services
             _bookContext = bookContext;
         }
 
-        public Task<List<Nomination>> GetNominationsAsync(int awardId)
+        public async Task<IReadOnlyList<Nomination>> GetNominationsAsync(int awardId)
         {
-            return _bookContext.Nominations.Where(n => n.AwardId == awardId).ToListAsync();
+            return await _bookContext.Nominations.Where(n => n.AwardId == awardId).ToListAsync();
         }
 
         public Task<Nomination> GetNominationAsync(int awardId, int nominationId)
