@@ -20,7 +20,11 @@ namespace BookPortal.Web
     {
         public Startup(IHostingEnvironment env)
         {
-            Configuration = new Configuration().AddJsonFile("config.json");
+            var configuration = new Configuration()
+                .AddJsonFile("config.json")
+                .AddJsonFile($"config.{env.EnvironmentName}.json", optional: true); ;
+
+            Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; set; }
@@ -51,8 +55,6 @@ namespace BookPortal.Web
                .AddDbContext<BookContext>(options => 
                     options.UseSqlServer(Configuration.Get("Data:DefaultConnection:ConnectionString")));
 
-            //services.AddEntityFramework().AddInMemoryStore().AddDbContext<BookContext>();
-
             ContainerBuilder builder = new ContainerBuilder();
 
             builder.RegisterType<AwardsService>();
@@ -79,13 +81,25 @@ namespace BookPortal.Web
             return container.Resolve<IServiceProvider>();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void ConfigureDevelopment(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
             Trace.AutoFlush = true;
             var sourceSwitch = new SourceSwitch("") { Level = SourceLevels.All };
             var traceListener = new TextWriterTraceListener(Configuration.Get("AppSettings:LogFilePath"));
             loggerFactory.AddTraceSource(sourceSwitch, traceListener);
 
+            Configure(app, loggerFactory);
+        }
+
+        public void ConfigureProduction(IApplicationBuilder app, ILoggerFactory loggerFactory)
+        {
+            loggerFactory.AddConsole();
+
+            Configure(app, loggerFactory);
+        }
+
+        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
+        {
             app.UseStaticFiles();
 
             app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());

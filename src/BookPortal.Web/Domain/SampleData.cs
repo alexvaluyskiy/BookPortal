@@ -93,6 +93,12 @@ namespace BookPortal.Web.Domain
                 }
                 await db.SaveChangesAsync();
 
+                foreach (var edition in GetEditionsWorks())
+                {
+                    db.EditionWorks.Add(edition);
+                }
+                await db.SaveChangesAsync();
+
                 foreach (var work in GetTranslationWorks())
                 {
                     db.TranslationWorks.Add(work);
@@ -297,22 +303,40 @@ namespace BookPortal.Web.Domain
             yield return new Edition
             {
                 Name = "Гиперион",
-                WorkId = 2,
                 Year = 1994
             };
 
             yield return new Edition
             {
                 Name = "Хиперион",
-                WorkId = 2,
                 Year = 1995
             };
 
             yield return new Edition
             {
                 Name = "Гиперион",
-                WorkId = 2,
                 Year = 1998
+            };
+        }
+
+        private static IEnumerable<EditionWork> GetEditionsWorks()
+        {
+            yield return new EditionWork
+            {
+                EditionId = 1,
+                WorkId = 2
+            };
+
+            yield return new EditionWork
+            {
+                EditionId = 2,
+                WorkId = 2
+            };
+
+            yield return new EditionWork
+            {
+                EditionId = 3,
+                WorkId = 2
             };
         }
 
@@ -335,23 +359,23 @@ namespace BookPortal.Web.Domain
             };
         }
 
-        private static IEnumerable<TranslationEdition> GetTranslationEditions()
+        private static IEnumerable<EditionTranslation> GetTranslationEditions()
         {
-            yield return new TranslationEdition
+            yield return new EditionTranslation
             {
                 TranslationWorkId = 1,
                 Name = "Гиперион",
                 EditionId = 1
             };
 
-            yield return new TranslationEdition
+            yield return new EditionTranslation
             {
                 TranslationWorkId = 1,
                 Name = "Хиперион",
                 EditionId = 2
             };
 
-            yield return new TranslationEdition
+            yield return new EditionTranslation
             {
                 TranslationWorkId = 1,
                 Name = "Гиперион",

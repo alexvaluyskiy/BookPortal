@@ -1,6 +1,6 @@
 ﻿namespace BookPortal.Web.Domain.Models
 {
-    public class TranslationEdition
+    public class EditionTranslation
     {
         public int Id { get; set; }
 

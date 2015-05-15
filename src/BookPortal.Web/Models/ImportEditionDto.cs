@@ -1,4 +1,5 @@
 ﻿using System;
+using BookPortal.Web.Domain.Models.Types;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -13,7 +14,7 @@ namespace BookPortal.Web.Models
         public string Authors { get; set; }
 
         [JsonConverter(typeof(StringEnumConverter))]
-        public BookType BookType { get; set; }
+        public EditionType Type { get; set; }
 
         public string Publishers { get; set; }
 
@@ -24,7 +25,7 @@ namespace BookPortal.Web.Models
         public string Language { get; set; }
 
         [JsonConverter(typeof(StringEnumConverter))]
-        public CoverType CoverType { get; set; }
+        public EditionCoverType CoverType { get; set; }
 
         public bool SuperCover { get; set; }
 
@@ -37,18 +38,5 @@ namespace BookPortal.Web.Models
         public string Annotation { get; set; }
 
         public Uri CoverUri { get; set; }
-    }
-
-    public enum CoverType
-    {
-        Paperback = 1,
-        Hardcover = 2
-    }
-
-    public enum BookType
-    {
-        Normal = 1,
-        Collection = 2,
-        Antology = 3
     }
 }

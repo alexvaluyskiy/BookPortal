@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
+using BookPortal.Web.Domain.Models.Types;
 using BookPortal.Web.Models;
 using HtmlAgilityPack;
 using Microsoft.Framework.Logging;
@@ -87,15 +88,15 @@ namespace BookPortal.Web.Services
 
                     if (cover == "твердый переплет")
                     {
-                        importEdition.CoverType = CoverType.Hardcover;
+                        importEdition.CoverType = EditionCoverType.Hardcover;
                     }
                     else if (cover == "мягкая обложка")
                     {
-                        importEdition.CoverType = CoverType.Paperback;
+                        importEdition.CoverType = EditionCoverType.Paperback;
                     }
                     else if (cover == "твердый переплет, суперобложка" || cover == "суперобложка")
                     {
-                        importEdition.CoverType = CoverType.Hardcover;
+                        importEdition.CoverType = EditionCoverType.Hardcover;
                         importEdition.SuperCover = true;
                     }
                 }
@@ -122,15 +123,15 @@ namespace BookPortal.Web.Services
                 }
             
                 // book type
-                importEdition.BookType = BookType.Normal;
+                importEdition.Type = EditionType.Normal;
             
                 var matchAntology = Regex.Match(html, @"<p\s*>\s*Антология", RegexOptions.Singleline);
                 if (matchAntology.Success)
-                    importEdition.BookType = BookType.Antology;
+                    importEdition.Type = EditionType.Antology;
 
                 var matchCollection = Regex.Match(html, @"<p\s*>\s*Авторский сборник", RegexOptions.Singleline);
                 if (matchCollection.Success)
-                    importEdition.BookType = BookType.Collection;
+                    importEdition.Type = EditionType.Collection;
 
                 // annotation
                 var matchAnnotation = Regex.Match(html, @"<\!-- Data\[ANNOTATION\] --\>(?<annotation>.+?)<\/td>");
