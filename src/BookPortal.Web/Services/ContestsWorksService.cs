@@ -18,12 +18,12 @@ namespace BookPortal.Web.Services
 
         public Task<List<ContestWork>> GetContestsWorksAsync(int contestId)
         {
-            return _bookContext.ContestsWorks.Where(c => c.ContestId == contestId).ToListAsync();
+            return _bookContext.ContestWorks.Where(c => c.ContestId == contestId).ToListAsync();
         }
 
         public Task<ContestWork> GetContestWorkAsync(int contestId, int contestWorkId)
         {
-            return _bookContext.ContestsWorks.Where(c => c.Id == contestWorkId).SingleOrDefaultAsync();
+            return _bookContext.ContestWorks.Where(c => c.Id == contestWorkId).SingleOrDefaultAsync();
         }
 
         public Task<ContestWork> AddContestWorkAsync(ContestWork request)

@@ -59,7 +59,7 @@ namespace BookPortal.Web.Domain
 
                 foreach (var contestWork in GetContestsWorks())
                 {
-                    db.ContestsWorks.Add(contestWork);
+                    db.ContestWorks.Add(contestWork);
                 }
                 await db.SaveChangesAsync();
 
@@ -78,6 +78,12 @@ namespace BookPortal.Web.Domain
                 foreach (var work in GetWorks())
                 {
                     db.Works.Add(work);
+                }
+                await db.SaveChangesAsync();
+
+                foreach (var work in GetPersonWorks())
+                {
+                    db.PersonWorks.Add(work);
                 }
                 await db.SaveChangesAsync();
 
@@ -265,7 +271,6 @@ namespace BookPortal.Web.Domain
         {
             yield return new Work
             {
-                PersonId = 2,
                 RusName = "Анна Каренина",
                 Year = 1866,
                 WorkTypeId = 1
@@ -273,7 +278,6 @@ namespace BookPortal.Web.Domain
 
             yield return new Work
             {
-                PersonId = 1,
                 RusName = "Гиперион",
                 Name = "Hyperion",
                 Year = 1989,
@@ -281,16 +285,38 @@ namespace BookPortal.Web.Domain
             };
         }
 
-        public static IEnumerable<Edition> GetEditions()
+        private static IEnumerable<PersonWork> GetPersonWorks()
+        {
+            yield return new PersonWork { WorkId = 1, PersonId = 2, Type = WorkPersonType.Author };
+            yield return new PersonWork { WorkId = 2, PersonId = 1, Type = WorkPersonType.Author };
+            yield return new PersonWork { WorkId = 2, PersonId = 2, Type = WorkPersonType.Author };
+        } 
+
+        private static IEnumerable<Edition> GetEditions()
         {
             yield return new Edition
             {
                 Name = "Гиперион",
-                WorkId = 2
+                WorkId = 2,
+                Year = 1994
             };
-        } 
 
-        public static IEnumerable<TranslationWork> GetTranslationWorks()
+            yield return new Edition
+            {
+                Name = "Хиперион",
+                WorkId = 2,
+                Year = 1995
+            };
+
+            yield return new Edition
+            {
+                Name = "Гиперион",
+                WorkId = 2,
+                Year = 1998
+            };
+        }
+
+        private static IEnumerable<TranslationWork> GetTranslationWorks()
         {
             yield return new TranslationWork
             {
@@ -300,7 +326,7 @@ namespace BookPortal.Web.Domain
             };
         }
 
-        public static IEnumerable<TranslationWorkPerson> GetTranslationWorksPersons()
+        private static IEnumerable<TranslationWorkPerson> GetTranslationWorksPersons()
         {
             yield return new TranslationWorkPerson
             {
@@ -309,7 +335,7 @@ namespace BookPortal.Web.Domain
             };
         }
 
-        public static IEnumerable<TranslationEdition> GetTranslationEditions()
+        private static IEnumerable<TranslationEdition> GetTranslationEditions()
         {
             yield return new TranslationEdition
             {
@@ -322,14 +348,14 @@ namespace BookPortal.Web.Domain
             {
                 TranslationWorkId = 1,
                 Name = "Хиперион",
-                EditionId = 1
+                EditionId = 2
             };
 
             yield return new TranslationEdition
             {
                 TranslationWorkId = 1,
                 Name = "Гиперион",
-                EditionId = 1
+                EditionId = 3
             };
         }
     }

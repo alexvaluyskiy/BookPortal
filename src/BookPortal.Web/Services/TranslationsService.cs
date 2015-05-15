@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BookPortal.Web.Domain;
 using BookPortal.Web.Models;
-using Remotion.Linq.Clauses;
 
 namespace BookPortal.Web.Services
 {
@@ -25,6 +23,17 @@ namespace BookPortal.Web.Services
                 .Select(c => c.TranslationWorkId)
                 .ToListAsync();
 
+            // get all translators
+            var translationPersons =   (from twp in _bookContext.TranslationWorkPersons
+                                        where translationWorksList.Contains(twp.TranslationWorkId)
+                                        join p in _bookContext.Persons on twp.PersonId equals p.Id
+                                        select new
+                                        {
+                                            Id = twp.TranslationWorkId,
+                                            Person = p
+                                        }).ToList();
+
+
             // get translation names
             var translationsNames =    (from a in _bookContext.TranslationEditions
                                         where translationWorksList.Contains(a.TranslationWorkId)
@@ -36,57 +45,95 @@ namespace BookPortal.Web.Services
                                             Count = g.Count()
                                         }).ToList();
 
+            // get all editions
+            var translationsEditions = (from te in _bookContext.TranslationEditions
+                                        join e in _bookContext.Editions on te.EditionId equals e.Id
+                                        where translationWorksList.Contains(te.TranslationWorkId)
+                                        select new
+                                        {
+                                            Id = te.TranslationWorkId,
+                                            EditionId = e.Id
+                                        }).ToList();
+
             // get translator works
             var query =     from tw in _bookContext.TranslationWorks
-                            join twp in _bookContext.TranslationWorkPersons on tw.Id equals twp.TranslationWorkId
-                            join p in _bookContext.Persons on twp.PersonId equals p.Id
                             join w in _bookContext.Works on tw.WorkId equals w.Id
                             join wt in _bookContext.WorkTypes on w.WorkTypeId equals wt.Id
                             where translationWorksList.Contains(tw.Id)
                             select new TranslationResponse
                             {
                                 Id = tw.Id,
-                                PersonId = p.Id,
-                                PersonName = p.NameSort,
                                 WorkId = w.Id,
                                 WorkName = w.Name,
                                 WorkYear = w.Year,
                                 TranslationYear = tw.Year,
                                 WorkTypeName = wt.Name,
-                                WorkTypeSingle = wt.NameSingle,
+                                WorkTypeNameSingle = wt.NameSingle,
                                 WorkTypeLevel = wt.Level
                             };
 
-            switch (request.Sort)
-            {
-                case TranslatorSort.Author:
-                    query = query
-                        .OrderBy(c => c.PersonName)
-                        .ThenBy(c => c.WorkTypeLevel);
-                    break;
-                case TranslatorSort.Type:
-                    query = query
-                        .OrderBy(c => c.WorkTypeLevel)
-                        .ThenBy(c => c.PersonName);
-                    break;
-                case TranslatorSort.Year:
-                    query = query
-                        .OrderBy(c => c.TranslationYear)
-                        .ThenBy(c => c.WorkTypeLevel)
-                        .ThenBy(c => c.PersonName);
-                    break;
-            }
-
             var response = await query.ToListAsync();
+
+            // get all persons
+            var translationWorks = response.Select(w => w.WorkId).ToList();
+            var translationAuthors = (from pw in _bookContext.PersonWorks
+                                    join p in _bookContext.Persons on pw.PersonId equals p.Id
+                                    where translationWorks.Contains(pw.WorkId)
+                                    select new
+                                    {
+                                        WorkId = pw.WorkId,
+                                        Person = p
+                                    }).ToList();
 
             foreach (var item in response)
             {
                 // adding all possible names to translation
                 item.Names = translationsNames
-                    .Where(c => c.Id == 1)
+                    .Where(c => c.Id == item.Id)
                     .OrderByDescending(c => c.Count)
                     .Select(c => c.Name)
                     .ToList();
+
+                // adding all editions
+                item.Editions = translationsEditions
+                    .Where(c => c.Id == item.Id)
+                    .Select(c => c.EditionId)
+                    .ToList();
+
+                // adding all translators, except main
+                item.Translators = translationPersons
+                    .Where(c => c.Id == item.Id)
+                    .Select(c => c.Person)
+                    .ToList();
+
+                // get all authors
+                item.Authors = translationAuthors
+                    .Where(c => c.WorkId == item.WorkId)
+                    .Select(c => c.Person)
+                    .ToList();
+            }
+
+            switch (request.Sort)
+            {
+                case TranslatorSort.Author:
+                    response = response
+                        .OrderBy(c => string.Join(", ", c.Authors.Select(d => d.NameSort)))
+                        .ThenBy(c => c.WorkTypeLevel)
+                        .ToList();
+                    break;
+                case TranslatorSort.Type:
+                    response = response
+                        .OrderBy(c => c.WorkTypeLevel)
+                        .ThenBy(c => string.Join(", ", c.Authors.Select(d => d.NameSort)))
+                        .ToList();
+                    break;
+                case TranslatorSort.Year:
+                    response = response
+                        .OrderBy(c => c.TranslationYear)
+                        .ThenBy(c => c.WorkTypeLevel)
+                        .ThenBy(c => string.Join(", ", c.Authors.Select(d => d.NameSort)))
+                        .ToList();
+                    break;
             }
 
             return response;

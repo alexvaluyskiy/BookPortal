@@ -8,9 +8,10 @@ namespace BookPortal.Web.Domain
         public DbSet<Award> Awards { get; set; }
         public DbSet<Contest> Contests { get; set; }
         public DbSet<Nomination> Nominations { get; set; }
-        public DbSet<ContestWork> ContestsWorks { get; set; }
+        public DbSet<ContestWork> ContestWorks { get; set; }
 
         public DbSet<Person> Persons { get; set; }
+        public DbSet<PersonWork> PersonWorks { get; set; }
 
         public DbSet<Work> Works { get; set; }
         public DbSet<WorkType> WorkTypes { get; set; }
@@ -115,6 +116,17 @@ namespace BookPortal.Web.Domain
                 builder.Property(c => c.Id).ForSqlServer().UseIdentity();
             });
 
+            modelBuilder.Entity<PersonWork>().ForRelational().Table("person_works");
+            modelBuilder.Entity<PersonWork>(builder =>
+            {
+                builder.Property(c => c.Id).ForRelational().Column("id");
+                builder.Property(c => c.Type).ForRelational().Column("type");
+                builder.Property(c => c.PersonId).ForRelational().Column("person_id");
+                builder.Property(c => c.WorkId).ForRelational().Column("work_id");
+
+                builder.Property(c => c.Id).ForSqlServer().UseIdentity();
+            });
+
             modelBuilder.Entity<Work>().ForRelational().Table("works");
             modelBuilder.Entity<Work>(builder =>
             {
@@ -123,7 +135,6 @@ namespace BookPortal.Web.Domain
                 builder.Property(c => c.Name).ForRelational().Column("name");
                 builder.Property(c => c.Year).ForRelational().Column("year");
                 builder.Property(c => c.Description).ForRelational().Column("description");
-                builder.Property(c => c.PersonId).ForRelational().Column("person_id");
                 builder.Property(c => c.WorkTypeId).ForRelational().Column("work_type_id");
 
                 builder.Property(c => c.Id).ForSqlServer().UseIdentity();

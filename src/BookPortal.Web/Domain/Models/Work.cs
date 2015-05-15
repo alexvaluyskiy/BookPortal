@@ -12,9 +12,6 @@
 
         public string Description { get; set; }
 
-        public int PersonId { get; set; }
-        public Person Person { get; set; }
-
         public int WorkTypeId { get; set; }
         public WorkType WorkType { get; set; }
     }

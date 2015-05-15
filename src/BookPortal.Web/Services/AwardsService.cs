@@ -64,7 +64,7 @@ namespace BookPortal.Web.Services
             if (request.Limit.HasValue && request.Limit > 0)
                 query = query.Take(request.Limit.Value);
 
-            // TODO: workaround for EF7 bug
+            // TODO: workaround for EF7 bug, which haven't supported subqueries yet
             var queryResults = await query.ToListAsync();
             foreach (var queryResult in queryResults)
             {
