@@ -63,6 +63,10 @@ namespace BookPortal.Web
             builder.RegisterType<PersonsService>();
             builder.RegisterType<WorksService>();
             builder.RegisterType<TranslationsService>();
+            builder.RegisterType<EditionsService>();
+
+            builder.RegisterType<PublishersService>();
+            builder.RegisterType<SeriesService>();
 
             builder.RegisterType<CountriesService>();
             builder.RegisterType<LanguagesService>();

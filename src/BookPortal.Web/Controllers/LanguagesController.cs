@@ -17,20 +17,20 @@ namespace BookPortal.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var countries = await _languagesService.GetLanguagesAsync();
+            var languages = await _languagesService.GetLanguagesAsync();
 
-            return new WrappedObjectResult(countries);
+            return new WrappedObjectResult(languages);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var country = await _languagesService.GetLanguageAsync(id);
+            var language = await _languagesService.GetLanguageAsync(id);
 
-            if (country == null)
+            if (language == null)
                 return new WrappedErrorResult(404, $"Language (id: {id}) is not found");
 
-            return new WrappedObjectResult(country);
+            return new WrappedObjectResult(language);
         }
     }
 }

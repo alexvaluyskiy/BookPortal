@@ -18,17 +18,17 @@ namespace BookPortal.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(int awardId)
         {
-            var nominations = await _contestsService.GetContestsAsync(awardId);
+            var contests = await _contestsService.GetContestsAsync(awardId);
 
-            return new WrappedObjectResult(nominations);
+            return new WrappedObjectResult(contests);
         }
 
         [HttpGet("{contestId}")]
         public async Task<IActionResult> Get(int awardId, int contestId)
         {
-            var nomination = await _contestsService.GetContestAsync(awardId, contestId);
+            var contest = await _contestsService.GetContestAsync(awardId, contestId);
 
-            return new WrappedObjectResult(nomination);
+            return new WrappedObjectResult(contest);
         }
 
         [HttpPost]

@@ -22,7 +22,7 @@ namespace BookPortal.Web.Domain
 
         public DbSet<Edition> Editions { get; set; }
         public DbSet<Serie> Series { get; set; }
-        public DbSet<Publisher> Publisher { get; set; }
+        public DbSet<Publisher> Publishers { get; set; }
 
         public DbSet<Language> Languages { get; set; }
         public DbSet<Country> Countries { get; set; }

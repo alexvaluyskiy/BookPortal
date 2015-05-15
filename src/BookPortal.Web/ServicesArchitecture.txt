@@ -1,0 +1,14 @@
+﻿Microservices
+* BookPortal.DB - Main API, which consists persons, awards, editions, etc.
+* BookPortal.Responses
+* BookPortal.Ratings
+* BookPortal.Recommendations
+* BookPortal.Forums
+* BookPortal.Blogs
+* BookPortal.Bookcases
+
+* BookPortal.Logging
+
+Client
+* Client for web - Angular 1.4 application
+* Client for iOS and Android

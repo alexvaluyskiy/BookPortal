@@ -20,11 +20,10 @@ namespace BookPortal.Web.Services
             // TODO: workaround for EF7 bug, which haven't supported selectmany yet
             var workIds = _bookContext.PersonWorks.Where(c => c.PersonId == personId).Select(c => c.WorkId).ToList();
 
-            var query = from c in _bookContext.Works
-                        where workIds.Contains(c.Id)
-                        select c;
-
-            return await query.ToListAsync();
+            return await _bookContext.Works
+                .Include(c => c.WorkType)
+                .Where(c => workIds.Contains(c.Id))
+                .ToListAsync();
         }
 
         public virtual async Task<Work> GetWorkAsync(int workId)

@@ -18,9 +18,9 @@ namespace BookPortal.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(int contestId)
         {
-            var nominations = await _contestsWorksService.GetContestsWorksAsync(contestId);
+            var contestWorks = await _contestsWorksService.GetContestsWorksAsync(contestId);
 
-            return new WrappedObjectResult(nominations);
+            return new WrappedObjectResult(contestWorks);
         }
 
         [HttpGet("{contestWorkId}")]
