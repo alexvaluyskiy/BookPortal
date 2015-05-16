@@ -8,6 +8,7 @@ using BookPortal.Web.Services;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Mvc;
+using Microsoft.AspNet.Routing;
 using Microsoft.Data.Entity;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.DependencyInjection;
@@ -83,10 +84,14 @@ namespace BookPortal.Web
 
         public void ConfigureDevelopment(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
+#if DNX451
             Trace.AutoFlush = true;
             var sourceSwitch = new SourceSwitch("") { Level = SourceLevels.All };
             var traceListener = new TextWriterTraceListener(Configuration.Get("AppSettings:LogFilePath"));
             loggerFactory.AddTraceSource(sourceSwitch, traceListener);
+#else
+            loggerFactory.AddConsole();
+#endif
 
             Configure(app, loggerFactory);
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using BookPortal.Web.Domain.Models.Types;
 using BookPortal.Web.Models;
 using BookPortal.Web.Services;
 using Microsoft.Framework.Logging;
@@ -26,7 +27,7 @@ namespace BookPortal.Web.Tests.Services
             ImportEditionDto importEdition = _service.ParseOzonPage(html);
 
             Assert.Equal(expectedString, importEdition.Name);
-            Assert.Equal(BookType.Normal, importEdition.BookType);
+            Assert.Equal(EditionType.Normal, importEdition.Type);
         }
 
         [Fact]
@@ -117,7 +118,7 @@ namespace BookPortal.Web.Tests.Services
 
             ImportEditionDto importEdition = _service.ParseOzonPage(html);
 
-            Assert.Equal(CoverType.Hardcover, importEdition.CoverType);
+            Assert.Equal(EditionCoverType.Hardcover, importEdition.CoverType);
             Assert.False(importEdition.SuperCover);
         }
 
@@ -128,7 +129,7 @@ namespace BookPortal.Web.Tests.Services
 
             ImportEditionDto importEdition = _service.ParseOzonPage(html);
 
-            Assert.Equal(CoverType.Paperback, importEdition.CoverType);
+            Assert.Equal(EditionCoverType.Paperback, importEdition.CoverType);
             Assert.False(importEdition.SuperCover);
         }
 
@@ -139,7 +140,7 @@ namespace BookPortal.Web.Tests.Services
 
             ImportEditionDto importEdition = _service.ParseOzonPage(html);
 
-            Assert.Equal(CoverType.Hardcover, importEdition.CoverType);
+            Assert.Equal(EditionCoverType.Hardcover, importEdition.CoverType);
             Assert.True(importEdition.SuperCover);
         }
 
@@ -195,7 +196,7 @@ namespace BookPortal.Web.Tests.Services
 
             ImportEditionDto importEdition = _service.ParseOzonPage(html);
 
-            Assert.Equal(BookType.Collection, importEdition.BookType);
+            Assert.Equal(EditionType.Collection, importEdition.Type);
         }
 
         [Fact]
@@ -205,7 +206,7 @@ namespace BookPortal.Web.Tests.Services
 
             ImportEditionDto importEdition = _service.ParseOzonPage(html);
 
-            Assert.Equal(BookType.Antology, importEdition.BookType);
+            Assert.Equal(EditionType.Antology, importEdition.Type);
         }
 
         [Fact]

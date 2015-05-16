@@ -22,6 +22,7 @@ namespace BookPortal.Web.Services
         {
             ImportEditionDto importEdition = new ImportEditionDto();
 
+#if DNX451
             HtmlDocument document = new HtmlDocument();
             document.LoadHtml(html);
 
@@ -147,6 +148,8 @@ namespace BookPortal.Web.Services
                 _logger.LogError(message);
                 throw new SerializationException(message, ex);
             }
+
+#endif
 
             return importEdition;
         }
