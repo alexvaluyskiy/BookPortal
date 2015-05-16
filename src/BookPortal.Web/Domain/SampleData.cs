@@ -9,7 +9,7 @@ namespace BookPortal.Web.Domain
 {
     public static class SampleData
     {
-        public static async Task InitializeMusicStoreDatabaseAsync(IServiceProvider serviceProvider)
+        public static async Task InitializeDatabaseAsync(IServiceProvider serviceProvider)
         {
             using (var db = serviceProvider.GetService<BookContext>())
             {

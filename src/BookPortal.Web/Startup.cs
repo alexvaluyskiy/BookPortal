@@ -117,7 +117,7 @@ namespace BookPortal.Web
             MapperInitialization.Initialize();
 
             //Populates the BookContext sample data
-            SampleData.InitializeMusicStoreDatabaseAsync(app.ApplicationServices).Wait();
+            SampleData.InitializeDatabaseAsync(app.ApplicationServices).Wait();
         }
     }
 }
