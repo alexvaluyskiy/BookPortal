@@ -19,6 +19,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BookPortal.Web.Tests", "tes
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BookPortal.Client", "src\BookPortal.Client\BookPortal.Client.xproj", "{A14779E6-E201-4280-A026-068B948BA39B}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BookPortal.Responses", "src\BookPortal.Responses\BookPortal.Responses.xproj", "{8CACCF83-7D43-4D8F-B073-C2789624A225}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{A14779E6-E201-4280-A026-068B948BA39B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A14779E6-E201-4280-A026-068B948BA39B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A14779E6-E201-4280-A026-068B948BA39B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CACCF83-7D43-4D8F-B073-C2789624A225}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CACCF83-7D43-4D8F-B073-C2789624A225}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CACCF83-7D43-4D8F-B073-C2789624A225}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CACCF83-7D43-4D8F-B073-C2789624A225}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -45,5 +51,6 @@ Global
 		{9F9F7E93-7B54-4C81-B826-0C0EFAAD9AB7} = {365DCF6D-CDCA-48DF-A959-8F24BC737B2E}
 		{4B8E527B-CDF1-425E-AC64-555EE76BE091} = {D1B21080-2F37-4597-B2D5-1B6EEA071776}
 		{A14779E6-E201-4280-A026-068B948BA39B} = {365DCF6D-CDCA-48DF-A959-8F24BC737B2E}
+		{8CACCF83-7D43-4D8F-B073-C2789624A225} = {365DCF6D-CDCA-48DF-A959-8F24BC737B2E}
 	EndGlobalSection
 EndGlobal
