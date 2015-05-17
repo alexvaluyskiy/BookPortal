@@ -1,6 +1,7 @@
 ﻿using System;
 using Autofac;
 using Autofac.Dnx;
+using BookPortal.Core.Logging;
 using BookPortal.Responses.Domain;
 using BookPortal.Responses.Services;
 using Microsoft.AspNet.Builder;
@@ -8,6 +9,7 @@ using Microsoft.AspNet.Hosting;
 using Microsoft.Data.Entity;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.DependencyInjection;
+using Microsoft.Framework.Logging;
 
 namespace BookPortal.Responses
 {
@@ -17,7 +19,7 @@ namespace BookPortal.Responses
         {
             var configuration = new Configuration()
                 .AddJsonFile("config.json")
-                .AddJsonFile($"config.{env.EnvironmentName}.json", optional: true); ;
+                .AddJsonFile($"config.{env.EnvironmentName}.json", true); ;
 
             Configuration = configuration;
         }
@@ -43,8 +45,13 @@ namespace BookPortal.Responses
             return container.Resolve<IServiceProvider>();
         }
 
-        public void Configure(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
+            loggerFactory.AddLoggingService(
+                Configuration.Get("AppSettings:LoggingService"),
+                Configuration.Get("AppSettings:ApplicationName"),
+                LogLevel.Information);
+
             app.UseMvc();
 
             //Populates the BookContext sample data

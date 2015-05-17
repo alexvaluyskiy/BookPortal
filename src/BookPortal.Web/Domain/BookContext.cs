@@ -137,6 +137,7 @@ namespace BookPortal.Web.Domain
                 builder.Property(c => c.Id).ForRelational().Column("work_id");
                 builder.Property(c => c.RusName).ForRelational().Column("rusname");
                 builder.Property(c => c.Name).ForRelational().Column("name");
+                builder.Property(c => c.AltName).ForRelational().Column("altname");
                 builder.Property(c => c.Year).ForRelational().Column("year");
                 builder.Property(c => c.Description).ForRelational().Column("description");
                 builder.Property(c => c.WorkTypeId).ForRelational().Column("work_type_id");
@@ -181,12 +182,21 @@ namespace BookPortal.Web.Domain
             {
                 builder.Property(c => c.Id).ForRelational().Column("edition_id");
                 builder.Property(c => c.Name).ForRelational().Column("name");
+                builder.Property(c => c.Type).ForRelational().Column("type");
                 builder.Property(c => c.Authors).ForRelational().Column("authors");
+                builder.Property(c => c.Compilers).ForRelational().Column("compilers");
                 builder.Property(c => c.Publishers).ForRelational().Column("publishers");
                 builder.Property(c => c.Series).ForRelational().Column("series");
+                builder.Property(c => c.Isbn).ForRelational().Column("isbn");
+                builder.Property(c => c.Year).ForRelational().Column("year");
                 builder.Property(c => c.Count).ForRelational().Column("count");
+                builder.Property(c => c.CoverType).ForRelational().Column("cover_type");
+                builder.Property(c => c.SuperCover).ForRelational().Column("supercover");
                 builder.Property(c => c.Format).ForRelational().Column("format");
                 builder.Property(c => c.Pages).ForRelational().Column("pages");
+                builder.Property(c => c.Description).ForRelational().Column("description");
+                builder.Property(c => c.Content).ForRelational().Column("content");
+                builder.Property(c => c.Notes).ForRelational().Column("notes");
                 builder.Property(c => c.LanguageId).ForRelational().Column("language_id");
 
                 builder.Property(c => c.Id).ForSqlServer().UseIdentity();

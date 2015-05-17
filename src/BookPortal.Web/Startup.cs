@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using Autofac;
 using Autofac.Dnx;
+using BookPortal.Core.Logging;
 using BookPortal.Web.Domain;
 using BookPortal.Web.Infrastructure;
 using BookPortal.Web.Services;
@@ -82,29 +83,13 @@ namespace BookPortal.Web
             return container.Resolve<IServiceProvider>();
         }
 
-        public void ConfigureDevelopment(IApplicationBuilder app, ILoggerFactory loggerFactory)
-        {
-#if DNX451
-            Trace.AutoFlush = true;
-            var sourceSwitch = new SourceSwitch("") { Level = SourceLevels.All };
-            var traceListener = new TextWriterTraceListener(Configuration.Get("AppSettings:LogFilePath"));
-            loggerFactory.AddTraceSource(sourceSwitch, traceListener);
-#else
-            loggerFactory.AddConsole();
-#endif
-
-            Configure(app, loggerFactory);
-        }
-
-        public void ConfigureProduction(IApplicationBuilder app, ILoggerFactory loggerFactory)
-        {
-            loggerFactory.AddConsole();
-
-            Configure(app, loggerFactory);
-        }
-
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
+            loggerFactory.AddLoggingService(
+                Configuration.Get("AppSettings:LoggingService"),
+                Configuration.Get("AppSettings:ApplicationName"),
+                LogLevel.Information);
+
             app.UseStaticFiles();
 
             app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());

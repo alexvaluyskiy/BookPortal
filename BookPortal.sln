@@ -23,6 +23,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BookPortal.Responses", "src
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BookPortal.Logging", "src\BookPortal.Logging\BookPortal.Logging.xproj", "{65A30E3D-80F4-47FF-BC6F-5B8A5ACD668D}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BookPortal.Core.Logging", "src\BookPortal.Core.Logging\BookPortal.Core.Logging.xproj", "{900E5C29-7688-4599-BC64-703CAAFBAC33}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,10 @@ Global
 		{65A30E3D-80F4-47FF-BC6F-5B8A5ACD668D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65A30E3D-80F4-47FF-BC6F-5B8A5ACD668D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65A30E3D-80F4-47FF-BC6F-5B8A5ACD668D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{900E5C29-7688-4599-BC64-703CAAFBAC33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{900E5C29-7688-4599-BC64-703CAAFBAC33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{900E5C29-7688-4599-BC64-703CAAFBAC33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{900E5C29-7688-4599-BC64-703CAAFBAC33}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,5 +65,6 @@ Global
 		{A14779E6-E201-4280-A026-068B948BA39B} = {365DCF6D-CDCA-48DF-A959-8F24BC737B2E}
 		{8CACCF83-7D43-4D8F-B073-C2789624A225} = {365DCF6D-CDCA-48DF-A959-8F24BC737B2E}
 		{65A30E3D-80F4-47FF-BC6F-5B8A5ACD668D} = {365DCF6D-CDCA-48DF-A959-8F24BC737B2E}
+		{900E5C29-7688-4599-BC64-703CAAFBAC33} = {365DCF6D-CDCA-48DF-A959-8F24BC737B2E}
 	EndGlobalSection
 EndGlobal

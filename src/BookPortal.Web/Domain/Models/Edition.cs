@@ -25,7 +25,7 @@ namespace BookPortal.Web.Domain.Models
 
         public int Count { get; set; }
 
-        public EditionCoverType CovertType { get; set; } = EditionCoverType.Unknown;
+        public EditionCoverType CoverType { get; set; } = EditionCoverType.Unknown;
 
         public bool SuperCover { get; set; }
 
