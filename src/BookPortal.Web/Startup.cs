@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using Autofac;
 using Autofac.Dnx;
+using BookPortal.Core.Configuration;
 using BookPortal.Core.Logging;
 using BookPortal.Web.Domain;
 using BookPortal.Web.Infrastructure;
@@ -9,7 +9,6 @@ using BookPortal.Web.Services;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Mvc;
-using Microsoft.AspNet.Routing;
 using Microsoft.Data.Entity;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.DependencyInjection;
@@ -23,8 +22,8 @@ namespace BookPortal.Web
         public Startup(IHostingEnvironment env)
         {
             var configuration = new Configuration()
-                .AddJsonFile("config.json")
-                .AddJsonFile($"config.{env.EnvironmentName}.json", optional: true); ;
+                .AddConfigurationService("http://localhost:5011")
+                .AddJsonFile("config.json", optional: true);
 
             Configuration = configuration;
         }

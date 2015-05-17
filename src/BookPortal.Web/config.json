@@ -1,6 +1,7 @@
 ﻿{
     "AppSettings": {
-        "LogFilePath": "D:\\ravenger.log",
+        "ApplicationName":  "BookPortal.Responses",
+        "LoggingService": "http://localhost:5010",
         "ImportOzonUrl": "http://www.ozon.ru/context/detail/id/",
     },
     "Data": {
