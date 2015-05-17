@@ -1,0 +1,7 @@
+﻿{
+    "Data": {
+        "DefaultConnection": {
+            "ConnectionString": "Server=(localdb)\\mssqllocaldb;Database=LogsDatabase;Integrated Security=true"
+        }
+    }
+}
