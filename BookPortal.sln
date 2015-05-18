@@ -19,7 +19,7 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BookPortal.Web.Tests", "tes
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BookPortal.Client", "src\BookPortal.Client\BookPortal.Client.xproj", "{A14779E6-E201-4280-A026-068B948BA39B}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BookPortal.Responses", "src\BookPortal.Responses\BookPortal.Responses.xproj", "{8CACCF83-7D43-4D8F-B073-C2789624A225}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BookPortal.Reviews", "src\BookPortal.Reviews\BookPortal.Reviews.xproj", "{8CACCF83-7D43-4D8F-B073-C2789624A225}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BookPortal.Logging", "src\BookPortal.Logging\BookPortal.Logging.xproj", "{65A30E3D-80F4-47FF-BC6F-5B8A5ACD668D}"
 EndProject

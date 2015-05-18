@@ -1,24 +1,24 @@
 ﻿using System.Threading.Tasks;
 using BookPortal.Core.ApiPrimitives;
-using BookPortal.Responses.Services;
+using BookPortal.Reviews.Services;
 using Microsoft.AspNet.Mvc;
 
-namespace BookPortal.Responses.Controllers
+namespace BookPortal.Reviews.Controllers
 {
     [Route("api/[controller]")]
-    public class ResponsesController : Controller
+    public class ReviewsController : Controller
     {
-        private readonly ResponsesService _responsesService;
+        private readonly ReviewsService _reviewsService;
 
-        public ResponsesController(ResponsesService responsesService)
+        public ReviewsController(ReviewsService reviewsService)
         {
-            _responsesService = responsesService;
+            _reviewsService = reviewsService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var persons = await _responsesService.GetResponsesAsync();
+            var persons = await _reviewsService.GetResponsesAsync();
 
             return new WrappedObjectResult(persons);
         }
@@ -26,7 +26,7 @@ namespace BookPortal.Responses.Controllers
         [HttpGet("{responseid}")]
         public async Task<IActionResult> Get(int responseId)
         {
-            var person = await _responsesService.GetResponseAsync(responseId);
+            var person = await _reviewsService.GetResponseAsync(responseId);
 
             if (person == null)
                 return new WrappedErrorResult(404);

@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BookPortal.Responses.Domain.Models;
+using BookPortal.Reviews.Domain.Models;
 using Microsoft.Data.Entity.SqlServer;
 using Microsoft.Framework.DependencyInjection;
+using Microsoft.Net.Http.Server;
 
-namespace BookPortal.Responses.Domain
+namespace BookPortal.Reviews.Domain
 {
     public static class SampleData
     {
         public static async Task InitializeDatabaseAsync(IServiceProvider serviceProvider)
         {
-            using (var db = serviceProvider.GetService<ResponseContext>())
+            using (var db = serviceProvider.GetService<ReviewContext>())
             {
                 var sqlServerDatabase = db.Database as SqlServerDatabase;
                 if (sqlServerDatabase != null)
@@ -25,33 +26,33 @@ namespace BookPortal.Responses.Domain
 
         private static async Task InsertTestData(IServiceProvider serviceProvider)
         {
-            using (var db = serviceProvider.GetService<ResponseContext>())
+            using (var db = serviceProvider.GetService<ReviewContext>())
             {
                 foreach (var response in GetResponses())
                 {
-                    db.Responses.Add(response);
+                    db.Reviews.Add(response);
                 }
                 await db.SaveChangesAsync();
 
                 foreach (var vote in GetResponseVotes())
                 {
-                    db.ResponseVotes.Add(vote);
+                    db.ReviewVotes.Add(vote);
                 }
                 await db.SaveChangesAsync();
             }
         }
 
-        private static IEnumerable<Response> GetResponses()
+        private static IEnumerable<Review> GetResponses()
         {
-            yield return new Response { UserId = 1, WorkId = 1, Text = "очень крутой роман"};
-            yield return new Response { UserId = 1, WorkId = 1, Text = "фильм лучше" };
+            yield return new Review { UserId = 1, WorkId = 1, Text = "очень крутой роман"};
+            yield return new Review { UserId = 1, WorkId = 1, Text = "фильм лучше" };
         }
 
-        private static IEnumerable<ResponseVote> GetResponseVotes()
+        private static IEnumerable<ReviewVote> GetResponseVotes()
         {
-            yield return new ResponseVote { ResponseId = 1, UserId = 2, Vote = 1 };
-            yield return new ResponseVote { ResponseId = 2, UserId = 2, Vote = 1 };
-            yield return new ResponseVote { ResponseId = 1, UserId = 24, Vote = -1 };
+            yield return new ReviewVote { ReviewId = 1, UserId = 2, Vote = 1 };
+            yield return new ReviewVote { ReviewId = 2, UserId = 2, Vote = 1 };
+            yield return new ReviewVote { ReviewId = 1, UserId = 24, Vote = -1 };
         }
     }
 }

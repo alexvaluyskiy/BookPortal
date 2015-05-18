@@ -1,17 +1,17 @@
-﻿using BookPortal.Responses.Domain.Models;
+﻿using BookPortal.Reviews.Domain.Models;
 using Microsoft.Data.Entity;
 
-namespace BookPortal.Responses.Domain
+namespace BookPortal.Reviews.Domain
 {
-    public class ResponseContext : DbContext
+    public class ReviewContext : DbContext
     {
-        public DbSet<Response> Responses { get; set; }
-        public DbSet<ResponseVote> ResponseVotes { get; set; }
+        public DbSet<Review> Reviews { get; set; }
+        public DbSet<ReviewVote> ReviewVotes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Response>().ForRelational().Table("responses");
-            modelBuilder.Entity<Response>(builder =>
+            modelBuilder.Entity<Review>().ForRelational().Table("reviews");
+            modelBuilder.Entity<Review>(builder =>
             {
                 builder.Property(c => c.Id).ForRelational().Column("response_id");
                 builder.Property(c => c.UserId).ForRelational().Column("user_id");
@@ -22,11 +22,11 @@ namespace BookPortal.Responses.Domain
                 builder.Property(c => c.Id).ForSqlServer().UseIdentity();
             });
 
-            modelBuilder.Entity<ResponseVote>().ForRelational().Table("response_votes");
-            modelBuilder.Entity<ResponseVote>(builder =>
+            modelBuilder.Entity<ReviewVote>().ForRelational().Table("review_vote");
+            modelBuilder.Entity<ReviewVote>(builder =>
             {
                 builder.Property(c => c.Id).ForRelational().Column("response_vote_id");
-                builder.Property(c => c.ResponseId).ForRelational().Column("response_id");
+                builder.Property(c => c.ReviewId).ForRelational().Column("response_id");
                 builder.Property(c => c.UserId).ForRelational().Column("user_id");
                 builder.Property(c => c.Vote).ForRelational().Column("vote");
 

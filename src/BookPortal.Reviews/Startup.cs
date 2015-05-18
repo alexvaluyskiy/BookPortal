@@ -3,8 +3,8 @@ using Autofac;
 using Autofac.Dnx;
 using BookPortal.Core.ApiPrimitives;
 using BookPortal.Core.Logging;
-using BookPortal.Responses.Domain;
-using BookPortal.Responses.Services;
+using BookPortal.Reviews.Domain;
+using BookPortal.Reviews.Services;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Mvc;
@@ -14,7 +14,7 @@ using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
 using Newtonsoft.Json;
 
-namespace BookPortal.Responses
+namespace BookPortal.Reviews
 {
     public class Startup
     {
@@ -48,12 +48,12 @@ namespace BookPortal.Responses
 
             services.AddEntityFramework()
                .AddSqlServer()
-               .AddDbContext<ResponseContext>(options =>
+               .AddDbContext<ReviewContext>(options =>
                     options.UseSqlServer(Configuration.Get("Data:DefaultConnection:ConnectionString")));
 
             ContainerBuilder builder = new ContainerBuilder();
 
-            builder.RegisterType<ResponsesService>();
+            builder.RegisterType<ReviewsService>();
 
             builder.Populate(services);
             var container = builder.Build();

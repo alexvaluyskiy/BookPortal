@@ -1,0 +1,11 @@
+﻿{
+    "AppSettings": {
+        "ApplicationName":  "BookPortal.Reviews",
+        "LoggingService": "http://localhost:5010"
+    },
+    "Data": {
+        "DefaultConnection": {
+            "ConnectionString": "Server=(localdb)\\mssqllocaldb;Database=ReviewsDatabase;Integrated Security=true"
+        }
+    }
+}

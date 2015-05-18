@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace BookPortal.Responses.Domain.Models
+namespace BookPortal.Reviews.Domain.Models
 {
-    public class Response
+    public class Review
     {
         public int Id { get; set; }
 
