@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BookPortal.Web.Models.Api;
+using BookPortal.Core.ApiPrimitives.Models;
 using Microsoft.AspNet.Diagnostics;
 using Microsoft.AspNet.Http;
 using Newtonsoft.Json;
 
-namespace BookPortal.Web.Infrastructure
+namespace BookPortal.Core.ApiPrimitives
 {
     public class ErrorRequestHandler
     {

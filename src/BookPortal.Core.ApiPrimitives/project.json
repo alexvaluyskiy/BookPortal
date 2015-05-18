@@ -1,0 +1,29 @@
+﻿{
+    "version": "1.0.0-*",
+    "description": "",
+    "authors": [ "" ],
+    "tags": [ "" ],
+    "projectUrl": "",
+    "licenseUrl": "",
+
+    "dependencies": {
+        "Microsoft.AspNet.Mvc": "6.0.0-beta4"
+    },
+
+    "frameworks": {
+        "dnx451": {
+            "frameworkAssemblies": {
+                "System.Runtime.Serialization": "4.0.0.0"
+            }
+        },
+        "dnxcore50": {
+            "dependencies": {
+                "System.Collections": "4.0.10-*",
+                "System.Linq": "4.0.0-*",
+                "System.Runtime.Serialization.Primitives": "4.0.10-*",
+                "System.Threading": "4.0.10-*",
+                "Microsoft.CSharp": "4.0.0-*"
+            }
+        }
+    }
+}

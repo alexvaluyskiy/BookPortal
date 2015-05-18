@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Microsoft.AspNet.Mvc;
 
-namespace BookPortal.Web.Infrastructure
+namespace BookPortal.Core.ApiPrimitives
 {
     public class ValidateModelAttribute : ActionFilterAttribute
     {

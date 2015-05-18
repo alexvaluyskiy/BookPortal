@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace BookPortal.Web.Models.Api
+namespace BookPortal.Core.ApiPrimitives.Models
 {
     [DataContract]
     public class ApiErrorItem

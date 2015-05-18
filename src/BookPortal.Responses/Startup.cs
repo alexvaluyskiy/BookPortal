@@ -1,15 +1,18 @@
 ﻿using System;
 using Autofac;
 using Autofac.Dnx;
+using BookPortal.Core.ApiPrimitives;
 using BookPortal.Core.Logging;
 using BookPortal.Responses.Domain;
 using BookPortal.Responses.Services;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
+using Microsoft.AspNet.Mvc;
 using Microsoft.Data.Entity;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
+using Newtonsoft.Json;
 
 namespace BookPortal.Responses
 {
@@ -28,7 +31,20 @@ namespace BookPortal.Responses
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc().Configure<MvcOptions>(options =>
+            {
+                // setup json output serializer
+                var jsonOutputFormatter = new JsonOutputFormatter();
+                jsonOutputFormatter.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                jsonOutputFormatter.SerializerSettings.Formatting = Formatting.Indented;
+                jsonOutputFormatter.SerializerSettings.ContractResolver = new LowerCasePropertyNamesContractResolver();
+
+                options.OutputFormatters.RemoveTypesOf<JsonOutputFormatter>();
+                options.OutputFormatters.Add(jsonOutputFormatter);
+
+                // add filters
+                options.Filters.Add(new ValidateModelAttribute());
+            });
 
             services.AddEntityFramework()
                .AddSqlServer()

@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using BookPortal.Web.Models.Api;
+using BookPortal.Core.ApiPrimitives.Models;
+using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.ModelBinding;
 
-namespace Microsoft.AspNet.Mvc
+namespace BookPortal.Core.ApiPrimitives
 {
     // TODO: accept list of errors
     public class WrappedErrorResult : ObjectResult

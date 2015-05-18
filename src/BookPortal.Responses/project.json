@@ -3,6 +3,7 @@
     "version": "1.0.0-*",
 
     "dependencies": {
+        "BookPortal.Core.ApiPrimitives": "1.0.0-*",
         "BookPortal.Core.Logging": "1.0.0-*",
         "Microsoft.AspNet.Mvc": "6.0.0-beta4",
         "Microsoft.AspNet.Server.IIS": "1.0.0-beta4",

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using BookPortal.Core.ApiPrimitives;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Framework.OptionsModel;

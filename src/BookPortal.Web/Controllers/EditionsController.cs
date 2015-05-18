@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BookPortal.Core.ApiPrimitives;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Mvc;
 

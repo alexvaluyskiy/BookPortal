@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Threading.Tasks;
-using BookPortal.Web.Models.Api;
+using BookPortal.Core.ApiPrimitives.Models;
+using Microsoft.AspNet.Mvc;
 
-namespace Microsoft.AspNet.Mvc
+namespace BookPortal.Core.ApiPrimitives
 {
     public class WrappedObjectResult : ObjectResult
     {

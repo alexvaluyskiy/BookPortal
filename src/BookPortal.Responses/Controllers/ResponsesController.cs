@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using BookPortal.Core.ApiPrimitives;
 using BookPortal.Responses.Services;
 using Microsoft.AspNet.Mvc;
 
@@ -19,7 +20,7 @@ namespace BookPortal.Responses.Controllers
         {
             var persons = await _responsesService.GetResponsesAsync();
 
-            return new ObjectResult(persons);
+            return new WrappedObjectResult(persons);
         }
 
         [HttpGet("{responseid}")]
@@ -28,9 +29,9 @@ namespace BookPortal.Responses.Controllers
             var person = await _responsesService.GetResponseAsync(responseId);
 
             if (person == null)
-                return new HttpStatusCodeResult(404);
+                return new WrappedErrorResult(404);
 
-            return new ObjectResult(person);
+            return new WrappedObjectResult(person);
         }
     }
 }

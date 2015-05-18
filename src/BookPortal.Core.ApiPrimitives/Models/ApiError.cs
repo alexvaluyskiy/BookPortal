@@ -2,7 +2,7 @@
 using System.Runtime.Serialization;
 using Microsoft.AspNet.Mvc.ModelBinding;
 
-namespace BookPortal.Web.Models.Api
+namespace BookPortal.Core.ApiPrimitives.Models
 {
     [DataContract]
     public class ApiError
