@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using BookPortal.Core.ApiPrimitives;
+using BookPortal.Reviews.Domain.Models;
 using BookPortal.Reviews.Model;
 using BookPortal.Reviews.Services;
 using Microsoft.AspNet.Mvc;
@@ -15,23 +16,72 @@ namespace BookPortal.Reviews.Controllers
             _reviewsService = reviewsService;
         }
 
-        [HttpGet("api/works/{workId}/reviews")]
-        public async Task<IActionResult> IndexWork(ReviewRequest reviewRequest)
+        [HttpGet("api/persons/{personId}/reviews")]
+        public async Task<IActionResult> IndexPerson(ReviewPersonRequest reviewRequest)
         {
-            var persons = await _reviewsService.GetReviewsWorkAsync(reviewRequest);
+            var reviews = await _reviewsService.GetReviewsPersonAsync(reviewRequest);
 
-            return new WrappedObjectResult(persons);
+            return new WrappedObjectResult(reviews);
         }
 
-        [HttpGet("api/[controller]/{reviewId}")]
+        [HttpGet("api/works/{workId}/reviews")]
+        public async Task<IActionResult> IndexWork(ReviewWorkRequest reviewRequest)
+        {
+            var reviews = await _reviewsService.GetReviewsWorkAsync(reviewRequest);
+
+            return new WrappedObjectResult(reviews);
+        }
+
+        [HttpGet("api/users/{userId}/reviews")]
+        public async Task<IActionResult> IndexUser(ReviewUserRequest reviewRequest)
+        {
+            var reviews = await _reviewsService.GetReviewsUserAsync(reviewRequest);
+
+            return new WrappedObjectResult(reviews);
+        }
+
+        [HttpGet("api/[controller]/{reviewId}", Name = "GetReview")]
         public async Task<IActionResult> Get(int reviewId)
         {
-            var person = await _reviewsService.GetReviewAsync(reviewId);
+            var review = await _reviewsService.GetReviewAsync(reviewId);
 
-            if (person == null)
+            if (review == null)
                 return new WrappedErrorResult(404);
 
-            return new WrappedObjectResult(person);
+            return new WrappedObjectResult(review);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody]Review request)
+        {
+            ReviewResponse review = await _reviewsService.AddReviewAsync(request);
+
+            if (review == null)
+                return new WrappedErrorResult(400);
+
+            return new CreatedAtRouteResult("GetReview", new { reviewId = review.Id }, review);
+        }
+
+        [HttpPut("{reviewId}")]
+        public async Task<IActionResult> Put(int reviewId, [FromBody]Review request)
+        {
+            ReviewResponse review = await _reviewsService.UpdateReviewAsync(request);
+
+            if (review == null)
+                return new WrappedErrorResult(400);
+
+            return new NoContentResult();
+        }
+
+        [HttpDelete("{reviewId}")]
+        public async Task<IActionResult> Delete(int reviewId)
+        {
+            ReviewResponse review = await _reviewsService.DeleteReviewAsync(reviewId);
+
+            if (review == null)
+                return new WrappedErrorResult(400);
+
+            return new NoContentResult();
         }
     }
 }

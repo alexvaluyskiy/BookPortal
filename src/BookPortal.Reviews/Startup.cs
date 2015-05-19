@@ -5,6 +5,7 @@ using BookPortal.Core.ApiPrimitives;
 using BookPortal.Core.Configuration;
 using BookPortal.Core.Logging;
 using BookPortal.Reviews.Domain;
+using BookPortal.Reviews.Infrastructure;
 using BookPortal.Reviews.Services;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
@@ -22,7 +23,7 @@ namespace BookPortal.Reviews
         public Startup(IHostingEnvironment env)
         {
             var configuration = new Configuration();
-            configuration.AddConfigurationService("http://localhost:6004", "BookPortalWeb");
+            configuration.AddConfigurationService("http://localhost:6004", "BookPortalReviews");
             configuration.AddJsonFile("config.json", optional: true);
 
             Configuration = configuration;
@@ -52,8 +53,6 @@ namespace BookPortal.Reviews
                .AddDbContext<ReviewContext>(options =>
                     options.UseSqlServer(Configuration.Get("Data:DefaultConnection:ConnectionString")));
 
-            services.AddApplicationInsightsTelemetry(Configuration);
-
             ContainerBuilder builder = new ContainerBuilder();
 
             builder.RegisterType<ReviewsService>();
@@ -71,10 +70,10 @@ namespace BookPortal.Reviews
                 Configuration.Get("AppSettings:ApplicationName"),
                 LogLevel.Warning);
 
-            app.UseApplicationInsightsRequestTelemetry();
-            app.UseApplicationInsightsExceptionTelemetry();
-
             app.UseMvc();
+
+            // create mappings
+            MapperInitialization.Initialize();
 
             //Populates the BookContext sample data
             SampleData.InitializeDatabaseAsync(app.ApplicationServices).Wait();
