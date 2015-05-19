@@ -43,9 +43,9 @@ namespace BookPortal.CloudConfig.Domain
 
         private static IEnumerable<ConfigProfile> GetProfiles()
         {
-            yield return new ConfigProfile { Name = "BookPortal.Logging" };
-            yield return new ConfigProfile { Name = "BookPortal.Reviews" };
-            yield return new ConfigProfile { Name = "BookPortal.Web" };
+            yield return new ConfigProfile { Name = "BookPortalLogging" };
+            yield return new ConfigProfile { Name = "BookPortalReviews" };
+            yield return new ConfigProfile { Name = "BookPortalWeb" };
         }
 
         private static IEnumerable<Config> GetConfigs()

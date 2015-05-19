@@ -1,7 +1,7 @@
 ﻿{
     "Data": {
         "DefaultConnection": {
-            "ConnectionString": "Server=(localdb)\\mssqllocaldb;Database=LogsDatabase;Integrated Security=true"
+            "ConnectionString": "Data Source=PC-OLVAL0;Database=LogsDatabase;User ID=ravenger;Password=qe1dg7bm"
         }
     }
 }

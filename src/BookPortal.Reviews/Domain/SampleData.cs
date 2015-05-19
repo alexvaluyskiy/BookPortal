@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using BookPortal.Reviews.Domain.Models;
 using Microsoft.Data.Entity.SqlServer;
 using Microsoft.Framework.DependencyInjection;
-using Microsoft.Net.Http.Server;
 
 namespace BookPortal.Reviews.Domain
 {
@@ -28,13 +27,13 @@ namespace BookPortal.Reviews.Domain
         {
             using (var db = serviceProvider.GetService<ReviewContext>())
             {
-                foreach (var response in GetResponses())
+                foreach (var response in GerReviews())
                 {
                     db.Reviews.Add(response);
                 }
                 await db.SaveChangesAsync();
 
-                foreach (var vote in GetResponseVotes())
+                foreach (var vote in GetReviewVotes())
                 {
                     db.ReviewVotes.Add(vote);
                 }
@@ -42,13 +41,13 @@ namespace BookPortal.Reviews.Domain
             }
         }
 
-        private static IEnumerable<Review> GetResponses()
+        private static IEnumerable<Review> GerReviews()
         {
             yield return new Review { UserId = 1, WorkId = 1, Text = "очень крутой роман"};
             yield return new Review { UserId = 1, WorkId = 1, Text = "фильм лучше" };
         }
 
-        private static IEnumerable<ReviewVote> GetResponseVotes()
+        private static IEnumerable<ReviewVote> GetReviewVotes()
         {
             yield return new ReviewVote { ReviewId = 1, UserId = 2, Vote = 1 };
             yield return new ReviewVote { ReviewId = 2, UserId = 2, Vote = 1 };

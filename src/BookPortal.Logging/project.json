@@ -3,7 +3,10 @@
     "version": "1.0.0-*",
 
     "dependencies": {
+        "BookPortal.Core.Logging": "1.0.1",
+        "BookPortal.Core.Configuration": "1.0.2",
         "Microsoft.AspNet.Mvc": "6.0.0-beta4",
+        "Microsoft.AspNet.Diagnostics": "1.0.0-beta4",
         "Microsoft.AspNet.Server.IIS": "1.0.0-beta4",
         "Microsoft.AspNet.Server.WebListener": "1.0.0-beta4",
         "Microsoft.Framework.ConfigurationModel.Json": "1.0.0-beta4",

@@ -1,12 +1,12 @@
 ﻿{
     "AppSettings": {
-        "ApplicationName":  "BookPortal.Responses",
-        "LoggingService": "http://localhost:5010",
-        "ImportOzonUrl": "http://www.ozon.ru/context/detail/id/",
+        "ApplicationName": "BookPortal.Web",
+        "LoggingService": "http://localhost:6001",
+        "ImportOzonUrl": "http://www.ozon.ru/context/detail/id/"
     },
     "Data": {
         "DefaultConnection": {
-            "ConnectionString": "Server=(localdb)\\mssqllocaldb;Database=BookDatabase;Integrated Security=true"
+            "ConnectionString": "Data Source=PC-OLVAL0;Database=BooksDatabase;User ID=ravenger;Password=qe1dg7bm"
         }
     }
 }

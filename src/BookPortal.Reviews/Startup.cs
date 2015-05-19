@@ -2,6 +2,7 @@
 using Autofac;
 using Autofac.Dnx;
 using BookPortal.Core.ApiPrimitives;
+using BookPortal.Core.Configuration;
 using BookPortal.Core.Logging;
 using BookPortal.Reviews.Domain;
 using BookPortal.Reviews.Services;
@@ -20,9 +21,9 @@ namespace BookPortal.Reviews
     {
         public Startup(IHostingEnvironment env)
         {
-            var configuration = new Configuration()
-                .AddJsonFile("config.json")
-                .AddJsonFile($"config.{env.EnvironmentName}.json", true); ;
+            var configuration = new Configuration();
+            configuration.AddConfigurationService("http://localhost:6004", "BookPortalWeb");
+            configuration.AddJsonFile("config.json", optional: true);
 
             Configuration = configuration;
         }
@@ -51,6 +52,8 @@ namespace BookPortal.Reviews
                .AddDbContext<ReviewContext>(options =>
                     options.UseSqlServer(Configuration.Get("Data:DefaultConnection:ConnectionString")));
 
+            services.AddApplicationInsightsTelemetry(Configuration);
+
             ContainerBuilder builder = new ContainerBuilder();
 
             builder.RegisterType<ReviewsService>();
@@ -66,7 +69,10 @@ namespace BookPortal.Reviews
             loggerFactory.AddLoggingService(
                 Configuration.Get("AppSettings:LoggingService"),
                 Configuration.Get("AppSettings:ApplicationName"),
-                LogLevel.Information);
+                LogLevel.Warning);
+
+            app.UseApplicationInsightsRequestTelemetry();
+            app.UseApplicationInsightsExceptionTelemetry();
 
             app.UseMvc();
 

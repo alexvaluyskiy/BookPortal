@@ -22,9 +22,9 @@ namespace BookPortal.Web
     {
         public Startup(IHostingEnvironment env)
         {
-            var configuration = new Configuration()
-                .AddConfigurationService("http://localhost:5011")
-                .AddJsonFile("config.json", optional: true);
+            var configuration = new Configuration();
+            configuration.AddConfigurationService("http://localhost:6004", "BookPortalWeb");
+            configuration.AddJsonFile("config.json", optional: true);
 
             Configuration = configuration;
         }
