@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BookPortal.Reviews.Domain;
@@ -17,14 +16,9 @@ namespace BookPortal.Reviews.Services
             _reviewContext = reviewContext;
         }
 
+        // TODO: Get user rating for this work (from BookPortal.Rating service)
         public async Task<IReadOnlyList<ReviewResponse>> GetReviewsWorkAsync(ReviewRequest reviewRequest)
         {
-            // TODO: Get from BookPortal.Auth service
-            var users = new Dictionary<int, string>() { { 1, "ravenger" } };
-
-            // TODO: Get from BookPortal.Web service
-            var workName = new { WorkName = "Hyperion", WorkRusName = "Гиперион" };
-
             var query = _reviewContext.Reviews.Where(c => c.WorkId == reviewRequest.WorkId);
 
             switch (reviewRequest.Sort)
@@ -43,24 +37,76 @@ namespace BookPortal.Reviews.Services
             if (reviewRequest.Limit.HasValue && reviewRequest.Limit > 0)
                 query = query.Take(reviewRequest.Limit.Value);
 
-            var queryResult = query.Select(c => new ReviewResponse
+            var queryResult = await query.Select(c => new ReviewResponse
             {
                 Id = c.Id,
                 Text = c.Text,
                 WorkId = c.WorkId,
-                WorkRusname = workName.WorkRusName,
-                WorkName = workName.WorkName,
                 DateCreated = c.DateCreated,
                 UserId = c.UserId,
-                UserName = users[c.UserId]
-            });
+            }).ToListAsync();
 
-            return await queryResult.ToListAsync();
+            // get response votes
+            var reviewIds = queryResult.GroupBy(c => c.Id).Select(grp => grp.Key).ToList();
+            var reviewVotes = ( from c in _reviewContext.ReviewVotes
+                                where reviewIds.Contains(c.ReviewId)
+                                group c by c.ReviewId into g
+                                select new
+                                {
+                                    ReviewId = g.Key,
+                                    ReviewRating = g.Sum(c => c.Vote)
+                                }).ToList();
+
+            // get user names
+            var userIds = queryResult.GroupBy(c => c.UserId).Select(grp => grp.Key).ToArray();
+            var users = GetUsers(userIds);
+
+            // get work names
+            var works = GetWorks(reviewRequest.WorkId);
+
+            foreach (var result in queryResult)
+            {
+                Work work = works.SingleOrDefault(c => c.WorkId == result.WorkId);
+                result.WorkName = work?.Name;
+                result.WorkRusname = work?.RusName;
+                result.UserName = 
+                    users.Where(c => c.UserId == result.UserId).Select(c => c.Name).SingleOrDefault();
+                result.ReviewRating =
+                    reviewVotes.Where(c => c.ReviewId == result.Id).Select(c => c.ReviewRating).SingleOrDefault();
+            }
+
+            return queryResult;
         }
 
         public async Task<Review> GetReviewAsync(int reviewId)
         {
             return await _reviewContext.Reviews.Where(c => c.Id == reviewId).SingleOrDefaultAsync();
+        }
+
+        // TODO: Get from BookPortal.Auth service
+        private IReadOnlyList<User> GetUsers(params int[] userIds)
+        {
+            var list = new List<User>(userIds.Length);
+
+            foreach (var userId in userIds)
+            {
+                list.Add(new User { UserId = userId, Name = "ravenger" });
+            }
+
+            return list;
+        }
+
+        // TODO: Get from BookPortal.Web service
+        private IReadOnlyList<Work> GetWorks(params int[] workIds)
+        {
+            var list = new List<Work>(workIds.Length);
+
+            foreach (var workId in workIds)
+            {
+                list.Add(new Work { WorkId = workId, RusName = "Гиперион", Name = "Hyperion" });
+            }
+
+            return list;
         }
     }
 }

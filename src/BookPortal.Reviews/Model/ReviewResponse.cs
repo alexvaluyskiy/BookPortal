@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BookPortal.Reviews.Model
 {
@@ -20,6 +17,10 @@ namespace BookPortal.Reviews.Model
         public int UserId { get; set; }
 
         public string UserName { get; set; }
+
+        public int UserWorkRating { get; set; }
+
+        public int ReviewRating { get; set; }
 
         public DateTime DateCreated { get; set; }
     }

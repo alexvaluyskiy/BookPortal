@@ -43,15 +43,17 @@ namespace BookPortal.Reviews.Domain
 
         private static IEnumerable<Review> GerReviews()
         {
-            yield return new Review { UserId = 1, WorkId = 1, Text = "очень крутой роман"};
-            yield return new Review { UserId = 1, WorkId = 1, Text = "фильм лучше" };
+            yield return new Review { UserId = 1, WorkId = 1, Text = "очень крутой роман", DateCreated = DateTime.UtcNow };
+            yield return new Review { UserId = 1, WorkId = 1, Text = "фильм лучше", DateCreated = DateTime.UtcNow };
         }
 
         private static IEnumerable<ReviewVote> GetReviewVotes()
         {
             yield return new ReviewVote { ReviewId = 1, UserId = 2, Vote = 1 };
-            yield return new ReviewVote { ReviewId = 2, UserId = 2, Vote = 1 };
+            yield return new ReviewVote { ReviewId = 1, UserId = 24, Vote = 1 };
+            yield return new ReviewVote { ReviewId = 1, UserId = 24, Vote = 1 };
             yield return new ReviewVote { ReviewId = 1, UserId = 24, Vote = -1 };
+            yield return new ReviewVote { ReviewId = 2, UserId = 2, Vote = 1 };
         }
     }
 }

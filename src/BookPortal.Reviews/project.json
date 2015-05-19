@@ -24,8 +24,16 @@
     },
 
     "frameworks": {
-        "dnx451": { },
-        "dnxcore50": { }
+        "dnx451": {
+            "frameworkAssemblies": {
+                "System.Net.Http": "4.0.0.0"
+            }
+        },
+        "dnxcore50": {
+            "dependencies": {
+                "System.Net.Http": "4.0.0-*"
+            }
+        }
     },
 
     "publishExclude": [
