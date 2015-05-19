@@ -8,5 +8,12 @@
         "DefaultConnection": {
             "ConnectionString": "Data Source=PC-OLVAL0;Database=BooksDatabase;User ID=ravenger;Password=qe1dg7bm"
         }
+    },
+    "ApplicationInsights": {
+        "InstrumentationKey": "44f3c97f-7c3f-458a-8135-d895b80ed1f4",
+        "TelemetryChannel": {
+            "EndpointAddress": "http://dc.services.visualstudio.com/v2/track",
+            "DeveloperMode": true
+        }
     }
 }

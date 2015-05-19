@@ -57,6 +57,8 @@ namespace BookPortal.Web
                .AddDbContext<BookContext>(options => 
                     options.UseSqlServer(Configuration.Get("Data:DefaultConnection:ConnectionString")));
 
+            services.AddApplicationInsightsTelemetry(Configuration);
+
             ContainerBuilder builder = new ContainerBuilder();
 
             builder.RegisterType<AwardsService>();
@@ -95,6 +97,9 @@ namespace BookPortal.Web
             app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseErrorHandler(builder => builder.Run(ErrorRequestHandler.HandleErrorRequest));
+
+            app.UseApplicationInsightsRequestTelemetry();
+            app.UseApplicationInsightsExceptionTelemetry();
 
             app.UseMvc();
 
