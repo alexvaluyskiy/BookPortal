@@ -19,7 +19,7 @@ namespace BookPortal.Web.Domain.Models
         public int? ParentSerieId { get; set; }
         public Serie ParentSerie { get; set; }
 
-        public int PublisherId { get; set; }
+        public int? PublisherId { get; set; }
         public Publisher Publisher { get; set; }
     }
 }
