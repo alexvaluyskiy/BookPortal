@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using BookPortal.Core.ApiPrimitives;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Mvc;
 
@@ -20,7 +19,7 @@ namespace BookPortal.Web.Controllers
         {
             var works = await _worksService.GetWorksAsync(personId);
 
-            return new WrappedObjectResult(works);
+            return this.PageObject(200, works);
         }
 
         [HttpGet("{id}")]
@@ -29,9 +28,11 @@ namespace BookPortal.Web.Controllers
             var work = await _worksService.GetWorkAsync(id);
 
             if (work == null)
-                return new WrappedErrorResult(404, $"Work (id: {id}) is not found");
+            {
+                return this.ErrorObject(404, $"Work (id: {id}) is not found");
+            }
 
-            return new WrappedObjectResult(work);
+            return this.SingleObject(200, work);
         }
     }
 }

@@ -23,7 +23,7 @@ namespace BookPortal.Web.Controllers
         {
             var editions = await _editionsService.GetEditionsAsync(workId);
 
-            return new WrappedObjectResult(editions);
+            return this.PageObject(200, editions);
         }
 
         [HttpGet("{id}")]
@@ -32,9 +32,9 @@ namespace BookPortal.Web.Controllers
             var edition = await _editionsService.GetEditionAsync(id);
 
             if (edition == null)
-                return new WrappedErrorResult(404, $"Edition (id: {id}) is not found");
+                return this.ErrorObject(404, $"Edition (id: {id}) is not found");
 
-            return new WrappedObjectResult(edition);
+            return this.SingleObject(200, edition);
         }
     }
 }

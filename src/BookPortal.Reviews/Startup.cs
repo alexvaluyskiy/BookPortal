@@ -2,6 +2,7 @@
 using Autofac;
 using Autofac.Dnx;
 using BookPortal.Core.ApiPrimitives;
+using BookPortal.Core.ApiPrimitives.Filters;
 using BookPortal.Core.Configuration;
 using BookPortal.Core.Logging;
 using BookPortal.Reviews.Domain;

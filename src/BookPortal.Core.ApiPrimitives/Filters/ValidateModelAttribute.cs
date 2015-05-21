@@ -1,7 +1,6 @@
-﻿using System.Linq;
-using Microsoft.AspNet.Mvc;
+﻿using Microsoft.AspNet.Mvc;
 
-namespace BookPortal.Core.ApiPrimitives
+namespace BookPortal.Core.ApiPrimitives.Filters
 {
     public class ValidateModelAttribute : ActionFilterAttribute
     {
@@ -9,8 +8,7 @@ namespace BookPortal.Core.ApiPrimitives
         {
             if (context.ModelState.IsValid == false)
             {
-                var modelErrors = context.ModelState.SelectMany(m => m.Value.Errors);
-                context.Result = new WrappedErrorResult(400, modelErrors);
+                context.Result = new ErrorObjectResult(400, context.ModelState);
             }
         }
     }

@@ -38,7 +38,7 @@ namespace BookPortal.Logging
             app.UseMvc();
 
             // create sample data
-            SampleData.InitializeDatabaseAsync(app.ApplicationServices).Wait();
+            //SampleData.InitializeDatabaseAsync(app.ApplicationServices).Wait();
         }
     }
 }

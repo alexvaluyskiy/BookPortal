@@ -20,7 +20,7 @@ namespace BookPortal.Web.Controllers
         {
             var persons = await _personsService.GetPersonsAsync();
 
-            return new WrappedObjectResult(persons);
+            return this.PageObject(200, persons);
         }
 
         [HttpGet("{id}")]
@@ -29,9 +29,9 @@ namespace BookPortal.Web.Controllers
             var person = await _personsService.GetPersonAsync(id);
 
             if (person == null)
-                return new WrappedErrorResult(404, $"Person (id: {id}) is not found");
+                return this.ErrorObject(404, $"Person (id: {id}) is not found");
 
-            return new WrappedObjectResult(person);
+            return this.SingleObject(200, person);
         }
     }
 }

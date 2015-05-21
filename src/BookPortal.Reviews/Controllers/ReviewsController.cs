@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using BookPortal.Core.ApiPrimitives;
 using BookPortal.Reviews.Domain.Models;
 using BookPortal.Reviews.Model;
 using BookPortal.Reviews.Services;
@@ -21,7 +20,7 @@ namespace BookPortal.Reviews.Controllers
         {
             var reviews = await _reviewsService.GetReviewsPersonAsync(reviewRequest);
 
-            return new WrappedObjectResult(reviews);
+            return this.PageObject(200, reviews);
         }
 
         [HttpGet("api/works/{workId}/reviews")]
@@ -29,7 +28,7 @@ namespace BookPortal.Reviews.Controllers
         {
             var reviews = await _reviewsService.GetReviewsWorkAsync(reviewRequest);
 
-            return new WrappedObjectResult(reviews);
+            return this.PageObject(200, reviews);
         }
 
         [HttpGet("api/users/{userId}/reviews")]
@@ -37,7 +36,7 @@ namespace BookPortal.Reviews.Controllers
         {
             var reviews = await _reviewsService.GetReviewsUserAsync(reviewRequest);
 
-            return new WrappedObjectResult(reviews);
+            return this.PageObject(200, reviews);
         }
 
         [HttpGet("api/[controller]/{reviewId}", Name = "GetReview")]
@@ -46,9 +45,9 @@ namespace BookPortal.Reviews.Controllers
             var review = await _reviewsService.GetReviewAsync(reviewId);
 
             if (review == null)
-                return new WrappedErrorResult(404);
+                return this.ErrorObject(404);
 
-            return new WrappedObjectResult(review);
+            return this.SingleObject(200, review);
         }
 
         [HttpPost]
@@ -57,9 +56,9 @@ namespace BookPortal.Reviews.Controllers
             ReviewResponse review = await _reviewsService.AddReviewAsync(request);
 
             if (review == null)
-                return new WrappedErrorResult(400);
+                return this.ErrorObject(400);
 
-            return new CreatedAtRouteResult("GetReview", new { reviewId = review.Id }, review);
+            return CreatedAtRoute("GetReview", new {reviewId = review.Id}, review);
         }
 
         [HttpPut("{reviewId}")]
@@ -68,7 +67,7 @@ namespace BookPortal.Reviews.Controllers
             ReviewResponse review = await _reviewsService.UpdateReviewAsync(request);
 
             if (review == null)
-                return new WrappedErrorResult(400);
+                return this.ErrorObject(400);
 
             return new NoContentResult();
         }
@@ -79,7 +78,7 @@ namespace BookPortal.Reviews.Controllers
             ReviewResponse review = await _reviewsService.DeleteReviewAsync(reviewId);
 
             if (review == null)
-                return new WrappedErrorResult(400);
+                return this.ErrorObject(400);
 
             return new NoContentResult();
         }

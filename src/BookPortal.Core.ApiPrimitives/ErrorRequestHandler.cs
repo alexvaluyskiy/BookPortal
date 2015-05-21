@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using BookPortal.Core.ApiPrimitives.Models;
 using Microsoft.AspNet.Diagnostics;
@@ -17,54 +16,26 @@ namespace BookPortal.Core.ApiPrimitives
             var error = context.GetFeature<IErrorHandlerFeature>();
             if (error != null)
             {
-                AggregateException aggregateException = error.Error as AggregateException;
+                ErrorResult errorResult = new ErrorResult();
+                errorResult.Message = error.Error.GetType().Name;
+                errorResult.Details = error.Error.ToString();
 
-                if (aggregateException != null)
+                var errorText = JsonConvert.SerializeObject(errorResult);
+
+                if (error.Error is ArgumentException || error.Error is ArgumentNullException)
                 {
-                    ApiError apiError = new ApiError();
-                    apiError.Message = aggregateException.Message;
-
-                    foreach (var exception in aggregateException.InnerExceptions)
-                    {
-                        ApiErrorItem apiErrorItem = new ApiErrorItem();
-                        apiErrorItem.Message = exception.Message;
-                        apiErrorItem.Details = exception.StackTrace;
-                        apiErrorItem.ErrorCode = exception.GetType().Name;
-                        apiError.Errors = new List<ApiErrorItem>();
-                        apiError.Errors.Add(apiErrorItem);
-                    }
-
-                    var errorText = JsonConvert.SerializeObject(apiError);
-
-                    context.Response.StatusCode = 500;
+                    context.Response.StatusCode = 400;
+                    await context.Response.WriteAsync(errorText);
+                }
+                else if (error.Error is NotImplementedException || error.Error is NotSupportedException)
+                {
+                    context.Response.StatusCode = 405;
                     await context.Response.WriteAsync(errorText);
                 }
                 else
                 {
-                    Exception exception = error.Error;
-
-                    ApiErrorItem apiErrorItem = new ApiErrorItem();
-                    apiErrorItem.Message = exception.Message;
-                    apiErrorItem.Details = exception.StackTrace;
-                    apiErrorItem.ErrorCode = exception.GetType().Name;
-
-                    var errorText = JsonConvert.SerializeObject(apiErrorItem);
-
-                    if (exception is ArgumentException || exception is ArgumentNullException)
-                    {
-                        context.Response.StatusCode = 400;
-                        await context.Response.WriteAsync(errorText);
-                    }
-                    else if (exception is NotImplementedException || exception is NotSupportedException)
-                    {
-                        context.Response.StatusCode = 405;
-                        await context.Response.WriteAsync(errorText);
-                    }
-                    else
-                    {
-                        context.Response.StatusCode = 500;
-                        await context.Response.WriteAsync(errorText);
-                    }
+                    context.Response.StatusCode = 500;
+                    await context.Response.WriteAsync(errorText);
                 }
             }
         }

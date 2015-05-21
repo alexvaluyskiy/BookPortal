@@ -7,7 +7,7 @@ using Microsoft.AspNet.Mvc;
 namespace BookPortal.Web.Controllers
 {
     [Route("api/persons/{personId}/[controller]")]
-    public class TranslationsController
+    public class TranslationsController : Controller
     {
         private readonly TranslationsService _translationsService;
 
@@ -21,7 +21,7 @@ namespace BookPortal.Web.Controllers
         {
             var translations = await _translationsService.GetTranslationsAsync(request);
 
-            return new WrappedObjectResult(translations);
+            return this.SingleObject(200, translations);
         }
     }
 }

@@ -23,7 +23,7 @@ namespace BookPortal.Web.Controllers
         {
             var series = await _seriesService.GetSeriesAsync(publisherId);
 
-            return new WrappedObjectResult(series);
+            return this.PageObject(200, series);
         }
 
         [HttpGet("{id}")]
@@ -32,9 +32,9 @@ namespace BookPortal.Web.Controllers
             var serie = await _seriesService.GetSerieAsync(id);
 
             if (serie == null)
-                return new WrappedErrorResult(404, $"Serie (id: {id}) is not found");
+                return this.ErrorObject(404, $"Serie (id: {id}) is not found");
 
-            return new WrappedObjectResult(serie);
+            return this.SingleObject(200, serie);
         }
     }
 }

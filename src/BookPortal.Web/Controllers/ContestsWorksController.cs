@@ -21,7 +21,7 @@ namespace BookPortal.Web.Controllers
         {
             var contestWorks = await _contestsWorksService.GetContestsWorksAsync(contestId);
 
-            return new WrappedObjectResult(contestWorks);
+            return this.PageObject(200, contestWorks);
         }
 
         [HttpGet("{contestWorkId}")]
@@ -29,7 +29,7 @@ namespace BookPortal.Web.Controllers
         {
             var contestWork = await _contestsWorksService.GetContestWorkAsync(contestId, contestWorkId);
 
-            return new WrappedObjectResult(contestWork);
+            return this.SingleObject(200, contestWork);
         }
 
         [HttpPost]
@@ -38,9 +38,9 @@ namespace BookPortal.Web.Controllers
             ContestWork contestWork = await _contestsWorksService.AddContestWorkAsync(request);
 
             if (contestWork == null)
-                return new WrappedErrorResult(400);
+                return this.ErrorObject(400);
 
-            return new NoContentResult();
+            return new HttpStatusCodeResult(204);
         }
 
         [HttpPut("{contestWorkId}")]
@@ -49,9 +49,9 @@ namespace BookPortal.Web.Controllers
             ContestWork contestWork = await _contestsWorksService.UpdateContestWorkAsync(contestWorkId, request);
 
             if (contestWork == null)
-                return new WrappedErrorResult(400);
+                return this.ErrorObject(400);
 
-            return new NoContentResult();
+            return new HttpStatusCodeResult(204);
         }
 
         [HttpDelete("{contestWorkId}")]
@@ -60,9 +60,9 @@ namespace BookPortal.Web.Controllers
             ContestWork contestWork = await _contestsWorksService.DeleteContestWorkAsync(contestWorkId);
 
             if (contestWork == null)
-                return new WrappedErrorResult(400);
+                return this.ErrorObject(400);
 
-            return new NoContentResult();
+            return new HttpStatusCodeResult(204);
         }
     }
 }

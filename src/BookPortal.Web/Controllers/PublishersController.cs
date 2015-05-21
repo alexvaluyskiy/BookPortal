@@ -24,9 +24,9 @@ namespace BookPortal.Web.Controllers
             var publisher = await _publishersService.GetPublisherAsync(id);
 
             if (publisher == null)
-                return new WrappedErrorResult(404, $"Publisher (id: {id}) is not found");
+                return this.ErrorObject(404, $"Publisher (id: {id}) is not found");
 
-            return new WrappedObjectResult(publisher);
+            return this.SingleObject(200, publisher);
         }
     }
 }

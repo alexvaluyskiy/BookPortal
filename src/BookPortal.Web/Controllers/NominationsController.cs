@@ -21,7 +21,7 @@ namespace BookPortal.Web.Controllers
         {
             var nominations = await _nominationsService.GetNominationsAsync(awardId);
 
-            return new WrappedObjectResult(nominations);
+            return this.PageObject(200, nominations);
         }
 
         [HttpGet("{nominationId}")]
@@ -29,7 +29,7 @@ namespace BookPortal.Web.Controllers
         {
             var nomination = await _nominationsService.GetNominationAsync(awardId, nominationId);
 
-            return new WrappedObjectResult(nomination);
+            return this.SingleObject(200, nomination);
         }
 
         [HttpPost]
@@ -38,9 +38,9 @@ namespace BookPortal.Web.Controllers
             Nomination nomination = await _nominationsService.AddNominationAsync(request);
 
             if (nomination == null)
-                return new WrappedErrorResult(400);
+                return this.ErrorObject(400);
 
-            return new NoContentResult();
+            return new HttpStatusCodeResult(204);
         }
 
         [HttpPut("{nominationId}")]
@@ -49,9 +49,9 @@ namespace BookPortal.Web.Controllers
             Nomination nomination = await _nominationsService.UpdateNominationAsync(nominationId, request);
 
             if (nomination == null)
-                return new WrappedErrorResult(400);
+                return this.ErrorObject(400);
 
-            return new NoContentResult();
+            return new HttpStatusCodeResult(204);
         }
 
         [HttpDelete("{nominationId}")]
@@ -60,9 +60,9 @@ namespace BookPortal.Web.Controllers
             Nomination nomination = await _nominationsService.DeleteNominationAsync(nominationId);
 
             if (nomination == null)
-                return new WrappedErrorResult(400);
+                return this.ErrorObject(400);
 
-            return new NoContentResult();
+            return new HttpStatusCodeResult(204);
         }
     }
 }

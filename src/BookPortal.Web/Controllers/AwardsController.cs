@@ -22,7 +22,7 @@ namespace BookPortal.Web.Controllers
         {
             var awards = await _awardsService.GetAwardsAsync(request);
 
-            return new WrappedObjectResult(awards);
+            return this.PageObject(200, awards);
         }
 
         [HttpGet("{id}", Name = "GetAward")]
@@ -31,9 +31,9 @@ namespace BookPortal.Web.Controllers
             var award = await _awardsService.GetAwardAsync(id);
 
             if (award == null)
-                return new WrappedErrorResult(404, $"Award (id: {id}) is not found");
+                return this.ErrorObject(404, $"Award (id: {id}) is not found");
 
-            return new WrappedObjectResult(award);
+            return this.SingleObject(200, award);
         }
 
         [HttpPost]
@@ -42,7 +42,7 @@ namespace BookPortal.Web.Controllers
             AwardResponse award = await _awardsService.AddAwardAsync(request);
 
             if (award == null)
-                return new WrappedErrorResult(400);
+                return this.ErrorObject(400);
 
             return new CreatedAtRouteResult("GetAward", new {id = award.Id}, award);
         }
@@ -53,9 +53,9 @@ namespace BookPortal.Web.Controllers
             AwardResponse award = await _awardsService.UpdateAwardAsync(id, request);
 
             if (award == null)
-                return new WrappedErrorResult(400);
+                return this.ErrorObject(400);
 
-            return new NoContentResult();
+            return new HttpStatusCodeResult(204);
         }
 
         [HttpDelete("{id}")]
@@ -64,9 +64,9 @@ namespace BookPortal.Web.Controllers
             AwardResponse award = await _awardsService.DeleteAwardAsync(id);
 
             if (award == null)
-                return new WrappedErrorResult(400);
+                return this.ErrorObject(400);
 
-            return new NoContentResult();
+            return new HttpStatusCodeResult(204);
         }
     }
 }
