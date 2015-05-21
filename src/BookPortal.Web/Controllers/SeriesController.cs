@@ -26,15 +26,28 @@ namespace BookPortal.Web.Controllers
             return this.PageObject(200, series);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        [HttpGet("{serieId}")]
+        public async Task<IActionResult> Get(int serieId)
         {
-            var serie = await _seriesService.GetSerieAsync(id);
+            var serie = await _seriesService.GetSerieAsync(serieId);
 
             if (serie == null)
-                return this.ErrorObject(404, $"Serie (id: {id}) is not found");
+                return this.ErrorObject(404, $"Serie (id: {serieId}) is not found");
 
             return this.SingleObject(200, serie);
         }
+
+        [HttpGet("{serieId}/tree")]
+        public async Task<IActionResult> GetTree(int serieId)
+        {
+            var treeItem = await _seriesService.GetSerieTreeAsync(serieId);
+
+            if (treeItem == null)
+                return this.ErrorObject(404, $"Serie (id: {serieId}) is not found");
+
+            return this.SingleObject(200, treeItem);
+        }
+
+
     }
 }

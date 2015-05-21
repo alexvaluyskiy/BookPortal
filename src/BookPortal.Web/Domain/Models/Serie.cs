@@ -16,6 +16,9 @@ namespace BookPortal.Web.Domain.Models
 
         public bool SerieClosed { get; set; }
 
+        public int? ParentSerieId { get; set; }
+        public Serie ParentSerie { get; set; }
+
         public int PublisherId { get; set; }
         public Publisher Publisher { get; set; }
     }

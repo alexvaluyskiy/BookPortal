@@ -116,6 +116,18 @@ namespace BookPortal.Web.Domain
                     db.TranslationEditions.Add(edition);
                 }
                 await db.SaveChangesAsync();
+
+                foreach (var publisher in GetPublishers())
+                {
+                    db.Publishers.Add(publisher);
+                }
+                await db.SaveChangesAsync();
+
+                foreach (var serie in GetSeries())
+                {
+                    db.Series.Add(serie);
+                }
+                await db.SaveChangesAsync();
             }
         }
 
@@ -380,6 +392,56 @@ namespace BookPortal.Web.Domain
                 TranslationWorkId = 1,
                 Name = "Гиперион",
                 EditionId = 3
+            };
+        }
+
+        private static IEnumerable<Publisher> GetPublishers()
+        {
+            yield return new Publisher { Name = "Аст" };
+            yield return new Publisher { Name = "Эксмо" };
+        }
+
+        private static IEnumerable<Serie> GetSeries()
+        {
+            yield return new Serie
+            {
+                Name = "Отцы-Основатели",
+                DateOpen = new DateTime(2003, 1, 1),
+                PublisherId = 2
+            };
+        
+            yield return new Serie
+            {
+                Name = "Отцы-Основатели. Легенды фантастики",
+                DateOpen = new DateTime(2003, 1, 1),
+                PublisherId = 2,
+                ParentSerieId = 1
+            };
+
+            yield return new Serie
+            {
+                Name = "Отцы-Основатели. Русское пространство",
+                DateOpen = new DateTime(2003, 1, 1),
+                PublisherId = 2,
+                ParentSerieId = 1
+            };
+
+            yield return new Serie
+            {
+                Name = "Весь Желязны",
+                DateOpen = new DateTime(2003, 1, 1),
+                DateClose = new DateTime(2009, 1, 1),
+                PublisherId = 2,
+                ParentSerieId = 2
+            };
+
+            yield return new Serie
+            {
+                Name = "Иван Ефремов",
+                DateOpen = new DateTime(2007, 1, 1),
+                DateClose = new DateTime(2007, 1, 1),
+                PublisherId = 2,
+                ParentSerieId = 3
             };
         }
     }

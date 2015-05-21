@@ -252,6 +252,7 @@ namespace BookPortal.Web.Domain
                 builder.Property(c => c.DateOpen).ForRelational().Column("date_open");
                 builder.Property(c => c.DateClose).ForRelational().Column("date_close");
                 builder.Property(c => c.SerieClosed).ForRelational().Column("serie_closed");
+                builder.Property(c => c.ParentSerieId).ForRelational().Column("parent_serie_id");
                 builder.Property(c => c.PublisherId).ForRelational().Column("publisher_id");
 
                 builder.Property(c => c.Id).ForSqlServer().UseIdentity();

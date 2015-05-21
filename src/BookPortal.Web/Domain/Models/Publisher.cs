@@ -18,7 +18,7 @@ namespace BookPortal.Web.Domain.Models
 
         public string DescriptionSource { get; set; }
 
-        public int CountryId { get; set; }
+        public int? CountryId { get; set; }
         public Country Country { get; set; }
     }
 }
