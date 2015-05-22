@@ -4,9 +4,8 @@ using System.ComponentModel;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 
-namespace BookPortal.Web.Domain
+namespace System.Data.SqlClient
 {
     public static class DataReaderExtensions
     {

@@ -41,8 +41,7 @@
         },
         "dnxcore50": {
             "dependencies": {
-                "System.Net.Http": "4.0.0-beta-*",
-                "System.Reflection.TypeExtensions": "4.0.0-*"
+                "System.Net.Http": "4.0.0-beta-*"
             }
         }
     },
