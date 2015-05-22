@@ -33,43 +33,30 @@ namespace BookPortal.Web.Services
         {
             List<Serie> seriesTree = new List<Serie>();
 
-            // find the root of the tree
-            var rootSerieSql = @"
+            var sql = @"
+                DECLARE @parent_serie_id as Int;
+
                 WITH parent AS
                 (
-	                SELECT s.* FROM series s WHERE s.serie_id = @serieid
-	                UNION ALL
-	                SELECT s.* FROM series s JOIN parent AS a ON s.serie_id = a.parent_serie_id
+                    SELECT s.* FROM series s WHERE s.serie_id = @serie_id
+                    UNION ALL
+                    SELECT s.* FROM series s JOIN parent AS a ON s.serie_id = a.parent_serie_id
                 )
-                SELECT TOP 1 serie_id FROM parent WHERE parent_serie_id is NULL";
+                SELECT TOP 1 @parent_serie_id = serie_id FROM parent WHERE parent_serie_id is NULL;
 
-            int rootSerieId;
-
-            var connection = _bookContext.Database.AsSqlServer().Connection.DbConnection as SqlConnection;
-            connection.Open();
-            using (var command = new SqlCommand(rootSerieSql, connection))
-            {
-                command.Parameters.AddWithValue("@serieid", serieId);
-                object result = await command.ExecuteScalarAsync();
-                rootSerieId = (int)(result ?? 0);
-            }
-
-            if (rootSerieId == 0)
-                return null;
-
-            // find all items in the tree
-            var treeSql = @"
                 WITH tree AS
                 (
-                    SELECT s.* FROM series s WHERE s.serie_id = @serieid
+                    SELECT s.* FROM series s WHERE s.serie_id = @parent_serie_id
                     UNION ALL
                     SELECT s.* FROM series s JOIN tree AS a ON s.parent_serie_id = a.serie_id
                 )
                 SELECT serie_id, name, parent_serie_id FROM tree";
 
-            using (var command = new SqlCommand(treeSql, connection))
+            var connection = _bookContext.Database.AsSqlServer().Connection.DbConnection as SqlConnection;
+            connection.Open();
+            using (var command = new SqlCommand(sql, connection))
             {
-                command.Parameters.AddWithValue("@serieid", rootSerieId);
+                command.Parameters.AddWithValue("@serie_id", serieId);
                 using (var reader = await command.ExecuteReaderAsync())
                 {
                     while (await reader.ReadAsync())
