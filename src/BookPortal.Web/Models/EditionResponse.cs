@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using BookPortal.Web.Domain.Models;
 using BookPortal.Web.Domain.Models.Types;
 
-namespace BookPortal.Web.Domain.Models
+namespace BookPortal.Web.Models
 {
-    public class Edition
+    public class EditionResponse
     {
         public int Id { get; set; }
 
         public string Name { get; set; }
 
-        public EditionType Type { get; set; } = EditionType.Normal;
+        public EditionType Type { get; set; }
 
         public string Authors { get; set; }
 
@@ -24,7 +27,7 @@ namespace BookPortal.Web.Domain.Models
 
         public int Count { get; set; }
 
-        public EditionCoverType CoverType { get; set; } = EditionCoverType.Unknown;
+        public EditionCoverType CoverType { get; set; }
 
         public bool SuperCover { get; set; }
 
@@ -39,12 +42,7 @@ namespace BookPortal.Web.Domain.Models
         public string Notes { get; set; }
 
         public int? LanguageId { get; set; }
-        public Language Language { get; set; }
 
-        public ICollection<EditionWork> Works { get; set; } = new HashSet<EditionWork>();
-
-        public ICollection<EditionSerie> Series { get; set; } = new HashSet<EditionSerie>();
-
-        public ICollection<EditionPublisher> Publishers { get; set; } = new HashSet<EditionPublisher>();
+        public int SerieSort { get; set; }
     }
 }

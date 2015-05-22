@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BookPortal.Core.ApiPrimitives;
+using BookPortal.Web.Models;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Mvc;
 
@@ -35,6 +36,17 @@ namespace BookPortal.Web.Controllers
                 return this.ErrorObject(404, $"Serie (id: {serieId}) is not found");
 
             return this.SingleObject(200, serie);
+        }
+
+        [HttpGet("{serieId}/editions")]
+        public async Task<IActionResult> GetEditions(SerieRequest request)
+        {
+            var treeItem = await _seriesService.GetSerieEditionsAsync(request);
+
+            if (treeItem == null)
+                return this.ErrorObject(404, $"Serie (id: {request.SerieId}) is not found");
+
+            return this.SingleObject(200, treeItem);
         }
 
         [HttpGet("{serieId}/tree")]

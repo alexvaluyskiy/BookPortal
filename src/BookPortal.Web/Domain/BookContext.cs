@@ -185,8 +185,6 @@ namespace BookPortal.Web.Domain
                 builder.Property(c => c.Type).ForRelational().Column("type");
                 builder.Property(c => c.Authors).ForRelational().Column("authors");
                 builder.Property(c => c.Compilers).ForRelational().Column("compilers");
-                builder.Property(c => c.Publishers).ForRelational().Column("publishers");
-                builder.Property(c => c.Series).ForRelational().Column("series");
                 builder.Property(c => c.Isbn).ForRelational().Column("isbn");
                 builder.Property(c => c.Year).ForRelational().Column("year");
                 builder.Property(c => c.Count).ForRelational().Column("count");
@@ -216,6 +214,7 @@ namespace BookPortal.Web.Domain
             modelBuilder.Entity<EditionSerie>(builder =>
             {
                 builder.Property(c => c.Id).ForRelational().Column("id");
+                builder.Property(c => c.Sort).ForRelational().Column("sort");
                 builder.Property(c => c.EditionId).ForRelational().Column("edition_id");
                 builder.Property(c => c.SerieId).ForRelational().Column("serie_id");
 

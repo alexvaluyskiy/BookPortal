@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BookPortal.Web.Domain;
 using BookPortal.Web.Domain.Models;
+using BookPortal.Web.Domain.Models.Types;
 using BookPortal.Web.Models;
 using Microsoft.Data.Entity;
 
@@ -27,6 +28,59 @@ namespace BookPortal.Web.Services
         public async Task<Serie> GetSerieAsync(int serieId)
         {
             return await _bookContext.Series.Where(c => c.Id == serieId).SingleOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<Edition>> GetSerieEditionsAsync(SerieRequest request)
+        {
+            string sql = @"
+                SELECT e.*
+                FROM edition_series es INNER JOIN editions e ON e.edition_id = es.edition_id
+                WHERE es.serie_id = @serie_id
+            ";
+
+            switch (request.Sort)
+            {
+                case SerieEditionsSort.Name:
+                    sql += "ORDER BY e.name, e.year";
+                    break;
+                case SerieEditionsSort.Authors:
+                    sql += "ORDER BY e.authors, es.sort, e.year";
+                    break;
+                case SerieEditionsSort.Year:
+                    sql += "ORDER BY e.year, es.sort, e.name";
+                    break;
+                default:
+                    sql += "ORDER BY e.ReleaseDate DESC, es.sort";
+                    break;
+            }
+
+            List<Edition> editions = new List<Edition>();
+
+            var connection = _bookContext.Database.AsSqlServer().Connection.DbConnection as SqlConnection;
+            connection.Open();
+            using (var command = new SqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@serie_id", request.SerieId);
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        var edition = new Edition();
+                        edition.Id = reader.GetValue<int>("edition_id");
+                        edition.Name = reader.GetValue<string>("name");
+                        edition.Year = reader.GetValue<int>("year");
+                        edition.CoverType = (EditionCoverType)reader.GetValue<int>("cover_type");
+                        edition.Format = reader.GetValue<string>("format");
+                        edition.Authors = reader.GetValue<string>("authors");
+                        edition.Description = reader.GetValue<string>("description");
+                        edition.ReleaseDate = reader.GetValue<DateTime?>("ReleaseDate");
+                        editions.Add(edition);
+                    }
+                }
+            }
+            connection.Close();
+
+            return editions.Skip(request.Offset).Take(request.Limit);
         }
 
         public async Task<SerieTreeItem> GetSerieTreeAsync(int serieId)

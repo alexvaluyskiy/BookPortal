@@ -45,6 +45,7 @@ namespace BookPortal.Web
                 jsonOutputFormatter.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 jsonOutputFormatter.SerializerSettings.Formatting = Formatting.Indented;
                 jsonOutputFormatter.SerializerSettings.ContractResolver = new LowerCasePropertyNamesContractResolver();
+                jsonOutputFormatter.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
 
                 options.OutputFormatters.RemoveTypesOf<JsonOutputFormatter>();
                 options.OutputFormatters.Add(jsonOutputFormatter);
@@ -91,7 +92,7 @@ namespace BookPortal.Web
             loggerFactory.AddLoggingService(
                 Configuration.Get("AppSettings:LoggingService"),
                 Configuration.Get("AppSettings:ApplicationName"),
-                LogLevel.Information);
+                LogLevel.Verbose);
 
             app.UseStaticFiles();
 

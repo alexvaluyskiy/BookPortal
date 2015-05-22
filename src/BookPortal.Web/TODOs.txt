@@ -22,3 +22,13 @@ NET Core
 2. HtmlAgilityPack is not supported
 3. Moq is not supported
 4. AutoFixture is not supported
+
+
+TODO
+--------------------------
+1. Communication between services
+2. Deploy services and databases to Azure
+
+TODO Domain Model
+--------------------------
+1. Add pseudonyms to Persons
