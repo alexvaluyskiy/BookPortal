@@ -15,16 +15,18 @@ using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
 using Newtonsoft.Json;
 using System.Linq;
+using Microsoft.Framework.Runtime;
 
 namespace BookPortal.Reviews
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
         {
-            var configuration = new Configuration();
-            configuration.AddConfigurationService("http://localhost:6004", "BookPortalReviews");
-            configuration.AddJsonFile("config.json", optional: true);
+            var configuration = new Configuration(appEnv.ApplicationBasePath);
+            configuration.AddJsonFile("config.json");
+            configuration.AddConfigurationService(configuration.Get("Services:ConfigurationService"), "Shared");
+            configuration.AddConfigurationService(configuration.Get("Services:ConfigurationService"), "BookPortalReviews");
 
             Configuration = configuration;
         }
@@ -56,7 +58,7 @@ namespace BookPortal.Reviews
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddLoggingService(
-                Configuration.Get("AppSettings:LoggingService"),
+                Configuration.Get("Services:LoggingService"),
                 Configuration.Get("AppSettings:ApplicationName"),
                 LogLevel.Warning);
 
@@ -66,7 +68,7 @@ namespace BookPortal.Reviews
             MapperInitialization.Initialize();
 
             //Populates the BookContext sample data
-            SampleData.InitializeDatabaseAsync(app.ApplicationServices).Wait();
+            //SampleData.InitializeDatabaseAsync(app.ApplicationServices).Wait();
         }
     }
 }

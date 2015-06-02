@@ -5,7 +5,7 @@
     "dependencies": {
         "BookPortal.Core.ApiPrimitives": "1.0.1",
         "BookPortal.Core.Configuration": "1.0.2",
-        "BookPortal.Core.Logging": "1.0-*",
+        "BookPortal.Core.Logging": "1.0.1",
         "Microsoft.AspNet.Mvc": "6.0.0-*",
         "Microsoft.AspNet.Server.IIS": "1.0.0-*",
         "Microsoft.AspNet.Server.WebListener": "1.0.0-*",

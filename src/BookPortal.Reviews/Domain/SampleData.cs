@@ -37,7 +37,7 @@ namespace BookPortal.Reviews.Domain
                 {
                     db.ReviewVotes.Add(vote);
                 }
-                await db.SaveChangesAsync();
+                //await db.SaveChangesAsync();
             }
         }
 

@@ -7,16 +7,20 @@ using Microsoft.Data.Entity;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
+using Microsoft.Framework.Runtime;
 
 namespace BookPortal.Logging
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
         {
-            var configuration = new Configuration();
-            configuration.AddConfigurationService("http://localhost:6004", "BookPortalWeb");
-            configuration.AddJsonFile("config.json", optional: true);
+            var configuration = new Configuration(appEnv.ApplicationBasePath);
+            configuration.AddJsonFile("config.json");
+            configuration.AddConfigurationService(configuration.Get("Services:ConfigurationService"), "Shared");
+            configuration.AddConfigurationService(configuration.Get("Services:ConfigurationService"), "BookPortalLogging");
+
+            Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; set; }

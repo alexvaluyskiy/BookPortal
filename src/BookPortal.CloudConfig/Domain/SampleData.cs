@@ -61,16 +61,9 @@ namespace BookPortal.CloudConfig.Domain
 
             yield return new Config
             {
-                ProfileId = 1,
-                Key = "Services:ConfigurationService",
-                Value = "http://localhost:6004"
-            };
-
-            yield return new Config
-            {
                 ProfileId = 2,
                 Key = "Data:DefaultConnection:ConnectionString",
-                Value = "Data Source=PC-OLVAL0;Database=LogsDatabase;User ID=ravenger;Password=qe1dg7bm"
+                Value = "Data Source=RAVENGER-PC\\SQLEXPRESS;Database=LogsDatabase;User ID=ravenger;Password=qe1dg7bm"
             };
 
             yield return new Config
@@ -84,7 +77,7 @@ namespace BookPortal.CloudConfig.Domain
             {
                 ProfileId = 3,
                 Key = "Data:DefaultConnection:ConnectionString",
-                Value = "Data Source=PC-OLVAL0;Database=ReviewsDatabase;User ID=ravenger;Password=qe1dg7bm"
+                Value = "Data Source=RAVENGER-PC\\SQLEXPRESS;Database=ReviewsDatabase;User ID=ravenger;Password=qe1dg7bm"
             };
 
             yield return new Config
@@ -98,7 +91,14 @@ namespace BookPortal.CloudConfig.Domain
             {
                 ProfileId = 4,
                 Key = "Data:DefaultConnection:ConnectionString",
-                Value = "Data Source=PC-OLVAL0;Database=BooksDatabase;User ID=ravenger;Password=qe1dg7bm"
+                Value = "Data Source=RAVENGER-PC\\SQLEXPRESS;Database=BooksDatabase;User ID=ravenger;Password=qe1dg7bm"
+            };
+
+            yield return new Config
+            {
+                ProfileId = 4,
+                Key = "AppSettings:ImportOzonUrl",
+                Value = "http://www.ozon.ru/context/detail/id/"
             };
         }
     }

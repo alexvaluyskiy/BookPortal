@@ -1,4 +1,6 @@
-﻿namespace BookPortal.Reviews.Domain.Models
+﻿using System;
+
+namespace BookPortal.Reviews.Domain.Models
 {
     public class ReviewVote
     {
@@ -10,5 +12,7 @@
         public int UserId { get; set; }
 
         public int Vote { get; set; }
+
+        public DateTime DateCreated { get; set; }
     }
 }

@@ -1,13 +1,6 @@
 ﻿{
-    "AppSettings": {
-        "ApplicationName": "BookPortal.Web",
-        "LoggingService": "http://localhost:6001",
-        "ImportOzonUrl": "http://www.ozon.ru/context/detail/id/"
-    },
-    "Data": {
-        "DefaultConnection": {
-            "ConnectionString": "Data Source=PC-OLVAL0;Database=BooksDatabase;User ID=ravenger;Password=qe1dg7bm"
-        }
+    "Services": {
+        "ConfigurationService": "http://localhost:6004"
     },
     "ApplicationInsights": {
         "InstrumentationKey": "44f3c97f-7c3f-458a-8135-d895b80ed1f4",

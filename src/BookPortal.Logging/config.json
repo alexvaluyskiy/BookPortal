@@ -1,7 +1,5 @@
 ﻿{
-    "Data": {
-        "DefaultConnection": {
-            "ConnectionString": "Data Source=PC-OLVAL0;Database=LogsDatabase;User ID=ravenger;Password=qe1dg7bm"
-        }
+    "Services": {
+        "ConfigurationService": "http://localhost:6004"
     }
 }

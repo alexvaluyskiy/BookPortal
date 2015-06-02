@@ -14,17 +14,19 @@ using Microsoft.Data.Entity;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
+using Microsoft.Framework.Runtime;
 using Newtonsoft.Json;
 
 namespace BookPortal.Web
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
         {
-            var configuration = new Configuration();
-            configuration.AddConfigurationService("http://localhost:6004", "BookPortalWeb");
-            configuration.AddJsonFile("config.json", optional: true);
+            var configuration = new Configuration(appEnv.ApplicationBasePath);
+            configuration.AddJsonFile("config.json");
+            configuration.AddConfigurationService(configuration.Get("Services:ConfigurationService"), "Shared");
+            configuration.AddConfigurationService(configuration.Get("Services:ConfigurationService"), "BookPortalWeb");
 
             Configuration = configuration;
         }
@@ -79,7 +81,7 @@ namespace BookPortal.Web
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddLoggingService(
-                Configuration.Get("AppSettings:LoggingService"),
+                Configuration.Get("Services:LoggingService"),
                 Configuration.Get("AppSettings:ApplicationName"),
                 LogLevel.Verbose);
 

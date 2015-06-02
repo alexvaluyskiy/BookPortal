@@ -49,7 +49,7 @@ namespace BookPortal.CloudConfig
             app.UseMvc();
 
             //Populates the BookContext sample data
-            SampleData.InitializeDatabaseAsync(app.ApplicationServices).Wait();
+            //SampleData.InitializeDatabaseAsync(app.ApplicationServices).Wait();
         }
     }
 }
