@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BookPortal.CloudConfig.Domain;
+using BookPortal.CloudConfig.Domain.Models;
+using BookPortal.CloudConfig.Model;
 using Microsoft.AspNet.Mvc;
 
 namespace BookPortal.CloudConfig.Controllers
@@ -19,7 +20,7 @@ namespace BookPortal.CloudConfig.Controllers
         [HttpGet("api/config/{profile}")]
         public async Task<IActionResult> Get(string profile)
         {
-            int profileId = _context.Profiles.Where(c => c.Name == profile).Select(c => c.Id).SingleOrDefault();
+            int profileId = GetProfileId(profile);
 
             if (profileId == 0)
                 return this.ErrorObject(400, $@"Profile ""{profile}"" is not found");
@@ -30,6 +31,58 @@ namespace BookPortal.CloudConfig.Controllers
                 .ToListAsync();
 
             return new ObjectResult(configs);
+        }
+
+        [HttpPost("api/config/{profile}")]
+        public async Task<IActionResult> Post(string profile, [FromBody]ConfigRequest request)
+        {
+            int profileId = GetProfileId(profile);
+
+            if (profileId == 0)
+                return this.ErrorObject(400, $@"Profile ""{profile}"" is not found");
+
+            Config config = GetConfig(profileId, request.Key);
+
+            if (config == null)
+            {
+                config = new Config { Key = request.Key, Value = request.Value, ProfileId = profileId };
+                _context.Add(config);
+            }
+            else
+            {
+                _context.Update(config);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return new ObjectResult(request) { StatusCode = 201 };
+        }
+
+        [HttpDelete("api/config/{profile}/{key}")]
+        public async Task<IActionResult> Delete(string profile, string key)
+        {
+            int profileId = GetProfileId(profile);
+            if (profileId == 0)
+                return this.ErrorObject(400, $@"Profile ""{profile}"" is not found");
+
+            var config = _context.Configs.SingleOrDefault(c => c.ProfileId == profileId && c.Key == key);
+            if (config == null)
+                return this.ErrorObject(400, $@"Key ""{key}"" is not found");
+
+            _context.Configs.Remove(config);
+            await _context.SaveChangesAsync();
+
+            return new HttpStatusCodeResult(204);
+        }
+
+        private int GetProfileId(string profile)
+        {
+            return _context.Profiles.Where(c => c.Name == profile).Select(c => c.Id).SingleOrDefault();
+        }
+
+        private Config GetConfig(int profileId, string key)
+        {
+            return _context.Configs.SingleOrDefault(c => c.ProfileId == profileId && c.Key == key);
         }
     }
 }
