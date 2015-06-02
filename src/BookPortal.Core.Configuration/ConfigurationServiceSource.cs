@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Microsoft.Framework.ConfigurationModel;
 using Newtonsoft.Json;
 
@@ -22,17 +23,21 @@ namespace BookPortal.Core.Configuration
 
         public override void Load()
         {
+            LoadAsync().Wait();
+        }
+
+        public async Task LoadAsync()
+        {
             HttpRequestMessage requestMessage = new HttpRequestMessage();
             requestMessage.RequestUri = new Uri(_configServiceUri, "api/config/" + _profile);
             requestMessage.Method = HttpMethod.Get;
 
-            var response = _client.SendAsync(requestMessage).GetAwaiter().GetResult();
+            var response = await _client.SendAsync(requestMessage);
 
             if (response.IsSuccessStatusCode)
             {
-                string content = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                string content = await response.Content.ReadAsStringAsync();
                 var result = JsonConvert.DeserializeObject<List<KeyValuePair<string, string>>>(content);
-
 
                 Data = result.ToDictionary(x => x.Key, x => x.Value);
             }

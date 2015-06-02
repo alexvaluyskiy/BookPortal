@@ -19,12 +19,17 @@ namespace BookPortal.CloudConfig.Controllers
         [HttpGet("api/config/{profile}")]
         public async Task<IActionResult> Get(string profile)
         {
-            var configs = await _context.Configs.Where(c => c.Profile.Name == profile).ToListAsync();
+            int profileId = _context.Profiles.Where(c => c.Name == profile).Select(c => c.Id).SingleOrDefault();
 
-            if (configs == null)
-                return this.ErrorObject(400, $"Can't find the profile: {profile}");
+            if (profileId == 0)
+                return this.ErrorObject(400, $@"Profile ""{profile}"" is not found");
 
-            return this.SingleObject(200, configs);
+            var configs = await _context.Configs
+                .Where(c => c.ProfileId == profileId)
+                .Select(c => new KeyValuePair<string, string>(c.Key, c.Value))
+                .ToListAsync();
+
+            return new ObjectResult(configs);
         }
     }
 }
