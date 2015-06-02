@@ -1,7 +1,7 @@
 ﻿{
     "Data": {
         "DefaultConnection": {
-            "ConnectionString": "Data Source=PC-OLVAL0;Database=ConfigsDatabase;User ID=ravenger;Password=qe1dg7bm"
+            "ConnectionString": "Data Source=RAVENGER-PC\\SQLEXPRESS;Database=ConfigsDatabase;User ID=ravenger;Password=qe1dg7bm"
         }
     }
 }

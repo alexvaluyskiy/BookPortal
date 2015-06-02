@@ -43,6 +43,7 @@ namespace BookPortal.CloudConfig.Domain
 
         private static IEnumerable<ConfigProfile> GetProfiles()
         {
+            yield return new ConfigProfile { Name = "Shared" };
             yield return new ConfigProfile { Name = "BookPortalLogging" };
             yield return new ConfigProfile { Name = "BookPortalReviews" };
             yield return new ConfigProfile { Name = "BookPortalWeb" };
@@ -53,50 +54,50 @@ namespace BookPortal.CloudConfig.Domain
             yield return new Config
             {
                 ProfileId = 1,
+                Key = "Services:LoggingService",
+                Value = "http://localhost:6001"
+            };
+
+            yield return new Config
+            {
+                ProfileId = 1,
+                Key = "Services:ConfigurationService",
+                Value = "http://localhost:6004"
+            };
+
+            yield return new Config
+            {
+                ProfileId = 2,
                 Key = "Data:DefaultConnection:ConnectionString",
                 Value = "Data Source=PC-OLVAL0;Database=LogsDatabase;User ID=ravenger;Password=qe1dg7bm"
             };
 
             yield return new Config
             {
-                ProfileId = 2,
-                Key = "AppSettings:LoggingService",
-                Value = "http://localhost:6001"
-            };
-
-            yield return new Config
-            {
-                ProfileId = 2,
+                ProfileId = 3,
                 Key = "AppSettings:ApplicationName",
                 Value = "BookPortal.Reviews"
             };
 
             yield return new Config
             {
-                ProfileId = 2,
+                ProfileId = 3,
                 Key = "Data:DefaultConnection:ConnectionString",
                 Value = "Data Source=PC-OLVAL0;Database=ReviewsDatabase;User ID=ravenger;Password=qe1dg7bm"
             };
 
             yield return new Config
             {
-                ProfileId = 3,
-                Key = "AppSettings:LoggingService",
-                Value = "http://localhost:6001"
-            };
-
-            yield return new Config
-            {
-                ProfileId = 3,
+                ProfileId = 4,
                 Key = "AppSettings:ApplicationName",
                 Value = "BookPortal.Web"
             };
 
             yield return new Config
             {
-                ProfileId = 3,
+                ProfileId = 4,
                 Key = "Data:DefaultConnection:ConnectionString",
-                Value = "Data Source=PC-OLVAL0;Database=ReviewsDatabase;User ID=ravenger;Password=qe1dg7bm"
+                Value = "Data Source=PC-OLVAL0;Database=BooksDatabase;User ID=ravenger;Password=qe1dg7bm"
             };
         }
     }
