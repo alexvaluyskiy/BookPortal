@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BookPortal.Web.Domain.Models;
-using Microsoft.Data.Entity.SqlServer;
+using Microsoft.Data.Entity.Relational;
 using Microsoft.Framework.DependencyInjection;
 
 namespace BookPortal.Web.Domain
@@ -13,7 +13,7 @@ namespace BookPortal.Web.Domain
         {
             using (var db = serviceProvider.GetService<BookContext>())
             {
-                var sqlServerDatabase = db.Database as SqlServerDatabase;
+                var sqlServerDatabase = db.Database as RelationalDatabase;
                 if (sqlServerDatabase != null)
                 {
                     await sqlServerDatabase.EnsureDeletedAsync();

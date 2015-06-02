@@ -1,6 +1,4 @@
 ﻿using System;
-using Autofac;
-using Autofac.Dnx;
 using BookPortal.Core.ApiPrimitives;
 using BookPortal.Core.ApiPrimitives.Filters;
 using BookPortal.Core.Configuration;
@@ -16,6 +14,7 @@ using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace BookPortal.Reviews
 {
@@ -32,12 +31,14 @@ namespace BookPortal.Reviews
 
         public IConfiguration Configuration { get; set; }
 
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().Configure<MvcOptions>(options =>
             {
                 // setup json output serializer
-                options.OutputFormatters.RemoveTypesOf<JsonOutputFormatter>();
+                var formatter = options.OutputFormatters
+                    .SingleOrDefault(c => c.GetType() == typeof(JsonOutputFormatter));
+                options.OutputFormatters.Remove(formatter);
                 options.OutputFormatters.Add(JsonFormatterFactory.Create());
 
                 // add filters
@@ -49,14 +50,7 @@ namespace BookPortal.Reviews
                .AddDbContext<ReviewContext>(options =>
                     options.UseSqlServer(Configuration.Get("Data:DefaultConnection:ConnectionString")));
 
-            ContainerBuilder builder = new ContainerBuilder();
-
-            builder.RegisterType<ReviewsService>();
-
-            builder.Populate(services);
-            var container = builder.Build();
-
-            return container.Resolve<IServiceProvider>();
+            services.AddScoped<ReviewsService>();
         }
 
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)

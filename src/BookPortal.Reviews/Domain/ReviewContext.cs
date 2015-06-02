@@ -10,25 +10,25 @@ namespace BookPortal.Reviews.Domain
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Review>().ForRelational().Table("reviews");
+            modelBuilder.Entity<Review>().ForSqlServer().Table("reviews");
             modelBuilder.Entity<Review>(builder =>
             {
-                builder.Property(c => c.Id).ForRelational().Column("response_id");
-                builder.Property(c => c.UserId).ForRelational().Column("user_id");
-                builder.Property(c => c.WorkId).ForRelational().Column("work_id");
-                builder.Property(c => c.Text).ForRelational().Column("text");
-                builder.Property(c => c.DateCreated).ForRelational().Column("date_created");
+                builder.Property(c => c.Id).ForSqlServer().Column("response_id");
+                builder.Property(c => c.UserId).ForSqlServer().Column("user_id");
+                builder.Property(c => c.WorkId).ForSqlServer().Column("work_id");
+                builder.Property(c => c.Text).ForSqlServer().Column("text");
+                builder.Property(c => c.DateCreated).ForSqlServer().Column("date_created");
 
                 builder.Property(c => c.Id).ForSqlServer().UseIdentity();
             });
 
-            modelBuilder.Entity<ReviewVote>().ForRelational().Table("review_vote");
+            modelBuilder.Entity<ReviewVote>().ForSqlServer().Table("review_vote");
             modelBuilder.Entity<ReviewVote>(builder =>
             {
-                builder.Property(c => c.Id).ForRelational().Column("response_vote_id");
-                builder.Property(c => c.ReviewId).ForRelational().Column("response_id");
-                builder.Property(c => c.UserId).ForRelational().Column("user_id");
-                builder.Property(c => c.Vote).ForRelational().Column("vote");
+                builder.Property(c => c.Id).ForSqlServer().Column("response_vote_id");
+                builder.Property(c => c.ReviewId).ForSqlServer().Column("response_id");
+                builder.Property(c => c.UserId).ForSqlServer().Column("user_id");
+                builder.Property(c => c.Vote).ForSqlServer().Column("vote");
 
                 builder.Property(c => c.Id).ForSqlServer().UseIdentity();
             });

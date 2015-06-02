@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BookPortal.Reviews.Domain.Models;
-using Microsoft.Data.Entity.SqlServer;
+using Microsoft.Data.Entity.Relational;
 using Microsoft.Framework.DependencyInjection;
 
 namespace BookPortal.Reviews.Domain
@@ -13,7 +13,7 @@ namespace BookPortal.Reviews.Domain
         {
             using (var db = serviceProvider.GetService<ReviewContext>())
             {
-                var sqlServerDatabase = db.Database as SqlServerDatabase;
+                var sqlServerDatabase = db.Database as RelationalDatabase;
                 if (sqlServerDatabase != null)
                 {
                     await sqlServerDatabase.EnsureDeletedAsync();

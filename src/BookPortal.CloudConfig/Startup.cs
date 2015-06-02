@@ -8,14 +8,16 @@ using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
 using BookPortal.Core.ApiPrimitives.Filters;
 using BookPortal.Core.ApiPrimitives;
+using System.Linq;
+using Microsoft.Framework.Runtime;
 
 namespace BookPortal.CloudConfig
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
         {
-            var configuration = new Configuration();
+            var configuration = new Configuration(appEnv.ApplicationBasePath);
             configuration.AddJsonFile("config.json");
 
             Configuration = configuration;
@@ -28,7 +30,8 @@ namespace BookPortal.CloudConfig
             services.AddMvc().Configure<MvcOptions>(options =>
             {
                 // setup json output serializer
-                options.OutputFormatters.RemoveTypesOf<JsonOutputFormatter>();
+                var formatter = options.OutputFormatters
+                    .SingleOrDefault(c => c.GetType() == typeof(JsonOutputFormatter));
                 options.OutputFormatters.Add(JsonFormatterFactory.Create());
 
                 // add filters

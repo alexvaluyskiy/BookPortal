@@ -1,33 +1,17 @@
 ﻿{
     "version": "1.0.1",
-    "description": "",
-    "authors": [ "" ],
-    "tags": [ "" ],
-    "projectUrl": "",
-    "licenseUrl": "",
+    "description": "BookPortal.Core.Logging",
+    "authors": [ "Alex Valuyskiy" ],
 
     "dependencies": {
-        "Microsoft.Framework.Logging.Interfaces": "1.0.0-beta4",
+        "Microsoft.Framework.Logging.Abstractions": "1.0.0-*",
         "Newtonsoft.Json": "6.0.8"
     },
 
     "frameworks": {
         "dnx451": {
             "frameworkAssemblies": {
-                //"System.ComponentModel.Annotations": "4.0.0.0",
                 "System.Net.Http": "4.0.0.0"
-            }
-        },
-        "dnxcore50": {
-            "dependencies": {
-                "System.Collections": "4.0.10-*",
-                "System.Diagnostics.Debug": "4.0.10-*",
-                //"System.ComponentModel.Annotations": "4.0.10-*",
-                "System.Net.Http": "4.0.0-*",
-                "System.Linq": "4.0.0-*",
-                "System.Threading": "4.0.10-*",
-                "Microsoft.CSharp": "4.0.0-*",
-                "System.Reflection":  "4.0.10-*"        
             }
         }
     }

@@ -12,18 +12,17 @@
     "dependencies": {
         "BookPortal.Core.ApiPrimitives": "1.0.1",
         "BookPortal.Core.Configuration": "1.0.2",
-        "BookPortal.Core.Logging": "1.0.0-*",
-        "Microsoft.AspNet.Mvc": "6.0.0-beta4",
-        "Microsoft.AspNet.Server.IIS": "1.0.0-beta4",
-        "Microsoft.AspNet.Server.WebListener": "1.0.0-beta4",
-        "Microsoft.AspNet.StaticFiles": "1.0.0-beta4",
-        "Microsoft.AspNet.Diagnostics": "1.0.0-beta4",
-        "Microsoft.AspNet.Cors": "1.0.0-beta4",
-        "Microsoft.Framework.ConfigurationModel.Json": "1.0.0-beta4",
-        "Microsoft.ApplicationInsights.AspNet": "0.32.0-beta4",
-        "EntityFramework.SqlServer": "7.0.0-beta4",
-        "EntityFramework.Commands": "7.0.0-beta4",
-        "Autofac.Dnx": "4.0.0-*",
+        "BookPortal.Core.Logging": "1.0-*",
+        "Microsoft.AspNet.Mvc": "6.0.0-*",
+        "Microsoft.AspNet.Server.IIS": "1.0.0-*",
+        "Microsoft.AspNet.Server.WebListener": "1.0.0-*",
+        "Microsoft.AspNet.StaticFiles": "1.0.0-*",
+        "Microsoft.AspNet.Diagnostics": "1.0.0-*",
+        "Microsoft.AspNet.Cors": "1.0.0-*",
+        "Microsoft.Framework.ConfigurationModel.Json": "1.0.0-*",
+        "Microsoft.ApplicationInsights.AspNet": "0.32.0-*",
+        "EntityFramework.SqlServer": "7.0.0-*",
+        "EntityFramework.Commands": "7.0.0-*",
         "AutoMapper": "4.0.0-*",
         "HtmlAgilityPack": "1.4.9"
     },
@@ -38,15 +37,6 @@
             "frameworkAssemblies": {
                 "System.Net.Http": ""
             }
-        },
-        "dnxcore50": {
-            "dependencies": {
-                "System.Net.Http": "4.0.0-beta-*"
-            }
         }
-    },
-
-    "exclude": [
-        "wwwroot"
-    ]
+    }
 }

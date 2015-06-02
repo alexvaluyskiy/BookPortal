@@ -61,7 +61,7 @@ namespace BookPortal.Core.Logging
             return logLevel >= _minLogLevel;
         }
 
-        public IDisposable BeginScope(object state)
+        public IDisposable BeginScopeImpl(object state)
         {
             return null;
         }

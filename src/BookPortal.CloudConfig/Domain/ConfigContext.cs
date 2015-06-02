@@ -11,22 +11,31 @@ namespace BookPortal.CloudConfig.Domain
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Config>().ForRelational().Table("configs");
+            modelBuilder.Entity<Config>().ForSqlServer().Table("configs");
             modelBuilder.Entity<Config>(builder =>
             {
-                builder.Property(c => c.Id).ForRelational().Column("config_id");
-                builder.Property(c => c.Key).ForRelational().Column("key");
-                builder.Property(c => c.Value).ForRelational().Column("value");
-                builder.Property(c => c.ProfileId).ForRelational().Column("profile_id");
+                builder.Property(c => c.Id).ForSqlServer()
+                    .Column("config_id");
+                builder.Property(c => c.Key).ForSqlServer()
+                    .Column("key")
+                    .ColumnType("nvarchar(50)");
+                builder.Property(c => c.Value).ForSqlServer()
+                    .Column("value")
+                    .ColumnType("nvarchar(250)");
+                builder.Property(c => c.ProfileId).ForSqlServer()
+                    .Column("profile_id");
 
                 builder.Property(c => c.Id).ForSqlServer().UseIdentity();
             });
 
-            modelBuilder.Entity<ConfigProfile>().ForRelational().Table("profiles");
+            modelBuilder.Entity<ConfigProfile>().ForSqlServer().Table("profiles");
             modelBuilder.Entity<ConfigProfile>(builder =>
             {
-                builder.Property(c => c.Id).ForRelational().Column("profile_id");
-                builder.Property(c => c.Name).ForRelational().Column("name");
+                builder.Property(c => c.Id).ForSqlServer()
+                    .Column("profile_id");
+                builder.Property(c => c.Name).ForSqlServer()
+                    .Column("name")
+                    .ColumnType("nvarchar(50)");
 
                 builder.Property(c => c.Id).ForSqlServer().UseIdentity();
             });

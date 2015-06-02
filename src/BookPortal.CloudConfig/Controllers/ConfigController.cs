@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Data.Entity;
 using BookPortal.CloudConfig.Domain;
 using BookPortal.CloudConfig.Domain.Models;
 using BookPortal.CloudConfig.Model;
@@ -8,11 +9,11 @@ using Microsoft.AspNet.Mvc;
 
 namespace BookPortal.CloudConfig.Controllers
 {
-    public class ConfigContollers : Controller
+    public class ConfigController : Controller
     {
         private readonly ConfigContext _context;
 
-        public ConfigContollers(ConfigContext context)
+        public ConfigController(ConfigContext context)
         {
             _context = context;
         }

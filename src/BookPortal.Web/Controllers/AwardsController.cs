@@ -54,7 +54,7 @@ namespace BookPortal.Web.Controllers
 
             if (award == null)
                 return this.ErrorObject(400);
-
+                
             return new HttpStatusCodeResult(204);
         }
 

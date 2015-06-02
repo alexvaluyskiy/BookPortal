@@ -31,6 +31,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BookPortal.Core.ApiPrimitiv
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BookPortal.CloudConfig", "src\BookPortal.CloudConfig\BookPortal.CloudConfig.xproj", "{A420C4BD-9E28-4DF3-8EF1-C8E772D936C0}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BookPortal.CloudConfig.Test", "test\BookPortal.CloudConfig.Tests\BookPortal.CloudConfig.Test.xproj", "{AFF01640-62E7-43DF-9031-D270CE5EDCA6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,10 @@ Global
 		{A420C4BD-9E28-4DF3-8EF1-C8E772D936C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A420C4BD-9E28-4DF3-8EF1-C8E772D936C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A420C4BD-9E28-4DF3-8EF1-C8E772D936C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFF01640-62E7-43DF-9031-D270CE5EDCA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFF01640-62E7-43DF-9031-D270CE5EDCA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFF01640-62E7-43DF-9031-D270CE5EDCA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFF01640-62E7-43DF-9031-D270CE5EDCA6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -87,5 +93,6 @@ Global
 		{BA03C6CC-F41E-4212-AC38-C1F6A8670767} = {365DCF6D-CDCA-48DF-A959-8F24BC737B2E}
 		{B143E258-4AD4-473A-943B-408161664FC2} = {365DCF6D-CDCA-48DF-A959-8F24BC737B2E}
 		{A420C4BD-9E28-4DF3-8EF1-C8E772D936C0} = {365DCF6D-CDCA-48DF-A959-8F24BC737B2E}
+		{AFF01640-62E7-43DF-9031-D270CE5EDCA6} = {D1B21080-2F37-4597-B2D5-1B6EEA071776}
 	EndGlobalSection
 EndGlobal

@@ -1,6 +1,5 @@
 ﻿using System;
-using Autofac;
-using Autofac.Dnx;
+using System.Linq;
 using BookPortal.Core.ApiPrimitives;
 using BookPortal.Core.ApiPrimitives.Filters;
 using BookPortal.Core.Configuration;
@@ -32,16 +31,19 @@ namespace BookPortal.Web
 
         public IConfiguration Configuration { get; set; }
 
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<AppSettings>(Configuration.GetSubKey("AppSettings"));
+            //IConfiguration configs = Configuration.GetSubKey("AppSettings");
+            //services.Configure<AppSettings>(configs, 0, "Default");
 
             services.AddCors();
 
             services.AddMvc().Configure<MvcOptions>(options =>
             {
                 // setup json output serializer
-                options.OutputFormatters.RemoveTypesOf<JsonOutputFormatter>();
+                var formatter = options.OutputFormatters
+                    .SingleOrDefault(c => c.GetType() == typeof (JsonOutputFormatter));
+                options.OutputFormatters.Remove(formatter);
                 options.OutputFormatters.Add(JsonFormatterFactory.Create());
 
                 // add filters
@@ -53,32 +55,25 @@ namespace BookPortal.Web
                .AddDbContext<BookContext>(options => 
                     options.UseSqlServer(Configuration.Get("Data:DefaultConnection:ConnectionString")));
 
-            services.AddApplicationInsightsTelemetry(Configuration);
+            //services.AddApplicationInsightsTelemetry(Configuration);
 
-            ContainerBuilder builder = new ContainerBuilder();
+            services.AddScoped<AwardsService>();
+            services.AddScoped<NominationsService>();
+            services.AddScoped<ContestsService>();
+            services.AddScoped<ContestsWorksService>();
 
-            builder.RegisterType<AwardsService>();
-            builder.RegisterType<NominationsService>();
-            builder.RegisterType<ContestsService>();
-            builder.RegisterType<ContestsWorksService>();
+            services.AddScoped<PersonsService>();
+            services.AddScoped<WorksService>();
+            services.AddScoped<TranslationsService>();
+            services.AddScoped<EditionsService>();
 
-            builder.RegisterType<PersonsService>();
-            builder.RegisterType<WorksService>();
-            builder.RegisterType<TranslationsService>();
-            builder.RegisterType<EditionsService>();
+            services.AddScoped<PublishersService>();
+            services.AddScoped<SeriesService>();
 
-            builder.RegisterType<PublishersService>();
-            builder.RegisterType<SeriesService>();
+            services.AddScoped<CountriesService>();
+            services.AddScoped<LanguagesService>();
 
-            builder.RegisterType<CountriesService>();
-            builder.RegisterType<LanguagesService>();
-
-            builder.RegisterType<ImportersService>();
-
-            builder.Populate(services);
-            var container = builder.Build();
-
-            return container.Resolve<IServiceProvider>();
+            services.AddScoped<ImportersService>();
         }
 
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
@@ -94,8 +89,8 @@ namespace BookPortal.Web
 
             app.UseErrorHandler(builder => builder.Run(ErrorRequestHandler.HandleErrorRequest));
 
-            app.UseApplicationInsightsRequestTelemetry();
-            app.UseApplicationInsightsExceptionTelemetry();
+            //app.UseApplicationInsightsRequestTelemetry();
+            //app.UseApplicationInsightsExceptionTelemetry();
 
             app.UseMvc();
 

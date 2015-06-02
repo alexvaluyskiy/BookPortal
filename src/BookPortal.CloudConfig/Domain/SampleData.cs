@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BookPortal.CloudConfig.Domain.Models;
+using Microsoft.Data.Entity.Relational;
 using Microsoft.Data.Entity.SqlServer;
 using Microsoft.Framework.DependencyInjection;
 
@@ -13,7 +14,7 @@ namespace BookPortal.CloudConfig.Domain
         {
             using (var db = serviceProvider.GetService<ConfigContext>())
             {
-                var sqlServerDatabase = db.Database as SqlServerDatabase;
+                var sqlServerDatabase = db.Database as RelationalDatabase;
                 if (sqlServerDatabase != null)
                 {
                     await sqlServerDatabase.EnsureDeletedAsync();

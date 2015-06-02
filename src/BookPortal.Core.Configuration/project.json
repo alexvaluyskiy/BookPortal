@@ -1,15 +1,12 @@
 ﻿{
     "version": "1.0.2",
-    "description": "",
+    "description": "BookPortal.Core.Configuration",
     "authors": [
         "Alex Valuyskiy"
     ],
-    "tags": [ "" ],
-    "projectUrl": "",
-    "licenseUrl": "",
 
     "dependencies": {
-        "Microsoft.Framework.ConfigurationModel": "1.0.0-beta4",
+        "Microsoft.Framework.ConfigurationModel": "1.0.0-*",
         "Newtonsoft.Json": "6.0.8"
     },
 
@@ -18,15 +15,6 @@
             "frameworkAssemblies": {
                 "System.Linq": "4.0.0.0",
                 "System.Net.Http": "4.0.0.0"
-            }
-        },
-        "dnxcore50": {
-            "dependencies": {
-                "System.Collections": "4.0.10-*",
-                "System.Linq": "4.0.0-*",
-                "System.Net.Http": "4.0.0-*",
-                "System.Threading": "4.0.10-*",
-                "Microsoft.CSharp": "4.0.0-*"
             }
         }
     }
