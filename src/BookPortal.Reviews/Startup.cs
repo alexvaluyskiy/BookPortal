@@ -37,13 +37,8 @@ namespace BookPortal.Reviews
             services.AddMvc().Configure<MvcOptions>(options =>
             {
                 // setup json output serializer
-                var jsonOutputFormatter = new JsonOutputFormatter();
-                jsonOutputFormatter.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                jsonOutputFormatter.SerializerSettings.Formatting = Formatting.Indented;
-                jsonOutputFormatter.SerializerSettings.ContractResolver = new LowerCasePropertyNamesContractResolver();
-
                 options.OutputFormatters.RemoveTypesOf<JsonOutputFormatter>();
-                options.OutputFormatters.Add(jsonOutputFormatter);
+                options.OutputFormatters.Add(JsonFormatterFactory.Create());
 
                 // add filters
                 options.Filters.Add(new ValidateModelAttribute());

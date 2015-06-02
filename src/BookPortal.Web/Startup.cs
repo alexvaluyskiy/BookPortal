@@ -41,14 +41,8 @@ namespace BookPortal.Web
             services.AddMvc().Configure<MvcOptions>(options =>
             {
                 // setup json output serializer
-                var jsonOutputFormatter = new JsonOutputFormatter();
-                jsonOutputFormatter.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                jsonOutputFormatter.SerializerSettings.Formatting = Formatting.Indented;
-                jsonOutputFormatter.SerializerSettings.ContractResolver = new LowerCasePropertyNamesContractResolver();
-                jsonOutputFormatter.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-
                 options.OutputFormatters.RemoveTypesOf<JsonOutputFormatter>();
-                options.OutputFormatters.Add(jsonOutputFormatter);
+                options.OutputFormatters.Add(JsonFormatterFactory.Create());
 
                 // add filters
                 options.Filters.Add(new ValidateModelAttribute());
@@ -109,7 +103,7 @@ namespace BookPortal.Web
             MapperInitialization.Initialize();
 
             //Populates the BookContext sample data
-            SampleData.InitializeDatabaseAsync(app.ApplicationServices).Wait();
+            //SampleData.InitializeDatabaseAsync(app.ApplicationServices).Wait();
         }
     }
 }
