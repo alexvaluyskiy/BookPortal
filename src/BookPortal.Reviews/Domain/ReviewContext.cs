@@ -25,7 +25,7 @@ namespace BookPortal.Reviews.Domain
             modelBuilder.Entity<ReviewVote>().ForSqlServer().Table("review_vote");
             modelBuilder.Entity<ReviewVote>(builder =>
             {
-                builder.Property(c => c.Id).ForSqlServer().Column("review_vote_id");
+                builder.Property(c => c.Id).ForSqlServer().Column("reviews_vote_id");
                 builder.Property(c => c.ReviewId).ForSqlServer().Column("review_id");
                 builder.Property(c => c.UserId).ForSqlServer().Column("user_id");
                 builder.Property(c => c.Vote).ForSqlServer().Column("vote");

@@ -45,6 +45,7 @@ namespace BookPortal.Core.Logging
                 entry.Timestamp = DateTime.UtcNow;
                 entry.Layer = _applicationName;
                 entry.Severity = logLevel.ToString();
+                entry.Exception = exception?.GetType().Name;
 
                 HttpRequestMessage requestMessage = new HttpRequestMessage();
                 requestMessage.RequestUri = new Uri(_loggingServiceUrl, "api/logs");

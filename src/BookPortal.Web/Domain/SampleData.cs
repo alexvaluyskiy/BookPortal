@@ -19,7 +19,7 @@ namespace BookPortal.Web.Domain
                     await sqlServerDatabase.EnsureDeletedAsync();
                     await sqlServerDatabase.EnsureCreatedAsync();
                 }
-                await InsertTestData(serviceProvider);
+                //await InsertTestData(serviceProvider);
             }
         }
 

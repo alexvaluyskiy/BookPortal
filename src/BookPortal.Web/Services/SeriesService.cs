@@ -56,7 +56,7 @@ namespace BookPortal.Web.Services
 
             List<Edition> editions = new List<Edition>();
 
-            var connection = _bookContext.Database.AsSqlServer().Connection.DbConnection as SqlConnection;
+            var connection = _bookContext.Database.AsRelational().Connection.DbConnection as SqlConnection;
             connection.Open();
             using (var command = new SqlCommand(sql, connection))
             {
@@ -106,7 +106,7 @@ namespace BookPortal.Web.Services
                 )
                 SELECT serie_id, name, parent_serie_id FROM tree";
 
-            var connection = _bookContext.Database.AsSqlServer().Connection.DbConnection as SqlConnection;
+            var connection = _bookContext.Database.AsRelational().Connection.DbConnection as SqlConnection;
             connection.Open();
             using (var command = new SqlCommand(sql, connection))
             {

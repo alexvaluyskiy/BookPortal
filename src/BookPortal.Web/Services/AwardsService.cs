@@ -59,21 +59,49 @@ namespace BookPortal.Web.Services
                     break;
             }
 
-            if (request.Offset.HasValue && request.Offset.Value > 0)
-                query = query.Skip(request.Offset.Value);
+            if (request.Offset > 0)
+                query = query.Skip(request.Offset);
 
-            if (request.Limit.HasValue && request.Limit > 0)
-                query = query.Take(request.Limit.Value);
+            if (request.Limit > 0)
+                query = query.Take(request.Limit);
 
-            // TODO: workaround for EF7 bug, which haven't supported subqueries yet
             var queryResults = await query.ToListAsync();
+
+            // TODO: Min/Max is not translating into SQL
+            var awardsIds = queryResults.Select(c => c.Id).ToList();
+            var awardFirstLastContests = (  from c in _bookContext.Contests
+                                            where awardsIds.Contains(c.AwardId)
+                                            group c by c.AwardId into g
+                                            select new
+                                            {
+                                                AwardId = g.Key,
+                                                FirstContestDate = g.Min(d => d.Date),
+                                                LastContestDate = g.Max(d => d.Date)
+                                            }).ToList();
+
             foreach (var queryResult in queryResults)
             {
-                queryResult.FirstContestDate = _bookContext.Contests.Where(f => f.AwardId == queryResult.Id).Min(f => f.Date);
-                queryResult.LastContestDate = _bookContext.Contests.Where(f => f.AwardId == queryResult.Id).Max(f => f.Date);
+                queryResult.FirstContestDate = awardFirstLastContests
+                    .Where(c => c.AwardId == queryResult.Id)
+                    .Select(c => c.FirstContestDate)
+                    .SingleOrDefault();
+                queryResult.LastContestDate = awardFirstLastContests
+                    .Where(c => c.AwardId == queryResult.Id)
+                    .Select(c => c.LastContestDate)
+                    .SingleOrDefault();
             }
 
             return queryResults;
+        }
+
+        public virtual async Task<int> GetAwardCountsAsync(AwardRequest request)
+        {
+            var query = _bookContext.Awards.AsQueryable();
+
+            if (request.IsOpened)
+                query = query.Where(a => a.IsOpened);
+
+            return await query.CountAsync();
         }
 
         public virtual async Task<AwardResponse> GetAwardAsync(int awardId)

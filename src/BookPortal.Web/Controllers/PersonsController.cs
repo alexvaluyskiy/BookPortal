@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using BookPortal.Core.ApiPrimitives;
+using BookPortal.Web.Models;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Mvc;
 
@@ -16,11 +17,13 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(PersonRequest request)
         {
-            var persons = await _personsService.GetPersonsAsync();
+            var persons = await _personsService.GetPeopleAsync(request);
 
-            return this.PageObject(200, persons);
+            var totalrows = await _personsService.GetPeopleCountsAsync(request);
+
+            return this.PageObject(persons, totalrows, request.Limit, request.Offset);
         }
 
         [HttpGet("{id}")]

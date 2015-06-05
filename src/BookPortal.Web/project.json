@@ -26,7 +26,7 @@
         "AutoMapper": "4.0.0-*",
         "HtmlAgilityPack": "1.4.9"
     },
-
+            
     "commands": {
         "web": "Microsoft.AspNet.Hosting --server Microsoft.AspNet.Server.WebListener --server.urls http://localhost:5000",
         "ef": "EntityFramework.Commands"

@@ -14,6 +14,7 @@ namespace BookPortal.Web.Domain
         public DbSet<PersonWork> PersonWorks { get; set; }
 
         public DbSet<Work> Works { get; set; }
+        public DbSet<WorkLink> WorkLinks { get; set; }
         public DbSet<WorkType> WorkTypes { get; set; }
 
         public DbSet<TranslationWork> TranslationWorks { get; set; }
@@ -109,7 +110,7 @@ namespace BookPortal.Web.Domain
                 builder.Property(c => c.NameOriginal).ForSqlServer().Column("name_original");
                 builder.Property(c => c.NameSort).ForSqlServer().Column("name_sort");
                 builder.Property(c => c.Gender).ForSqlServer().Column("gender");
-                builder.Property(c => c.Birthdate).ForSqlServer().Column("bidthdate");
+                builder.Property(c => c.Birthdate).ForSqlServer().Column("birthdate");
                 builder.Property(c => c.Deathdate).ForSqlServer().Column("deathdate");
                 builder.Property(c => c.CountryId).ForSqlServer().Column("country_id");
                 builder.Property(c => c.LanguageId).ForSqlServer().Column("language_id");
@@ -123,7 +124,7 @@ namespace BookPortal.Web.Domain
             modelBuilder.Entity<PersonWork>().ForSqlServer().Table("person_works");
             modelBuilder.Entity<PersonWork>(builder =>
             {
-                builder.Property(c => c.Id).ForSqlServer().Column("id");
+                builder.Property(c => c.Id).ForSqlServer().Column("person_work_id");
                 builder.Property(c => c.Type).ForSqlServer().Column("type");
                 builder.Property(c => c.PersonId).ForSqlServer().Column("person_id");
                 builder.Property(c => c.WorkId).ForSqlServer().Column("work_id");
@@ -134,26 +135,34 @@ namespace BookPortal.Web.Domain
             modelBuilder.Entity<Work>().ForSqlServer().Table("works");
             modelBuilder.Entity<Work>(builder =>
             {
-                builder.Property(c => c.Id).ForSqlServer().Column("work_id");
+                builder.Property(c => c.Id).ForSqlServer().Column("work_id").UseIdentity();
                 builder.Property(c => c.RusName).ForSqlServer().Column("rusname");
                 builder.Property(c => c.Name).ForSqlServer().Column("name");
                 builder.Property(c => c.AltName).ForSqlServer().Column("altname");
                 builder.Property(c => c.Year).ForSqlServer().Column("year");
                 builder.Property(c => c.Description).ForSqlServer().Column("description");
                 builder.Property(c => c.WorkTypeId).ForSqlServer().Column("work_type_id");
+            });
 
-                builder.Property(c => c.Id).ForSqlServer().UseIdentity();
+            modelBuilder.Entity<WorkLink>().ForSqlServer().Table("work_links");
+            modelBuilder.Entity<WorkLink>(builder =>
+            {
+                builder.Property(c => c.Id).ForSqlServer().Column("work_link_id").UseIdentity();
+                builder.Property(c => c.WorkId).ForSqlServer().Column("work_id");
+                builder.Property(c => c.ParentWorkId).ForSqlServer().Column("parent_work_id");
+                builder.Property(c => c.LinkType).ForSqlServer().Column("link_type");
+                builder.Property(c => c.IsAddition).ForSqlServer().Column("is_addition");
+                builder.Property(c => c.BonusText).ForSqlServer().Column("bonus_text");
+                builder.Property(c => c.GroupIndex).ForSqlServer().Column("group_index");
             });
 
             modelBuilder.Entity<WorkType>().ForSqlServer().Table("work_types");
             modelBuilder.Entity<WorkType>(builder =>
             {
-                builder.Property(c => c.Id).ForSqlServer().Column("work_type_id");
+                builder.Property(c => c.Id).ForSqlServer().Column("work_type_id").UseIdentity();
                 builder.Property(c => c.Name).ForSqlServer().Column("name");
                 builder.Property(c => c.NameSingle).ForSqlServer().Column("name_single");
                 builder.Property(c => c.Level).ForSqlServer().Column("level");
-
-                builder.Property(c => c.Id).ForSqlServer().UseIdentity();
             });
 
             modelBuilder.Entity<TranslationWork>().ForSqlServer().Table("translation_works");

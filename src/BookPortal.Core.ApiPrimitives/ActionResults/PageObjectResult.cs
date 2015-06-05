@@ -30,20 +30,10 @@ namespace Microsoft.AspNet.Mvc
             pageResult.TotalRows = TotalRows;
             pageResult.Limit = Limit;
             pageResult.Offset = Offset;
+            pageResult.Rows = Value;
 
-            var collection = Value as IEnumerable<object>;
-
-            if (collection != null)
-            {
-                foreach (var item in collection)
-                {
-                    var row = new PageRow<object> {RowNum = Offset + pageResult.Rows.Count, Values = item};
-                    pageResult.Rows.Add(row);
-                }
-
-                var successResult = new SuccessResult<PageResult<object>> { Result = pageResult };
-                Value = successResult;
-            }
+            var successResult = new SuccessResult<PageResult<object>> { Result = pageResult };
+            Value = successResult;
 
             return base.ExecuteResultAsync(context);
         }

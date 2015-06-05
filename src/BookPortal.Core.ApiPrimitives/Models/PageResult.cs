@@ -6,11 +6,6 @@ namespace BookPortal.Core.ApiPrimitives.Models
     [DataContract]
     public class PageResult<T>
     {
-        public PageResult()
-        {
-            Rows = new List<PageRow<T>>();
-        }
-
         [DataMember(Name = "totalrows", EmitDefaultValue = false)]
         public long TotalRows { get; set; }
 
@@ -21,6 +16,6 @@ namespace BookPortal.Core.ApiPrimitives.Models
         public long Limit { get; set; }
 
         [DataMember(Name = "rows")]
-        public List<PageRow<T>> Rows { get; set; }
+        public T Rows { get; set; }
     }
 }
