@@ -99,8 +99,8 @@ namespace BookPortal.Web
 
             app.UseErrorHandler(builder => builder.Run(ErrorRequestHandler.HandleErrorRequest));
 
-            //app.UseApplicationInsightsRequestTelemetry();
-            //app.UseApplicationInsightsExceptionTelemetry();
+            app.UseApplicationInsightsRequestTelemetry();
+            app.UseApplicationInsightsExceptionTelemetry();
 
             app.UseMvc();
 
