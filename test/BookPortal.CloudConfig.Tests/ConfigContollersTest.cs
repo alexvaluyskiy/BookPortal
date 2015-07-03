@@ -20,8 +20,8 @@ namespace BookPortal.CloudConfig.Test
             var services = new ServiceCollection();
 
             services.AddEntityFramework()
-                      .AddInMemoryStore()
-                      .AddDbContext<ConfigContext>();
+                .AddInMemoryDatabase()
+                .AddDbContext<ConfigContext>();
 
             _serviceProvider = services.BuildServiceProvider();
         }

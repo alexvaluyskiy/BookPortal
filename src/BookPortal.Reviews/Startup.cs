@@ -15,6 +15,8 @@ using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
 using Newtonsoft.Json;
 using System.Linq;
+using Autofac;
+using Autofac.Dnx;
 using Microsoft.Framework.Runtime;
 
 namespace BookPortal.Reviews
@@ -33,7 +35,7 @@ namespace BookPortal.Reviews
 
         public IConfiguration Configuration { get; set; }
 
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().Configure<MvcOptions>(options =>
             {
@@ -52,7 +54,13 @@ namespace BookPortal.Reviews
                .AddDbContext<ReviewContext>(options =>
                     options.UseSqlServer(Configuration.Get("Data:DefaultConnection:ConnectionString")));
 
-            services.AddScoped<ReviewsService>();
+            ContainerBuilder builder = new ContainerBuilder();
+
+            builder.RegisterType<ReviewsService>();
+
+            builder.Populate(services);
+            var container = builder.Build();
+            return container.Resolve<IServiceProvider>();
         }
 
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)

@@ -21,8 +21,8 @@ namespace BookPortal.Web.Tests.Services
             var services = new ServiceCollection();
 
             services.AddEntityFramework()
-                      .AddInMemoryStore()
-                      .AddDbContext<BookContext>();
+                .AddInMemoryDatabase()
+                .AddDbContext<BookContext>();
 
             _serviceProvider = services.BuildServiceProvider();
 

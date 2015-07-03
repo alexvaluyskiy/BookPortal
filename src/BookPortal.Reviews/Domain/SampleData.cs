@@ -13,12 +13,9 @@ namespace BookPortal.Reviews.Domain
         {
             using (var db = serviceProvider.GetService<ReviewContext>())
             {
-                var sqlServerDatabase = db.Database as RelationalDatabase;
-                if (sqlServerDatabase != null)
-                {
-                    await sqlServerDatabase.EnsureDeletedAsync();
-                    await sqlServerDatabase.EnsureCreatedAsync();
-                }
+                await db.Database.EnsureDeletedAsync();
+                await db.Database.EnsureCreatedAsync();
+
                 await InsertTestData(serviceProvider);
             }
         }

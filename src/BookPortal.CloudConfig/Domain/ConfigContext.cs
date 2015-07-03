@@ -11,33 +11,20 @@ namespace BookPortal.CloudConfig.Domain
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Config>().ForSqlServer().Table("configs");
+            modelBuilder.Entity<Config>().ToTable("configs");
             modelBuilder.Entity<Config>(builder =>
             {
-                builder.Property(c => c.Id).ForSqlServer()
-                    .Column("config_id");
-                builder.Property(c => c.Key).ForSqlServer()
-                    .Column("key")
-                    .ColumnType("nvarchar(50)");
-                builder.Property(c => c.Value).ForSqlServer()
-                    .Column("value")
-                    .ColumnType("nvarchar(250)");
-                builder.Property(c => c.ProfileId).ForSqlServer()
-                    .Column("profile_id");
-
-                builder.Property(c => c.Id).ForSqlServer().UseIdentity();
+                builder.Property(c => c.Id).HasColumnName("config_id").UseSqlServerIdentityColumn();
+                builder.Property(c => c.Key).HasColumnName("key").HasColumnType("nvarchar(50)");
+                builder.Property(c => c.Value).HasColumnName("value").HasColumnType("nvarchar(250)");
+                builder.Property(c => c.ProfileId).HasColumnName("profile_id");
             });
 
-            modelBuilder.Entity<ConfigProfile>().ForSqlServer().Table("profiles");
+            modelBuilder.Entity<ConfigProfile>().ToTable("profiles");
             modelBuilder.Entity<ConfigProfile>(builder =>
             {
-                builder.Property(c => c.Id).ForSqlServer()
-                    .Column("profile_id");
-                builder.Property(c => c.Name).ForSqlServer()
-                    .Column("name")
-                    .ColumnType("nvarchar(50)");
-
-                builder.Property(c => c.Id).ForSqlServer().UseIdentity();
+                builder.Property(c => c.Id).HasColumnName("profile_id").UseSqlServerIdentityColumn(); ;
+                builder.Property(c => c.Name).HasColumnName("name").HasColumnType("nvarchar(50)");
             });
 
             base.OnModelCreating(modelBuilder);

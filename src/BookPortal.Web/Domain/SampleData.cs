@@ -13,13 +13,10 @@ namespace BookPortal.Web.Domain
         {
             using (var db = serviceProvider.GetService<BookContext>())
             {
-                var sqlServerDatabase = db.Database as RelationalDatabase;
-                if (sqlServerDatabase != null)
-                {
-                    await sqlServerDatabase.EnsureDeletedAsync();
-                    await sqlServerDatabase.EnsureCreatedAsync();
-                }
-                //await InsertTestData(serviceProvider);
+                await db.Database.EnsureDeletedAsync();
+                await db.Database.EnsureCreatedAsync();
+
+                await InsertTestData(serviceProvider);
             }
         }
 

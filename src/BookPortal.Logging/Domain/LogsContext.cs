@@ -8,7 +8,7 @@ namespace BookPortal.Logging.Domain
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Log>().ForSqlServer().Table("logs");
+            modelBuilder.Entity<Log>().ToTable("logs");
             modelBuilder.Entity<Log>(builder =>
             {
                 builder.Key(c => c.OperationContext);

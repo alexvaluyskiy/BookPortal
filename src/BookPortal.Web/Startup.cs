@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using Autofac;
+using Autofac.Dnx;
 using BookPortal.Core.ApiPrimitives;
 using BookPortal.Core.ApiPrimitives.Filters;
 using BookPortal.Core.Configuration;
@@ -33,7 +35,7 @@ namespace BookPortal.Web
 
         public IConfiguration Configuration { get; set; }
 
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             //IConfiguration configs = Configuration.GetSubKey("AppSettings");
             //services.Configure<AppSettings>(configs, 0, "Default");
@@ -59,23 +61,30 @@ namespace BookPortal.Web
 
             //services.AddApplicationInsightsTelemetry(Configuration);
 
-            services.AddScoped<AwardsService>();
-            services.AddScoped<NominationsService>();
-            services.AddScoped<ContestsService>();
-            services.AddScoped<ContestsWorksService>();
+            ContainerBuilder builder = new ContainerBuilder();
 
-            services.AddScoped<PersonsService>();
-            services.AddScoped<WorksService>();
-            services.AddScoped<TranslationsService>();
-            services.AddScoped<EditionsService>();
+            builder.RegisterType<AwardsService>();
+            builder.RegisterType<NominationsService>();
+            builder.RegisterType<ContestsService>();
+            builder.RegisterType<ContestsWorksService>();
 
-            services.AddScoped<PublishersService>();
-            services.AddScoped<SeriesService>();
+            builder.RegisterType<PersonsService>();
+            builder.RegisterType<WorksService>();
+            builder.RegisterType<TranslationsService>();
+            builder.RegisterType<EditionsService>();
 
-            services.AddScoped<CountriesService>();
-            services.AddScoped<LanguagesService>();
+            builder.RegisterType<PublishersService>();
+            builder.RegisterType<SeriesService>();
 
-            services.AddScoped<ImportersService>();
+            builder.RegisterType<CountriesService>();
+            builder.RegisterType<LanguagesService>();
+
+            builder.RegisterType<ImportersService>();
+
+            builder.Populate(services);
+            var container = builder.Build();
+
+            return container.Resolve<IServiceProvider>();
         }
 
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)

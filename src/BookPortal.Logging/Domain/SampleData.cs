@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.Data.Entity.Relational;
 using Microsoft.Framework.DependencyInjection;
 
 namespace BookPortal.Logging.Domain
@@ -11,12 +10,8 @@ namespace BookPortal.Logging.Domain
         {
             using (var db = serviceProvider.GetService<LogsContext>())
             {
-                var sqlServerDatabase = db.Database as RelationalDatabase;
-                if (sqlServerDatabase != null)
-                {
-                    await sqlServerDatabase.EnsureDeletedAsync();
-                    await sqlServerDatabase.EnsureCreatedAsync();
-                }
+                await db.Database.EnsureDeletedAsync();
+                await db.Database.EnsureCreatedAsync();
             }
         }
     }

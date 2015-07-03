@@ -24,7 +24,8 @@
         "EntityFramework.SqlServer": "7.0.0-*",
         "EntityFramework.Commands": "7.0.0-*",
         "AutoMapper": "4.0.0-*",
-        "HtmlAgilityPack": "1.4.9"
+        "HtmlAgilityPack": "1.4.9",
+        "Autofac.Dnx": "4.0.0-*"
     },
             
     "commands": {

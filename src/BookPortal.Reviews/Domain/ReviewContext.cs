@@ -10,28 +10,24 @@ namespace BookPortal.Reviews.Domain
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Review>().ForSqlServer().Table("reviews");
+            modelBuilder.Entity<Review>().ToTable("reviews");
             modelBuilder.Entity<Review>(builder =>
             {
-                builder.Property(c => c.Id).ForSqlServer().Column("review_id");
-                builder.Property(c => c.UserId).ForSqlServer().Column("user_id");
-                builder.Property(c => c.WorkId).ForSqlServer().Column("work_id");
-                builder.Property(c => c.Text).ForSqlServer().Column("text");
-                builder.Property(c => c.DateCreated).ForSqlServer().Column("date_created");
-
-                builder.Property(c => c.Id).ForSqlServer().UseIdentity();
+                builder.Property(c => c.Id).HasColumnName("review_id").UseSqlServerIdentityColumn();
+                builder.Property(c => c.UserId).HasColumnName("user_id");
+                builder.Property(c => c.WorkId).HasColumnName("work_id");
+                builder.Property(c => c.Text).HasColumnName("text");
+                builder.Property(c => c.DateCreated).HasColumnName("date_created");
             });
 
-            modelBuilder.Entity<ReviewVote>().ForSqlServer().Table("review_vote");
+            modelBuilder.Entity<ReviewVote>().ToTable("review_vote");
             modelBuilder.Entity<ReviewVote>(builder =>
             {
-                builder.Property(c => c.Id).ForSqlServer().Column("reviews_vote_id");
-                builder.Property(c => c.ReviewId).ForSqlServer().Column("review_id");
-                builder.Property(c => c.UserId).ForSqlServer().Column("user_id");
-                builder.Property(c => c.Vote).ForSqlServer().Column("vote");
-                builder.Property(c => c.DateCreated).ForSqlServer().Column("date_created");
-
-                builder.Property(c => c.Id).ForSqlServer().UseIdentity();
+                builder.Property(c => c.Id).HasColumnName("reviews_vote_id").UseSqlServerIdentityColumn();
+                builder.Property(c => c.ReviewId).HasColumnName("review_id");
+                builder.Property(c => c.UserId).HasColumnName("user_id");
+                builder.Property(c => c.Vote).HasColumnName("vote");
+                builder.Property(c => c.DateCreated).HasColumnName("date_created");
             });
 
             base.OnModelCreating(modelBuilder);
