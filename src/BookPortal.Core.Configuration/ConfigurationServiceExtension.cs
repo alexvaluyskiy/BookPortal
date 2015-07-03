@@ -1,11 +1,11 @@
 ﻿using System;
-using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.Configuration;
 
 namespace BookPortal.Core.Configuration
 {
     public static class ConfigurationServiceExtension
     {
-        public static IConfigurationSourceRoot AddConfigurationService(this IConfigurationSourceRoot configuration, string configServiceUri, string profile)
+        public static IConfigurationBuilder AddConfigurationService(this IConfigurationBuilder configuration, string configServiceUri, string profile)
         {
             if (configServiceUri == null)
             {

@@ -1,13 +1,13 @@
 ﻿{
-    "version": "1.0.2",
+    "version": "1.0.0",
     "description": "BookPortal.Core.Configuration",
     "authors": [
         "Alex Valuyskiy"
     ],
 
     "dependencies": {
-        "Microsoft.Framework.ConfigurationModel": "1.0.0-*",
-        "Newtonsoft.Json": "6.0.8"
+        "Microsoft.Framework.Configuration": "1.0.0-*",
+        "Newtonsoft.Json": "7.0.1"
     },
 
     "frameworks": {
