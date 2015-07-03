@@ -4,7 +4,7 @@ using BookPortal.Logging.Domain;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.Data.Entity;
-using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
 using Microsoft.Framework.Runtime;
@@ -15,12 +15,12 @@ namespace BookPortal.Logging
     {
         public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
         {
-            var configuration = new Configuration(appEnv.ApplicationBasePath);
+            var configuration = new ConfigurationBuilder(appEnv.ApplicationBasePath);
             configuration.AddJsonFile("config.json");
-            configuration.AddConfigurationService(configuration.Get("Services:ConfigurationService"), "Shared");
-            configuration.AddConfigurationService(configuration.Get("Services:ConfigurationService"), "BookPortalLogging");
+            configuration.AddConfigurationService("http://localhost:6004", "Shared");
+            configuration.AddConfigurationService("http://localhost:6004", "BookPortalLogging");
 
-            Configuration = configuration;
+            Configuration = configuration.Build();
         }
 
         public IConfiguration Configuration { get; set; }
@@ -42,7 +42,7 @@ namespace BookPortal.Logging
             app.UseMvc();
 
             // create sample data
-            SampleData.InitializeDatabaseAsync(app.ApplicationServices).Wait();
+            // SampleData.InitializeDatabaseAsync(app.ApplicationServices).Wait();
         }
     }
 }

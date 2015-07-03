@@ -13,11 +13,10 @@ using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Data.Entity;
-using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
 using Microsoft.Framework.Runtime;
-using Newtonsoft.Json;
 
 namespace BookPortal.Web
 {
@@ -25,12 +24,12 @@ namespace BookPortal.Web
     {
         public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
         {
-            var configuration = new Configuration(appEnv.ApplicationBasePath);
+            var configuration = new ConfigurationBuilder(appEnv.ApplicationBasePath);
             configuration.AddJsonFile("config.json");
-            configuration.AddConfigurationService(configuration.Get("Services:ConfigurationService"), "Shared");
-            configuration.AddConfigurationService(configuration.Get("Services:ConfigurationService"), "BookPortalWeb");
+            configuration.AddConfigurationService("http://localhost:6004", "Shared");
+            configuration.AddConfigurationService("http://localhost:6004", "BookPortalWeb");
 
-            Configuration = configuration;
+            Configuration = configuration.Build();
         }
 
         public IConfiguration Configuration { get; set; }
