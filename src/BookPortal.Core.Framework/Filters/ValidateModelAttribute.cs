@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNet.Mvc;
 
-namespace BookPortal.Core.ApiPrimitives.Filters
+namespace BookPortal.Core.Framework.Filters
 {
     public class ValidateModelAttribute : ActionFilterAttribute
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using BookPortal.Core.ApiPrimitives.Models;
+using BookPortal.Core.Framework.Models;
 
 namespace Microsoft.AspNet.Mvc
 {

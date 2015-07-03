@@ -6,9 +6,9 @@ using Microsoft.Data.Entity;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
-using BookPortal.Core.ApiPrimitives.Filters;
-using BookPortal.Core.ApiPrimitives;
 using System.Linq;
+using BookPortal.Core.Framework;
+using BookPortal.Core.Framework.Filters;
 using Microsoft.Framework.Runtime;
 
 namespace BookPortal.CloudConfig

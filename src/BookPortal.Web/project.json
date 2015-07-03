@@ -10,7 +10,7 @@
     },
 
     "dependencies": {
-        "BookPortal.Core.ApiPrimitives": "1.0.1",
+        "BookPortal.Core.Framework": "1.0.0",
         "BookPortal.Core.Configuration": "1.0.0",
         "BookPortal.Core.Logging": "1.0.1",
         "Microsoft.AspNet.Mvc": "6.0.0-*",

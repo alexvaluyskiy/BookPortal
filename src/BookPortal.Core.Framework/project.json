@@ -1,6 +1,6 @@
 ﻿{
-    "version": "1.0.1",
-    "description": "BookPortal.Core.ApiPrimitives",
+    "version": "1.0.0",
+    "description": "BookPortal.Core.Framework",
     "authors": [ "Alex Valuyskiy" ],
 
     "dependencies": {

@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using BookPortal.Core.ApiPrimitives;
 using BookPortal.Web.Domain.Models;
 using BookPortal.Web.Models;
 using BookPortal.Web.Services;

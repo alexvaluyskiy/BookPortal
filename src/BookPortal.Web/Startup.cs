@@ -2,9 +2,9 @@
 using System.Linq;
 using Autofac;
 using Autofac.Dnx;
-using BookPortal.Core.ApiPrimitives;
-using BookPortal.Core.ApiPrimitives.Filters;
 using BookPortal.Core.Configuration;
+using BookPortal.Core.Framework;
+using BookPortal.Core.Framework.Filters;
 using BookPortal.Core.Logging;
 using BookPortal.Web.Domain;
 using BookPortal.Web.Infrastructure;

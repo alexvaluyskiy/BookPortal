@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json.Serialization;
 
-namespace BookPortal.Core.ApiPrimitives
+namespace BookPortal.Core.Framework
 {
     public class LowerCasePropertyNamesContractResolver : DefaultContractResolver
     {

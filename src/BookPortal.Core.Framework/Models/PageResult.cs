@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
-namespace BookPortal.Core.ApiPrimitives.Models
+namespace BookPortal.Core.Framework.Models
 {
     [DataContract]
     public class PageResult<T>

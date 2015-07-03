@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using BookPortal.Core.ApiPrimitives.Models;
+using BookPortal.Core.Framework.Models;
 using Microsoft.AspNet.Mvc.ModelBinding;
 
 namespace Microsoft.AspNet.Mvc

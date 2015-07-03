@@ -1,6 +1,4 @@
 ﻿using System;
-using BookPortal.Core.ApiPrimitives;
-using BookPortal.Core.ApiPrimitives.Filters;
 using BookPortal.Core.Configuration;
 using BookPortal.Core.Logging;
 using BookPortal.Reviews.Domain;
@@ -13,10 +11,11 @@ using Microsoft.Data.Entity;
 using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
-using Newtonsoft.Json;
 using System.Linq;
 using Autofac;
 using Autofac.Dnx;
+using BookPortal.Core.Framework;
+using BookPortal.Core.Framework.Filters;
 using Microsoft.Framework.Runtime;
 
 namespace BookPortal.Reviews

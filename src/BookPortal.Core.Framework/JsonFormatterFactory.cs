@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Mvc;
+﻿using Microsoft.AspNet.Mvc;
 using Newtonsoft.Json;
 
-namespace BookPortal.Core.ApiPrimitives
+namespace BookPortal.Core.Framework
 {
     public class JsonFormatterFactory
     {
