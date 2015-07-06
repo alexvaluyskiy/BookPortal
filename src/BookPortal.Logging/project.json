@@ -11,11 +11,13 @@
         "Microsoft.AspNet.Server.WebListener": "1.0.0-*",
         "Microsoft.Framework.Configuration.Json": "1.0.0-*",
         "Microsoft.Framework.Logging.Abstractions": "1.0.0-*",
-        "EntityFramework.SqlServer": "7.0.0-*"
+        "EntityFramework.SqlServer": "7.0.0-*",
+        "EntityFramework.Commands": "7.0.0-*"
     },
 
     "commands": {
-        "web": "Microsoft.AspNet.Hosting --server Microsoft.AspNet.Server.WebListener --server.urls http://localhost:5010"
+        "web": "Microsoft.AspNet.Hosting --server Microsoft.AspNet.Server.WebListener --server.urls http://localhost:5010",
+        "ef": "EntityFramework.Commands"
     },
 
     "frameworks": {

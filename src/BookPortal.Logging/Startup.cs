@@ -15,10 +15,11 @@ namespace BookPortal.Logging
     {
         public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
         {
+            string configServiceUrl = "http://aspnet5-bookportal-configuration.azurewebsites.net/";
+
             var configuration = new ConfigurationBuilder(appEnv.ApplicationBasePath);
-            configuration.AddJsonFile("config.json");
-            configuration.AddConfigurationService("http://localhost:6004", "Shared");
-            configuration.AddConfigurationService("http://localhost:6004", "BookPortalLogging");
+            configuration.AddConfigurationService(configServiceUrl, "Shared");
+            configuration.AddConfigurationService(configServiceUrl, "BookPortalLogging");
 
             Configuration = configuration.Build();
         }
@@ -40,9 +41,6 @@ namespace BookPortal.Logging
             loggerFactory.AddProvider(new DebugLoggerProvider());
 
             app.UseMvc();
-
-            // create sample data
-            // SampleData.InitializeDatabaseAsync(app.ApplicationServices).Wait();
         }
     }
 }
