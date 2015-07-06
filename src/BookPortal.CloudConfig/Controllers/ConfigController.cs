@@ -51,6 +51,7 @@ namespace BookPortal.CloudConfig.Controllers
             }
             else
             {
+                config.Value = request.Value;
                 _context.Update(config);
             }
 
