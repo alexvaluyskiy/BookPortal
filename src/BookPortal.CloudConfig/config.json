@@ -1,7 +1,7 @@
 ﻿{
     "Data": {
         "DefaultConnection": {
-            "ConnectionString": "Data Source=RAVENGER-PC\\SQLEXPRESS;Database=ConfigsDatabase;User ID=ravenger;Password=qe1dg7bm"
+            "ConnectionString": "Server=tcp:aspnet5-bookportal.database.windows.net,1433;Database=aspnet5-configuration;User ID=ravenger@aspnet5-bookportal;Password=Nextgen63;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
         }
     }
 }

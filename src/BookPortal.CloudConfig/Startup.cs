@@ -3,12 +3,13 @@ using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Data.Entity;
-using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
 using System.Linq;
 using BookPortal.Core.Framework;
 using BookPortal.Core.Framework.Filters;
+using BookPortal.Core.Logging;
 using Microsoft.Framework.Runtime;
 
 namespace BookPortal.CloudConfig
@@ -17,10 +18,10 @@ namespace BookPortal.CloudConfig
     {
         public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
         {
-            var configuration = new Configuration(appEnv.ApplicationBasePath);
+            var configuration = new ConfigurationBuilder(appEnv.ApplicationBasePath);
             configuration.AddJsonFile("config.json");
 
-            Configuration = configuration;
+            Configuration = configuration.Build();
         }
 
         public IConfiguration Configuration { get; set; }
@@ -30,8 +31,8 @@ namespace BookPortal.CloudConfig
             services.AddMvc().Configure<MvcOptions>(options =>
             {
                 // setup json output serializer
-                var formatter = options.OutputFormatters
-                    .SingleOrDefault(c => c.GetType() == typeof(JsonOutputFormatter));
+                var formatter = options.OutputFormatters.SingleOrDefault(c => c.GetType() == typeof(JsonOutputFormatter));
+                options.OutputFormatters.Remove(formatter);
                 options.OutputFormatters.Add(JsonFormatterFactory.Create());
 
                 // add filters
@@ -46,10 +47,9 @@ namespace BookPortal.CloudConfig
 
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
-            app.UseMvc();
+            loggerFactory.CreateLogger<DebugLogger>();
 
-            //Populates the BookContext sample data
-            //SampleData.InitializeDatabaseAsync(app.ApplicationServices).Wait();
+            app.UseMvc();
         }
     }
 }

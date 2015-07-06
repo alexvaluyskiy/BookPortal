@@ -76,6 +76,18 @@ namespace BookPortal.CloudConfig.Controllers
             return new HttpStatusCodeResult(204);
         }
 
+        [HttpPost("api/config")]
+        public async Task<IActionResult> PostProfile([FromBody]ProfileRequest request)
+        {
+            var configProfile = new ConfigProfile();
+            configProfile.Name = request.Name;
+            _context.Profiles.Add(configProfile);
+
+            await _context.SaveChangesAsync();
+
+            return new ObjectResult(configProfile) { StatusCode = 201 };
+        }
+
         private int GetProfileId(string profile)
         {
             return _context.Profiles.Where(c => c.Name == profile).Select(c => c.Id).SingleOrDefault();
