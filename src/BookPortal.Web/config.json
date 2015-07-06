@@ -1,9 +1,6 @@
 ﻿{
-    "Services": {
-        "ConfigurationService": "http://localhost:6004"
-    },
     "ApplicationInsights": {
-        "InstrumentationKey": "44f3c97f-7c3f-458a-8135-d895b80ed1f4",
+        "InstrumentationKey": "f7b8cd31-6851-42f6-80f7-85d2aef749d7",
         "TelemetryChannel": {
             "EndpointAddress": "http://dc.services.visualstudio.com/v2/track",
             "DeveloperMode": true

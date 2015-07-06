@@ -24,10 +24,12 @@ namespace BookPortal.Web
     {
         public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
         {
+            string configServiceUrl = "http://aspnet5-bookportal-configuration.azurewebsites.net/";
+
             var configuration = new ConfigurationBuilder(appEnv.ApplicationBasePath);
             configuration.AddJsonFile("config.json");
-            configuration.AddConfigurationService("http://localhost:6004", "Shared");
-            configuration.AddConfigurationService("http://localhost:6004", "BookPortalWeb");
+            configuration.AddConfigurationService(configServiceUrl, "Shared");
+            configuration.AddConfigurationService(configServiceUrl, "BookPortalWeb");
 
             Configuration = configuration.Build();
         }
@@ -36,9 +38,6 @@ namespace BookPortal.Web
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            //IConfiguration configs = Configuration.GetSubKey("AppSettings");
-            //services.Configure<AppSettings>(configs, 0, "Default");
-
             services.AddCors();
 
             services.AddMvc().Configure<MvcOptions>(options =>
@@ -58,7 +57,7 @@ namespace BookPortal.Web
                .AddDbContext<BookContext>(options => 
                     options.UseSqlServer(Configuration.Get("Data:DefaultConnection:ConnectionString")));
 
-            //services.AddApplicationInsightsTelemetry(Configuration);
+            services.AddApplicationInsightsTelemetry(Configuration);
 
             ContainerBuilder builder = new ContainerBuilder();
 
@@ -91,7 +90,7 @@ namespace BookPortal.Web
             loggerFactory.AddLoggingService(
                 Configuration.Get("Services:LoggingService"),
                 Configuration.Get("AppSettings:ApplicationName"),
-                LogLevel.Verbose);
+                LogLevel.Warning);
 
             app.UseStaticFiles();
 
@@ -106,9 +105,6 @@ namespace BookPortal.Web
 
             // create mappings
             MapperInitialization.Initialize();
-
-            //Populates the BookContext sample data
-            //SampleData.InitializeDatabaseAsync(app.ApplicationServices).Wait();
         }
     }
 }
