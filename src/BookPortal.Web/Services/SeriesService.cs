@@ -29,6 +29,7 @@ namespace BookPortal.Web.Services
 
         public async Task<SerieResponse> GetSerieAsync(int serieId)
         {
+            // get serie information
             var query = from s in _bookContext.Series
                         where s.Id == serieId
                         select new SerieResponse
@@ -41,16 +42,38 @@ namespace BookPortal.Web.Services
                             SerieClosed = s.SerieClosed
                         };
 
-
             var serie = await query.SingleOrDefaultAsync();
 
-            var publishers = _bookContext.PublisherSeries
-                .Include(c => c.Publisher)
+            if (serie == null)
+                return null;
+
+            // get language information
+            if (serie.LanguageId > 0)
+            {
+                var language = _bookContext.Languages.SingleOrDefault(c => c.Id == serie.LanguageId);
+                if (language != null)
+                {
+                    serie.LanguageId = language.Id;
+                    serie.Name = language.Name;
+                }
+            }
+
+            // get publishers ids
+            var publisherIds = _bookContext.PublisherSeries
                 .Where(c => c.SerieId == serieId)
-                .Select(c => c.Publisher)
+                .Select(c => c.PublisherId)
                 .ToList();
 
-            //serie.Publishers = publishers;
+            // get publisher
+            var publishers = _bookContext.Publishers
+                .Where(c => publisherIds.Contains(c.Id))
+                .Select(c => new PublisherResponse
+                {
+                    PublisherId = c.Id,
+                    Name = c.Name
+                }).ToList();
+
+            serie.Publishers = publishers;
 
             return serie;
         }
@@ -75,7 +98,7 @@ namespace BookPortal.Web.Services
                     sql += "ORDER BY e.year, es.sort, e.name";
                     break;
                 default:
-                    sql += "ORDER BY e.ReleaseDate DESC, es.sort";
+                    sql += "ORDER BY e.release_date DESC, es.sort";
                     break;
             }
 
@@ -100,7 +123,7 @@ namespace BookPortal.Web.Services
                             edition.Format = reader.GetValue<string>("format");
                             edition.Authors = reader.GetValue<string>("authors");
                             edition.Description = reader.GetValue<string>("description");
-                            edition.ReleaseDate = reader.GetValue<DateTime?>("ReleaseDate");
+                            edition.ReleaseDate = reader.GetValue<DateTime?>("release_date");
                             editions.Add(edition);
                         }
                     }

@@ -17,6 +17,10 @@ namespace BookPortal.Web.Models
 
         public bool SerieClosed { get; set; }
 
+        public int? LanguageId { get; set; }
+
+        public string LanguageName { get; set; }
+
         public List<PublisherResponse> Publishers { get; set; } 
     }
 }

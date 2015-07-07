@@ -92,7 +92,8 @@ namespace BookPortal.Web
                 Configuration.Get("AppSettings:ApplicationName"),
                 LogLevel.Warning);
 
-            loggerFactory.AddDebug(LogLevel.Verbose);
+            //loggerFactory.AddDebug(LogLevel.Verbose);
+            loggerFactory.AddProvider(new DebugLoggerProvider());
 
             app.UseStaticFiles();
 
