@@ -92,6 +92,8 @@ namespace BookPortal.Web
                 Configuration.Get("AppSettings:ApplicationName"),
                 LogLevel.Warning);
 
+            loggerFactory.AddDebug(LogLevel.Verbose);
+
             app.UseStaticFiles();
 
             app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());

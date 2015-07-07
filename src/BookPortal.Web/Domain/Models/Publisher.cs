@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace BookPortal.Web.Domain.Models
 {
@@ -20,5 +21,7 @@ namespace BookPortal.Web.Domain.Models
 
         public int? CountryId { get; set; }
         public Country Country { get; set; }
+
+        public ICollection<PublisherSerie> Series { get; set; } = new HashSet<PublisherSerie>();
     }
 }

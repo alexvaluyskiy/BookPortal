@@ -107,9 +107,9 @@ namespace BookPortal.Web.Services
         public virtual async Task<AwardResponse> GetAwardAsync(int awardId)
         {
             var query = from a in _bookContext.Awards
-                        where a.Id == awardId
                         join l in _bookContext.Languages on a.LanguageId equals l.Id
                         join c in _bookContext.Countries on a.CountryId equals c.Id
+                        where a.Id == awardId
                         select new AwardResponse
                         {
                             Id = a.Id,
@@ -128,7 +128,7 @@ namespace BookPortal.Web.Services
                         };
 
             // TODO: workaround for EF7 bug
-            var queryResult = await query.SingleOrDefaultAsync();
+            var queryResult = await query.FirstOrDefaultAsync();
             queryResult.FirstContestDate = _bookContext.Contests.Where(f => f.AwardId == awardId).Min(f => f.Date);
             queryResult.LastContestDate = _bookContext.Contests.Where(f => f.AwardId == awardId).Max(f => f.Date);
 

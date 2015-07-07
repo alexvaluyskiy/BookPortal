@@ -28,6 +28,7 @@ namespace BookPortal.Web.Domain
 
         public DbSet<Serie> Series { get; set; }
         public DbSet<Publisher> Publishers { get; set; }
+        public DbSet<PublisherSerie> PublisherSeries { get; set; }
 
         public DbSet<Language> Languages { get; set; }
         public DbSet<Country> Countries { get; set; }
@@ -188,6 +189,7 @@ namespace BookPortal.Web.Domain
                 builder.Property(c => c.Description).HasColumnName("description");
                 builder.Property(c => c.Content).HasColumnName("content");
                 builder.Property(c => c.Notes).HasColumnName("notes");
+                builder.Property(c => c.ReleaseDate).HasColumnName("release_date");
                 builder.Property(c => c.LanguageId).HasColumnName("language_id");
             });
 
@@ -235,7 +237,7 @@ namespace BookPortal.Web.Domain
                 builder.Property(c => c.DateClose).HasColumnName("date_close");
                 builder.Property(c => c.SerieClosed).HasColumnName("serie_closed");
                 builder.Property(c => c.ParentSerieId).HasColumnName("parent_serie_id");
-                builder.Property(c => c.PublisherId).HasColumnName("publisher_id");
+                builder.Property(c => c.LanguageId).HasColumnName("language_id");
             });
 
             modelBuilder.Entity<Publisher>().ToTable("publishers");
@@ -249,6 +251,14 @@ namespace BookPortal.Web.Domain
                 builder.Property(c => c.Description).HasColumnName("description");
                 builder.Property(c => c.DescriptionSource).HasColumnName("description_source");
                 builder.Property(c => c.CountryId).HasColumnName("country_id");
+            });
+
+            modelBuilder.Entity<PublisherSerie>().ToTable("publisher_series");
+            modelBuilder.Entity<PublisherSerie>(builder =>
+            {
+                builder.Property(c => c.Id).HasColumnName("publisher_serie_id").UseSqlServerIdentityColumn();
+                builder.Property(c => c.PublisherId).HasColumnName("publisher_id");
+                builder.Property(c => c.SerieId).HasColumnName("serie_id");
             });
 
             modelBuilder.Entity<Country>().ToTable("countries");

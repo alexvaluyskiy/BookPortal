@@ -22,12 +22,37 @@ namespace BookPortal.Web.Services
 
         public async Task<IReadOnlyList<Serie>> GetSeriesAsync(int publisherId)
         {
-            return await _bookContext.Series.Where(c => c.PublisherId == publisherId).ToListAsync();
+            var serieIds = _bookContext.PublisherSeries.Where(c => c.PublisherId == publisherId).Select(c => c.SerieId).ToList();
+
+            return await _bookContext.Series.Where(c => serieIds.Contains(c.Id)).ToListAsync();
         }
 
-        public async Task<Serie> GetSerieAsync(int serieId)
+        public async Task<SerieResponse> GetSerieAsync(int serieId)
         {
-            return await _bookContext.Series.Where(c => c.Id == serieId).SingleOrDefaultAsync();
+            var query = from s in _bookContext.Series
+                        where s.Id == serieId
+                        select new SerieResponse
+                        {
+                            SerieId = s.Id,
+                            Name = s.Name,
+                            Description = s.Description,
+                            DateOpen = s.DateOpen,
+                            DateClose = s.DateClose,
+                            SerieClosed = s.SerieClosed
+                        };
+
+
+            var serie = await query.SingleOrDefaultAsync();
+
+            var publishers = _bookContext.PublisherSeries
+                .Include(c => c.Publisher)
+                .Where(c => c.SerieId == serieId)
+                .Select(c => c.Publisher)
+                .ToList();
+
+            //serie.Publishers = publishers;
+
+            return serie;
         }
 
         public async Task<IEnumerable<Edition>> GetSerieEditionsAsync(SerieRequest request)
@@ -57,28 +82,31 @@ namespace BookPortal.Web.Services
             List<Edition> editions = new List<Edition>();
 
             var connection = _bookContext.Database.GetDbConnection() as SqlConnection;
-            connection.Open();
-            using (var command = new SqlCommand(sql, connection))
+            if (connection != null)
             {
-                command.Parameters.AddWithValue("@serie_id", request.SerieId);
-                using (var reader = await command.ExecuteReaderAsync())
+                connection.Open();
+                using (var command = new SqlCommand(sql, connection))
                 {
-                    while (await reader.ReadAsync())
+                    command.Parameters.AddWithValue("@serie_id", request.SerieId);
+                    using (var reader = await command.ExecuteReaderAsync())
                     {
-                        var edition = new Edition();
-                        edition.Id = reader.GetValue<int>("edition_id");
-                        edition.Name = reader.GetValue<string>("name");
-                        edition.Year = reader.GetValue<int>("year");
-                        edition.CoverType = (EditionCoverType)reader.GetValue<int>("cover_type");
-                        edition.Format = reader.GetValue<string>("format");
-                        edition.Authors = reader.GetValue<string>("authors");
-                        edition.Description = reader.GetValue<string>("description");
-                        edition.ReleaseDate = reader.GetValue<DateTime?>("ReleaseDate");
-                        editions.Add(edition);
+                        while (await reader.ReadAsync())
+                        {
+                            var edition = new Edition();
+                            edition.Id = reader.GetValue<int>("edition_id");
+                            edition.Name = reader.GetValue<string>("name");
+                            edition.Year = reader.GetValue<int>("year");
+                            edition.CoverType = (EditionCoverType)reader.GetValue<int>("cover_type");
+                            edition.Format = reader.GetValue<string>("format");
+                            edition.Authors = reader.GetValue<string>("authors");
+                            edition.Description = reader.GetValue<string>("description");
+                            edition.ReleaseDate = reader.GetValue<DateTime?>("ReleaseDate");
+                            editions.Add(edition);
+                        }
                     }
                 }
+                connection.Close();
             }
-            connection.Close();
 
             return editions.Skip(request.Offset).Take(request.Limit);
         }
@@ -107,23 +135,26 @@ namespace BookPortal.Web.Services
                 SELECT serie_id, name, parent_serie_id FROM tree";
 
             var connection = _bookContext.Database.GetDbConnection() as SqlConnection;
-            connection.Open();
-            using (var command = new SqlCommand(sql, connection))
+            if (connection != null)
             {
-                command.Parameters.AddWithValue("@serie_id", serieId);
-                using (var reader = await command.ExecuteReaderAsync())
+                connection.Open();
+                using (var command = new SqlCommand(sql, connection))
                 {
-                    while (await reader.ReadAsync())
+                    command.Parameters.AddWithValue("@serie_id", serieId);
+                    using (var reader = await command.ExecuteReaderAsync())
                     {
-                        var serie = new Serie();
-                        serie.Id = reader.GetValue<int>("serie_id");
-                        serie.Name = reader.GetValue<string>("name");
-                        serie.ParentSerieId = reader.GetValue<int?>("parent_serie_id");
-                        seriesTree.Add(serie);
+                        while (await reader.ReadAsync())
+                        {
+                            var serie = new Serie();
+                            serie.Id = reader.GetValue<int>("serie_id");
+                            serie.Name = reader.GetValue<string>("name");
+                            serie.ParentSerieId = reader.GetValue<int?>("parent_serie_id");
+                            seriesTree.Add(serie);
+                        }
                     }
                 }
+                connection.Close();
             }
-            connection.Close();
 
             SerieTreeItem tree = GetSerieTree(seriesTree, null).SingleOrDefault();
 

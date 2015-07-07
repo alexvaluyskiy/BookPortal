@@ -47,7 +47,7 @@ namespace BookPortal.CloudConfig
 
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
-            loggerFactory.CreateLogger<DebugLogger>();
+            loggerFactory.AddDebug(LogLevel.Verbose);
 
             app.UseMvc();
         }

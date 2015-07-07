@@ -38,7 +38,7 @@ namespace BookPortal.Logging
 
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddProvider(new DebugLoggerProvider());
+            loggerFactory.AddDebug(LogLevel.Verbose);
 
             app.UseMvc();
         }

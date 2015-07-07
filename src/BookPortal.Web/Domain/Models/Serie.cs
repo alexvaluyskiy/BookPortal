@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace BookPortal.Web.Domain.Models
 {
@@ -19,7 +20,9 @@ namespace BookPortal.Web.Domain.Models
         public int? ParentSerieId { get; set; }
         public Serie ParentSerie { get; set; }
 
-        public int? PublisherId { get; set; }
-        public Publisher Publisher { get; set; }
+        public int? LanguageId { get; set; }
+        public Language Language { get; set; }
+
+        public ICollection<PublisherSerie> Publishers { get; set; } = new HashSet<PublisherSerie>();
     }
 }
