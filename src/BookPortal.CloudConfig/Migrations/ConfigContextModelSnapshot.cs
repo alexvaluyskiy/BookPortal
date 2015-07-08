@@ -18,7 +18,7 @@ namespace BookPortalCloudConfigMigrations
             builder.Entity("BookPortal.CloudConfig.Domain.Models.Config", b =>
                 {
                     b.Property<int>("Id")
-                        .StoreGeneratedPattern(StoreGeneratedPattern.Identity)
+                        .ValueGeneratedOnAdd()
                         .Annotation("Relational:ColumnName", "config_id")
                         .Annotation("SqlServer:ItentityStrategy", "IdentityColumn");
 
@@ -41,7 +41,7 @@ namespace BookPortalCloudConfigMigrations
             builder.Entity("BookPortal.CloudConfig.Domain.Models.ConfigProfile", b =>
                 {
                     b.Property<int>("Id")
-                        .StoreGeneratedPattern(StoreGeneratedPattern.Identity)
+                        .ValueGeneratedOnAdd()
                         .Annotation("Relational:ColumnName", "profile_id")
                         .Annotation("SqlServer:ItentityStrategy", "IdentityColumn");
 
