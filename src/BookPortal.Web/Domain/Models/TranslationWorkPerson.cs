@@ -9,5 +9,7 @@
 
         public int TranslationWorkId { get; set; }
         public TranslationWork TranslationWork { get; set; }
+
+        public int PersonOrder { get; set; }
     }
 }

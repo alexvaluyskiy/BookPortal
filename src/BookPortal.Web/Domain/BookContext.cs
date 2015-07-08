@@ -169,6 +169,7 @@ namespace BookPortal.Web.Domain
                 builder.Property(c => c.Id).HasColumnName("translation_work_person_id").UseSqlServerIdentityColumn();
                 builder.Property(c => c.PersonId).HasColumnName("person_id");
                 builder.Property(c => c.TranslationWorkId).HasColumnName("translation_work_id");
+                builder.Property(c => c.PersonOrder).HasColumnName("person_order");
             });
 
             modelBuilder.Entity<Edition>().ToTable("editions");

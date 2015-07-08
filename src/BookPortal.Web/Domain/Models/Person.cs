@@ -23,6 +23,7 @@ namespace BookPortal.Web.Domain.Models
         public int? CountryId { get; set; }
         public Country Country { get; set; }
 
+        // TODO: rename to DefaultLanguageId
         public int? LanguageId { get; set; }
         public Language Language { get; set; }
 

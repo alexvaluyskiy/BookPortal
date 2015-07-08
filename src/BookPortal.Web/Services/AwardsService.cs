@@ -124,7 +124,9 @@ namespace BookPortal.Web.Services
                             LanguageId = l.Id,
                             LanguageName = l.Name,
                             CountryId = c.Id,
-                            CountryName = c.Name
+                            CountryName = c.Name,
+                            FirstContestDate = _bookContext.Contests.Where(f => f.AwardId == awardId).Min(f => f.Date),
+                            LastContestDate = _bookContext.Contests.Where(f => f.AwardId == awardId).Max(f => f.Date)
                         };
 
             // TODO: workaround for EF7 bug

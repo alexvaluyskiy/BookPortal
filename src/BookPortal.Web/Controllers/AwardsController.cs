@@ -34,7 +34,7 @@ namespace BookPortal.Web.Controllers
             if (award == null)
                 return this.ErrorObject(404, $"Award (id: {id}) is not found");
 
-            return this.SingleObject(200, award);
+            return this.SingleObject(award);
         }
 
         [HttpPost]

@@ -2,7 +2,9 @@
 {
     public enum ContestWorkType
     {
-        Work = 1,
-        Author = 2
+        Person = 1,
+        Work = 2,
+        Art = 4,
+        Publisher = 6
     }
 }
