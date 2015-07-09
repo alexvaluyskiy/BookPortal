@@ -37,12 +37,12 @@ namespace BookPortal.Web.Controllers
         [HttpGet("{serieId}/editions")]
         public async Task<IActionResult> GetEditions(SerieRequest request)
         {
-            var treeItem = await _seriesService.GetSerieEditionsAsync(request);
+            var editions = await _seriesService.GetSerieEditionsAsync(request);
 
-            if (treeItem == null)
+            if (editions == null)
                 return this.ErrorObject(404, $"Serie (id: {request.SerieId}) is not found");
 
-            return this.SingleObject(200, treeItem);
+            return this.SingleObject(200, editions);
         }
 
         [HttpGet("{serieId}/tree")]

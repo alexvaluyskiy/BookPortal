@@ -11,9 +11,9 @@ namespace BookPortal.Web.Domain.Models
 
         public PublisherType Type { get; set; } = PublisherType.Paper;
 
-        public DateTime? DateOpen { get; set; }
+        public int? YearOpen { get; set; }
 
-        public DateTime? DateClose { get; set; }
+        public int? YearClose { get; set; }
 
         public string Description { get; set; }
 

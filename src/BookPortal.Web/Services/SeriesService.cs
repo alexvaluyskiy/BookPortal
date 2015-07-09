@@ -37,8 +37,8 @@ namespace BookPortal.Web.Services
                             SerieId = s.Id,
                             Name = s.Name,
                             Description = s.Description,
-                            DateOpen = s.DateOpen,
-                            DateClose = s.DateClose,
+                            YearOpen = s.YearOpen,
+                            YearClose = s.YearClose,
                             SerieClosed = s.SerieClosed
                         };
 

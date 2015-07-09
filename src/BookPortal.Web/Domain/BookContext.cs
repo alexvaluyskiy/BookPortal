@@ -234,8 +234,8 @@ namespace BookPortal.Web.Domain
                 builder.Property(c => c.Id).HasColumnName("serie_id").UseSqlServerIdentityColumn();
                 builder.Property(c => c.Name).HasColumnName("name");
                 builder.Property(c => c.Description).HasColumnName("description");
-                builder.Property(c => c.DateOpen).HasColumnName("date_open");
-                builder.Property(c => c.DateClose).HasColumnName("date_close");
+                builder.Property(c => c.YearOpen).HasColumnName("year_open");
+                builder.Property(c => c.YearClose).HasColumnName("year_close");
                 builder.Property(c => c.SerieClosed).HasColumnName("serie_closed");
                 builder.Property(c => c.ParentSerieId).HasColumnName("parent_serie_id");
                 builder.Property(c => c.LanguageId).HasColumnName("language_id");
@@ -247,8 +247,8 @@ namespace BookPortal.Web.Domain
                 builder.Property(c => c.Id).HasColumnName("publisher_id").UseSqlServerIdentityColumn();
                 builder.Property(c => c.Name).HasColumnName("name");
                 builder.Property(c => c.Type).HasColumnName("type");
-                builder.Property(c => c.DateOpen).HasColumnName("date_open");
-                builder.Property(c => c.DateClose).HasColumnName("date_close");
+                builder.Property(c => c.YearOpen).HasColumnName("year_open");
+                builder.Property(c => c.YearClose).HasColumnName("year_close");
                 builder.Property(c => c.Description).HasColumnName("description");
                 builder.Property(c => c.DescriptionSource).HasColumnName("description_source");
                 builder.Property(c => c.CountryId).HasColumnName("country_id");

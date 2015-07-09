@@ -11,9 +11,9 @@ namespace BookPortal.Web.Models
 
         public string Description { get; set; }
 
-        public DateTime? DateOpen { get; set; }
+        public int? YearOpen { get; set; }
 
-        public DateTime? DateClose { get; set; }
+        public int? YearClose { get; set; }
 
         public bool SerieClosed { get; set; }
 

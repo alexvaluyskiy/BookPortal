@@ -28,7 +28,7 @@
         "HtmlAgilityPack": "1.4.9",
         "Autofac.Dnx": "4.0.0-*"
     },
-            
+                
     "commands": {
         "web": "Microsoft.AspNet.Hosting --server Microsoft.AspNet.Server.WebListener --server.urls http://localhost:5000",
         "ef": "EntityFramework.Commands"

@@ -11,16 +11,16 @@ namespace BookPortal.Web.Models
 
         public PublisherType Type { get; set; }
 
-        public DateTime? DateOpen { get; set; }
+        public int? YearOpen { get; set; }
 
-        public DateTime? DateClose { get; set; }
+        public int? YearClose { get; set; }
 
         public string Description { get; set; }
 
         public string DescriptionSource { get; set; }
 
-        public int? LanguageId { get; set; }
+        public int? CountryId { get; set; }
 
-        public string LanguageName { get; set; }
+        public string CountryName { get; set; }
     }
 }
