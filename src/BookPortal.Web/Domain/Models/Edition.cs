@@ -22,7 +22,7 @@ namespace BookPortal.Web.Domain.Models
 
         public DateTime? ReleaseDate { get; set; }
 
-        public int Count { get; set; }
+        public int? Count { get; set; }
 
         public EditionCoverType CoverType { get; set; } = EditionCoverType.Unknown;
 
@@ -30,7 +30,7 @@ namespace BookPortal.Web.Domain.Models
 
         public string Format { get; set; }
 
-        public int Pages { get; set; }
+        public int? Pages { get; set; }
 
         public string Description { get; set; }
 

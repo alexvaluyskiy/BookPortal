@@ -129,12 +129,7 @@ namespace BookPortal.Web.Services
                             LastContestDate = _bookContext.Contests.Where(f => f.AwardId == awardId).Max(f => f.Date)
                         };
 
-            // TODO: workaround for EF7 bug
-            var queryResult = await query.FirstOrDefaultAsync();
-            queryResult.FirstContestDate = _bookContext.Contests.Where(f => f.AwardId == awardId).Min(f => f.Date);
-            queryResult.LastContestDate = _bookContext.Contests.Where(f => f.AwardId == awardId).Max(f => f.Date);
-
-            return queryResult;
+            return await query.FirstOrDefaultAsync();
         }
 
         public virtual async Task<AwardResponse> AddAwardAsync(Award request)
