@@ -20,7 +20,7 @@ namespace BookPortal.Web.Domain.Models
 
         public int Year { get; set; }
 
-        public DateTime? ReleaseDate { get; set; }
+        public string ReleaseDate { get; set; }
 
         public int? Count { get; set; }
 
