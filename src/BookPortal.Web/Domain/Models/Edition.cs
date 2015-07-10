@@ -18,7 +18,7 @@ namespace BookPortal.Web.Domain.Models
 
         public string Isbn { get; set; }
 
-        public int Year { get; set; }
+        public int? Year { get; set; }
 
         public string ReleaseDate { get; set; }
 
