@@ -25,6 +25,11 @@ namespace Microsoft.AspNet.Mvc
             return new PageObjectResult(200, content);
         }
 
+        public static PageObjectResult PageObject(this Controller controller, object content, int totalrows)
+        {
+            return new PageObjectResult(200, content, totalrows, 0, 0);
+        }
+
         public static PageObjectResult PageObject(this Controller controller, object content, int totalrows, int limit, int offset)
         {
             return new PageObjectResult(200, content, totalrows, limit, offset);

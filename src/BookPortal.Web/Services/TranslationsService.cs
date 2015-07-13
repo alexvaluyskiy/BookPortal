@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Data.Entity;
 using BookPortal.Web.Domain;
+using BookPortal.Web.Domain.Models;
 using BookPortal.Web.Models;
 
 namespace BookPortal.Web.Services
@@ -31,7 +32,12 @@ namespace BookPortal.Web.Services
                                         select new
                                         {
                                             Id = twp.TranslationWorkId,
-                                            Person = p
+                                            Person = new PersonResponse
+                                            {
+                                                PersonId = p.Id,
+                                                Name = p.Name,
+                                                NameSort = p.NameSort
+                                            }
                                         }).ToList();
 
 
@@ -46,16 +52,6 @@ namespace BookPortal.Web.Services
                                             Count = g.Count()
                                         }).ToList();
 
-            // get all editions
-            var translationsEditions = (from te in _bookContext.TranslationEditions
-                                        join e in _bookContext.Editions on te.EditionId equals e.Id
-                                        where translationWorksList.Contains(te.TranslationWorkId)
-                                        select new
-                                        {
-                                            Id = te.TranslationWorkId,
-                                            EditionId = e.Id
-                                        }).ToList();
-
             // get translator works
             var query =     from tw in _bookContext.TranslationWorks
                             join w in _bookContext.Works on tw.WorkId equals w.Id
@@ -63,7 +59,7 @@ namespace BookPortal.Web.Services
                             where translationWorksList.Contains(tw.Id)
                             select new TranslationResponse
                             {
-                                Id = tw.Id,
+                                TranslationWorkId = tw.Id,
                                 WorkId = w.Id,
                                 WorkName = w.Name,
                                 WorkYear = w.Year,
@@ -83,27 +79,27 @@ namespace BookPortal.Web.Services
                                     select new
                                     {
                                         WorkId = pw.WorkId,
-                                        Person = p
+                                        Person = new PersonResponse
+                                        {
+                                            PersonId = p.Id,
+                                            Name = p.Name,
+                                            NameSort = p.NameSort
+                                        }
                                     }).ToList();
 
             foreach (var item in response)
             {
                 // adding all possible names to translation
                 item.Names = translationsNames
-                    .Where(c => c.Id == item.Id)
+                    .Where(c => c.Id == item.TranslationWorkId)
                     .OrderByDescending(c => c.Count)
                     .Select(c => c.Name)
                     .ToList();
 
-                // adding all editions
-                item.Editions = translationsEditions
-                    .Where(c => c.Id == item.Id)
-                    .Select(c => c.EditionId)
-                    .ToList();
-
                 // adding all translators, except main
+                // TODO: exclude main translator
                 item.Translators = translationPersons
-                    .Where(c => c.Id == item.Id)
+                    .Where(c => c.Id == item.TranslationWorkId && c.Person.PersonId != request.PersonId)
                     .Select(c => c.Person)
                     .ToList();
 
@@ -138,6 +134,23 @@ namespace BookPortal.Web.Services
             }
 
             return response;
+        }
+
+        // TODO: read Corrent field
+        public async Task<IReadOnlyList<EditionResponse>> GetTranslationEditionsAsync(int translationWorkId)
+        {
+            var query = from te in _bookContext.TranslationEditions
+                        join e in _bookContext.Editions on te.EditionId equals e.Id
+                        where te.TranslationWorkId == translationWorkId
+                        select new EditionResponse
+                        {
+                            EditionId = e.Id,
+                            Name = e.Name,
+                            Year = e.Year,
+                            Correct = 1
+                        };
+
+            return await query.ToListAsync();
         }
     }
 }

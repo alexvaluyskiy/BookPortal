@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace BookPortal.Web.Domain.Models
+namespace BookPortal.Web.Models
 {
-    public class Person
+    public class PersonResponse
     {
-        public int Id { get; set; }
+        public int PersonId { get; set; }
 
         public string Name { get; set; }
 
@@ -14,18 +17,19 @@ namespace BookPortal.Web.Domain.Models
 
         public string NameSort { get; set; }
 
-        public GenderType Gender { get; set; }
+        public int? Gender { get; set; }
 
         public string Birthdate { get; set; }
 
         public string Deathdate { get; set; }
 
         public int? CountryId { get; set; }
-        public Country Country { get; set; }
 
-        // TODO: rename to DefaultLanguageId
+        public string CountryName { get; set; }
+
         public int? LanguageId { get; set; }
-        public Language Language { get; set; }
+
+        public string LanguageName { get; set; }
 
         public string Biography { get; set; }
 

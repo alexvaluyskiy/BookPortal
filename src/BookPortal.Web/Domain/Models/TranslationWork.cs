@@ -6,7 +6,7 @@ namespace BookPortal.Web.Domain.Models
     {
         public int Id { get; set; }
 
-        public int Year { get; set; }
+        public int? Year { get; set; }
 
         public int WorkId { get; set; }
         public Work Work { get; set; }

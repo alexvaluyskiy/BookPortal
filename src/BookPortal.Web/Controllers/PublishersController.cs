@@ -33,7 +33,7 @@ namespace BookPortal.Web.Controllers
             if (editions == null)
                 return this.ErrorObject(404, $"Publisher (id: {publisherId}) doesn't contain editions");
 
-            return this.SingleObject(editions);
+            return this.PageObject(editions, editions.Count);
         }
 
         [HttpGet("{publisherId}/series")]
@@ -44,7 +44,7 @@ namespace BookPortal.Web.Controllers
             if (series == null)
                 return this.ErrorObject(404, $"Publisher (id: {publisherId}) doesn't contain series");
 
-            return this.SingleObject(series);
+            return this.PageObject(series, series.Count);
         }
 
         [HttpGet("{publisherId}/awards")]
@@ -55,7 +55,7 @@ namespace BookPortal.Web.Controllers
             if (awards == null)
                 return this.ErrorObject(404, $"Publisher (id: {publisherId}) doesn't contain awards");
 
-            return this.SingleObject(awards);
+            return this.PageObject(awards, awards.Count);
         }
     }
 }

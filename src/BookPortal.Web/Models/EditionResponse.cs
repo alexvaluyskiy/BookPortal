@@ -9,11 +9,11 @@ namespace BookPortal.Web.Models
 {
     public class EditionResponse
     {
-        public int Id { get; set; }
+        public int EditionId { get; set; }
 
         public string Name { get; set; }
 
-        public EditionType Type { get; set; }
+        public EditionType? Type { get; set; }
 
         public string Authors { get; set; }
 
@@ -27,9 +27,9 @@ namespace BookPortal.Web.Models
 
         public int? Count { get; set; }
 
-        public EditionCoverType CoverType { get; set; }
+        public EditionCoverType? CoverType { get; set; }
 
-        public bool SuperCover { get; set; }
+        public bool? SuperCover { get; set; }
 
         public string Format { get; set; }
 
@@ -43,6 +43,8 @@ namespace BookPortal.Web.Models
 
         public int? LanguageId { get; set; }
 
-        public int SerieSort { get; set; }
+        public int? SerieSort { get; set; }
+
+        public int Correct { get; set; }
     }
 }

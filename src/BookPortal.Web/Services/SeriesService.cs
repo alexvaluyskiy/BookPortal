@@ -65,6 +65,7 @@ namespace BookPortal.Web.Services
                 .ToList();
 
             // get publisher
+
             var publishers = _bookContext.Publishers
                 .Where(c => publisherIds.Contains(c.Id))
                 .Select(c => new PublisherResponse
@@ -123,7 +124,7 @@ namespace BookPortal.Web.Services
                             edition.Format = reader.GetValue<string>("format");
                             edition.Authors = reader.GetValue<string>("authors");
                             edition.Description = reader.GetValue<string>("description");
-                            edition.ReleaseDate = reader.GetValue<DateTime?>("release_date");
+                            edition.ReleaseDate = reader.GetValue<string>("release_date");
                             editions.Add(edition);
                         }
                     }
@@ -188,7 +189,7 @@ namespace BookPortal.Web.Services
         {
             var tempList = list.Where(x => x.ParentSerieId == parent).Select(x => new SerieTreeItem
             {
-                Id = x.Id,
+                SerieId = x.Id,
                 Name = x.Name,
                 Series = GetSerieTree(list, x.Id)
             }).ToList();

@@ -27,7 +27,7 @@ namespace BookPortal.Web.Services
 
             workLinks.Add( new WorkLink() { WorkId = 1, ParentWorkId = 2 });
 
-            var works = (from w in _bookContext.Works
+            var works = await (from w in _bookContext.Works
                         join wt in _bookContext.WorkTypes on w.WorkTypeId equals wt.Id
                         where workLinksIds.Contains(w.Id)
                         select new WorkResponse
@@ -41,7 +41,7 @@ namespace BookPortal.Web.Services
                             WorkTypeId = wt.Id,
                             WorkTypeName = wt.Name,
                             WorkTypeLevel = wt.Level
-                        }).ToList();
+                        }).ToListAsync();
 
             foreach (var work in works)
             {
@@ -61,6 +61,35 @@ namespace BookPortal.Web.Services
                 .Include(c => c.WorkType)
                 .Where(c => c.Id == workId)
                 .SingleOrDefaultAsync();
+        }
+
+        public async Task<IReadOnlyList<ContestWorkResponse>> GetWorkAwardsAsync(int workId)
+        {
+            var query = from cw in _bookContext.ContestWorks
+                        join c in _bookContext.Contests on cw.ContestId equals c.Id
+                        join n in _bookContext.Nominations on cw.NominationId equals n.Id
+                        join a in _bookContext.Awards on c.AwardId equals a.Id
+                        where cw.LinkType == ContestWorkType.Work && cw.LinkId == workId
+                        select new ContestWorkResponse
+                        {
+                            AwardId = a.Id,
+                            AwardRusname = a.RusName,
+                            AwardName = a.Name,
+                            AwardIsOpened = a.IsOpened,
+                            ContestId = c.Id,
+                            ContestName = c.Name,
+                            ContestYear = c.NameYear,
+                            NominationId = n.Id,
+                            NominationRusname = n.RusName,
+                            NominationName = n.Name,
+                            ContestWorkId = cw.Id,
+                            ContestWorkRusname = cw.RusName,
+                            ContestWorkName = cw.Name,
+                            ContestWorkPrefix = cw.Prefix,
+                            ContestWorkPostfix = cw.Postfix
+                        };
+
+            return await query.ToListAsync();
         }
     }
 }

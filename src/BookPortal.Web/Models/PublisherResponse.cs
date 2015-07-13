@@ -9,7 +9,7 @@ namespace BookPortal.Web.Models
 
         public string Name { get; set; }
 
-        public PublisherType Type { get; set; }
+        public PublisherType? Type { get; set; }
 
         public int? YearOpen { get; set; }
 

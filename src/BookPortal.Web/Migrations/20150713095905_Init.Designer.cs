@@ -7,30 +7,30 @@ using BookPortal.Web.Domain;
 namespace BookPortalWebMigrations
 {
     [ContextType(typeof(BookContext))]
-    partial class Migration1
+    partial class Init
     {
         public override string Id
         {
-            get { return "20150706150426_Migration1"; }
+            get { return "20150713095905_Init"; }
         }
 
         public override string ProductVersion
         {
-            get { return "7.0.0-beta6-13675"; }
+            get { return "7.0.0-beta6-13735"; }
         }
 
         public override void BuildTargetModel(ModelBuilder builder)
         {
             builder
-                .Annotation("ProductVersion", "7.0.0-beta6-13675")
-                .Annotation("SqlServer:ItentityStrategy", "IdentityColumn");
+                .Annotation("ProductVersion", "7.0.0-beta6-13735")
+                .Annotation("SqlServer:ValueGenerationStrategy", "IdentityColumn");
 
             builder.Entity("BookPortal.Web.Domain.Models.Award", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .Annotation("Relational:ColumnName", "award_id")
-                        .Annotation("SqlServer:ItentityStrategy", "IdentityColumn");
+                        .Annotation("SqlServer:ValueGenerationStrategy", "IdentityColumn");
 
                     b.Property<bool>("AwardClosed")
                         .Annotation("Relational:ColumnName", "award_closed");
@@ -75,13 +75,14 @@ namespace BookPortalWebMigrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .Annotation("Relational:ColumnName", "contest_id")
-                        .Annotation("SqlServer:ItentityStrategy", "IdentityColumn");
+                        .Annotation("SqlServer:ValueGenerationStrategy", "IdentityColumn");
 
                     b.Property<int>("AwardId")
                         .Annotation("Relational:ColumnName", "award_id");
 
-                    b.Property<DateTime>("Date")
-                        .Annotation("Relational:ColumnName", "date");
+                    b.Property<string>("Date")
+                        .Annotation("Relational:ColumnName", "date")
+                        .Annotation("Relational:ColumnType", "nvarchar(10)");
 
                     b.Property<string>("Description")
                         .Annotation("Relational:ColumnName", "description");
@@ -112,7 +113,7 @@ namespace BookPortalWebMigrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .Annotation("Relational:ColumnName", "contest_work_id")
-                        .Annotation("SqlServer:ItentityStrategy", "IdentityColumn");
+                        .Annotation("SqlServer:ValueGenerationStrategy", "IdentityColumn");
 
                     b.Property<int>("ContestId")
                         .Annotation("Relational:ColumnName", "contest_id");
@@ -154,7 +155,7 @@ namespace BookPortalWebMigrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .Annotation("Relational:ColumnName", "country_id")
-                        .Annotation("SqlServer:ItentityStrategy", "IdentityColumn");
+                        .Annotation("SqlServer:ValueGenerationStrategy", "IdentityColumn");
 
                     b.Property<string>("Name")
                         .Required()
@@ -170,7 +171,7 @@ namespace BookPortalWebMigrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .Annotation("Relational:ColumnName", "edition_id")
-                        .Annotation("SqlServer:ItentityStrategy", "IdentityColumn");
+                        .Annotation("SqlServer:ValueGenerationStrategy", "IdentityColumn");
 
                     b.Property<string>("Authors")
                         .Annotation("Relational:ColumnName", "authors");
@@ -181,7 +182,7 @@ namespace BookPortalWebMigrations
                     b.Property<string>("Content")
                         .Annotation("Relational:ColumnName", "content");
 
-                    b.Property<int>("Count")
+                    b.Property<int?>("Count")
                         .Annotation("Relational:ColumnName", "count");
 
                     b.Property<int>("CoverType")
@@ -205,10 +206,11 @@ namespace BookPortalWebMigrations
                     b.Property<string>("Notes")
                         .Annotation("Relational:ColumnName", "notes");
 
-                    b.Property<int>("Pages")
+                    b.Property<int?>("Pages")
                         .Annotation("Relational:ColumnName", "pages");
 
-                    b.Property<DateTime?>("ReleaseDate");
+                    b.Property<string>("ReleaseDate")
+                        .Annotation("Relational:ColumnName", "release_date");
 
                     b.Property<bool>("SuperCover")
                         .Annotation("Relational:ColumnName", "supercover");
@@ -216,7 +218,7 @@ namespace BookPortalWebMigrations
                     b.Property<int>("Type")
                         .Annotation("Relational:ColumnName", "type");
 
-                    b.Property<int>("Year")
+                    b.Property<int?>("Year")
                         .Annotation("Relational:ColumnName", "year");
 
                     b.Key("Id");
@@ -229,7 +231,7 @@ namespace BookPortalWebMigrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .Annotation("Relational:ColumnName", "id")
-                        .Annotation("SqlServer:ItentityStrategy", "IdentityColumn");
+                        .Annotation("SqlServer:ValueGenerationStrategy", "IdentityColumn");
 
                     b.Property<int>("EditionId")
                         .Annotation("Relational:ColumnName", "edition_id");
@@ -247,7 +249,7 @@ namespace BookPortalWebMigrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .Annotation("Relational:ColumnName", "id")
-                        .Annotation("SqlServer:ItentityStrategy", "IdentityColumn");
+                        .Annotation("SqlServer:ValueGenerationStrategy", "IdentityColumn");
 
                     b.Property<int>("EditionId")
                         .Annotation("Relational:ColumnName", "edition_id");
@@ -268,7 +270,7 @@ namespace BookPortalWebMigrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .Annotation("Relational:ColumnName", "translation_edition_id")
-                        .Annotation("SqlServer:ItentityStrategy", "IdentityColumn");
+                        .Annotation("SqlServer:ValueGenerationStrategy", "IdentityColumn");
 
                     b.Property<int>("EditionId")
                         .Annotation("Relational:ColumnName", "edition_id");
@@ -289,7 +291,7 @@ namespace BookPortalWebMigrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .Annotation("Relational:ColumnName", "id")
-                        .Annotation("SqlServer:ItentityStrategy", "IdentityColumn");
+                        .Annotation("SqlServer:ValueGenerationStrategy", "IdentityColumn");
 
                     b.Property<int>("EditionId")
                         .Annotation("Relational:ColumnName", "edition_id");
@@ -307,7 +309,7 @@ namespace BookPortalWebMigrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .Annotation("Relational:ColumnName", "language_id")
-                        .Annotation("SqlServer:ItentityStrategy", "IdentityColumn");
+                        .Annotation("SqlServer:ValueGenerationStrategy", "IdentityColumn");
 
                     b.Property<string>("Name")
                         .Required()
@@ -323,7 +325,7 @@ namespace BookPortalWebMigrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .Annotation("Relational:ColumnName", "nomination_id")
-                        .Annotation("SqlServer:ItentityStrategy", "IdentityColumn");
+                        .Annotation("SqlServer:ValueGenerationStrategy", "IdentityColumn");
 
                     b.Property<int>("AwardId")
                         .Annotation("Relational:ColumnName", "award_id");
@@ -351,7 +353,7 @@ namespace BookPortalWebMigrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .Annotation("Relational:ColumnName", "person_id")
-                        .Annotation("SqlServer:ItentityStrategy", "IdentityColumn");
+                        .Annotation("SqlServer:ValueGenerationStrategy", "IdentityColumn");
 
                     b.Property<string>("Biography")
                         .Annotation("Relational:ColumnName", "biography");
@@ -359,14 +361,16 @@ namespace BookPortalWebMigrations
                     b.Property<string>("BiographySource")
                         .Annotation("Relational:ColumnName", "biography_source");
 
-                    b.Property<DateTime?>("Birthdate")
-                        .Annotation("Relational:ColumnName", "birthdate");
+                    b.Property<string>("Birthdate")
+                        .Annotation("Relational:ColumnName", "birthdate")
+                        .Annotation("Relational:ColumnType", "nvarchar(10)");
 
                     b.Property<int?>("CountryId")
                         .Annotation("Relational:ColumnName", "country_id");
 
-                    b.Property<DateTime?>("Deathdate")
-                        .Annotation("Relational:ColumnName", "deathdate");
+                    b.Property<string>("Deathdate")
+                        .Annotation("Relational:ColumnName", "deathdate")
+                        .Annotation("Relational:ColumnType", "nvarchar(10)");
 
                     b.Property<int>("Gender")
                         .Annotation("Relational:ColumnName", "gender");
@@ -399,7 +403,7 @@ namespace BookPortalWebMigrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .Annotation("Relational:ColumnName", "person_work_id")
-                        .Annotation("SqlServer:ItentityStrategy", "IdentityColumn");
+                        .Annotation("SqlServer:ValueGenerationStrategy", "IdentityColumn");
 
                     b.Property<int>("PersonId")
                         .Annotation("Relational:ColumnName", "person_id");
@@ -420,16 +424,10 @@ namespace BookPortalWebMigrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .Annotation("Relational:ColumnName", "publisher_id")
-                        .Annotation("SqlServer:ItentityStrategy", "IdentityColumn");
+                        .Annotation("SqlServer:ValueGenerationStrategy", "IdentityColumn");
 
                     b.Property<int?>("CountryId")
                         .Annotation("Relational:ColumnName", "country_id");
-
-                    b.Property<DateTime?>("DateClose")
-                        .Annotation("Relational:ColumnName", "date_close");
-
-                    b.Property<DateTime?>("DateOpen")
-                        .Annotation("Relational:ColumnName", "date_open");
 
                     b.Property<string>("Description")
                         .Annotation("Relational:ColumnName", "description");
@@ -443,9 +441,33 @@ namespace BookPortalWebMigrations
                     b.Property<int>("Type")
                         .Annotation("Relational:ColumnName", "type");
 
+                    b.Property<int?>("YearClose")
+                        .Annotation("Relational:ColumnName", "year_close");
+
+                    b.Property<int?>("YearOpen")
+                        .Annotation("Relational:ColumnName", "year_open");
+
                     b.Key("Id");
 
                     b.Annotation("Relational:TableName", "publishers");
+                });
+
+            builder.Entity("BookPortal.Web.Domain.Models.PublisherSerie", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .Annotation("Relational:ColumnName", "publisher_serie_id")
+                        .Annotation("SqlServer:ValueGenerationStrategy", "IdentityColumn");
+
+                    b.Property<int>("PublisherId")
+                        .Annotation("Relational:ColumnName", "publisher_id");
+
+                    b.Property<int>("SerieId")
+                        .Annotation("Relational:ColumnName", "serie_id");
+
+                    b.Key("Id");
+
+                    b.Annotation("Relational:TableName", "publisher_series");
                 });
 
             builder.Entity("BookPortal.Web.Domain.Models.Serie", b =>
@@ -453,16 +475,13 @@ namespace BookPortalWebMigrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .Annotation("Relational:ColumnName", "serie_id")
-                        .Annotation("SqlServer:ItentityStrategy", "IdentityColumn");
-
-                    b.Property<DateTime?>("DateClose")
-                        .Annotation("Relational:ColumnName", "date_close");
-
-                    b.Property<DateTime?>("DateOpen")
-                        .Annotation("Relational:ColumnName", "date_open");
+                        .Annotation("SqlServer:ValueGenerationStrategy", "IdentityColumn");
 
                     b.Property<string>("Description")
                         .Annotation("Relational:ColumnName", "description");
+
+                    b.Property<int?>("LanguageId")
+                        .Annotation("Relational:ColumnName", "language_id");
 
                     b.Property<string>("Name")
                         .Annotation("Relational:ColumnName", "name");
@@ -470,11 +489,14 @@ namespace BookPortalWebMigrations
                     b.Property<int?>("ParentSerieId")
                         .Annotation("Relational:ColumnName", "parent_serie_id");
 
-                    b.Property<int?>("PublisherId")
-                        .Annotation("Relational:ColumnName", "publisher_id");
-
                     b.Property<bool>("SerieClosed")
                         .Annotation("Relational:ColumnName", "serie_closed");
+
+                    b.Property<int?>("YearClose")
+                        .Annotation("Relational:ColumnName", "year_close");
+
+                    b.Property<int?>("YearOpen")
+                        .Annotation("Relational:ColumnName", "year_open");
 
                     b.Key("Id");
 
@@ -486,7 +508,7 @@ namespace BookPortalWebMigrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .Annotation("Relational:ColumnName", "translation_work_id")
-                        .Annotation("SqlServer:ItentityStrategy", "IdentityColumn");
+                        .Annotation("SqlServer:ValueGenerationStrategy", "IdentityColumn");
 
                     b.Property<int>("LanguageId")
                         .Annotation("Relational:ColumnName", "language_id");
@@ -507,15 +529,22 @@ namespace BookPortalWebMigrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .Annotation("Relational:ColumnName", "translation_work_person_id")
-                        .Annotation("SqlServer:ItentityStrategy", "IdentityColumn");
+                        .Annotation("SqlServer:ValueGenerationStrategy", "IdentityColumn");
 
                     b.Property<int>("PersonId")
                         .Annotation("Relational:ColumnName", "person_id");
+
+                    b.Property<int>("PersonOrder")
+                        .Annotation("Relational:ColumnName", "person_order");
 
                     b.Property<int>("TranslationWorkId")
                         .Annotation("Relational:ColumnName", "translation_work_id");
 
                     b.Key("Id");
+
+                    b.Index("PersonId");
+
+                    b.Index("TranslationWorkId");
 
                     b.Annotation("Relational:TableName", "translation_work_persons");
                 });
@@ -525,7 +554,7 @@ namespace BookPortalWebMigrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .Annotation("Relational:ColumnName", "work_id")
-                        .Annotation("SqlServer:ItentityStrategy", "IdentityColumn");
+                        .Annotation("SqlServer:ValueGenerationStrategy", "IdentityColumn");
 
                     b.Property<string>("AltName")
                         .Annotation("Relational:ColumnName", "altname");
@@ -555,7 +584,7 @@ namespace BookPortalWebMigrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .Annotation("Relational:ColumnName", "work_link_id")
-                        .Annotation("SqlServer:ItentityStrategy", "IdentityColumn");
+                        .Annotation("SqlServer:ValueGenerationStrategy", "IdentityColumn");
 
                     b.Property<string>("BonusText")
                         .Annotation("Relational:ColumnName", "bonus_text");
@@ -585,7 +614,7 @@ namespace BookPortalWebMigrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .Annotation("Relational:ColumnName", "work_type_id")
-                        .Annotation("SqlServer:ItentityStrategy", "IdentityColumn");
+                        .Annotation("SqlServer:ValueGenerationStrategy", "IdentityColumn");
 
                     b.Property<int>("Level")
                         .Annotation("Relational:ColumnName", "level");
@@ -717,15 +746,26 @@ namespace BookPortalWebMigrations
                         .ForeignKey("CountryId");
                 });
 
-            builder.Entity("BookPortal.Web.Domain.Models.Serie", b =>
+            builder.Entity("BookPortal.Web.Domain.Models.PublisherSerie", b =>
                 {
-                    b.Reference("BookPortal.Web.Domain.Models.Serie")
-                        .InverseCollection()
-                        .ForeignKey("ParentSerieId");
-
                     b.Reference("BookPortal.Web.Domain.Models.Publisher")
                         .InverseCollection()
                         .ForeignKey("PublisherId");
+
+                    b.Reference("BookPortal.Web.Domain.Models.Serie")
+                        .InverseCollection()
+                        .ForeignKey("SerieId");
+                });
+
+            builder.Entity("BookPortal.Web.Domain.Models.Serie", b =>
+                {
+                    b.Reference("BookPortal.Web.Domain.Models.Language")
+                        .InverseCollection()
+                        .ForeignKey("LanguageId");
+
+                    b.Reference("BookPortal.Web.Domain.Models.Serie")
+                        .InverseCollection()
+                        .ForeignKey("ParentSerieId");
                 });
 
             builder.Entity("BookPortal.Web.Domain.Models.TranslationWork", b =>

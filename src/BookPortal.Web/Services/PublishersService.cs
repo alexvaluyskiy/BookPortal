@@ -40,7 +40,7 @@ namespace BookPortal.Web.Services
         }
 
         // TODO: add paging
-        public async Task<IEnumerable<Edition>> GetPublisherEditionsAsync(int publisherId)
+        public async Task<IReadOnlyList<Edition>> GetPublisherEditionsAsync(int publisherId)
         {
             var seriesIds = _bookContext.PublisherSeries
                 .Where(c => c.PublisherId == publisherId)
@@ -63,7 +63,7 @@ namespace BookPortal.Web.Services
             return await query.ToListAsync();
         }
 
-        public async Task<IEnumerable<SerieResponse>> GetPublisherSeriesAsync(int publisherId)
+        public async Task<IReadOnlyList<SerieResponse>> GetPublisherSeriesAsync(int publisherId)
         {
             // TODO: EF7 bug: No inner join
             var series2 = _bookContext.PublisherSeries
@@ -90,7 +90,7 @@ namespace BookPortal.Web.Services
             return series;
         }
 
-        public async Task<IEnumerable<ContestWorkResponse>> GetPublisherAwardsAsync(int publisherId)
+        public async Task<IReadOnlyList<ContestWorkResponse>> GetPublisherAwardsAsync(int publisherId)
         {
             var query = from cw in _bookContext.ContestWorks
                         join c in _bookContext.Contests on cw.ContestId equals c.Id

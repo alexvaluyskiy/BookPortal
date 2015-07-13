@@ -60,7 +60,7 @@ namespace BookPortal.Web.Domain
                 builder.Property(c => c.NameYear).HasColumnName("name_year");
                 builder.Property(c => c.Number).HasColumnName("number");
                 builder.Property(c => c.Place).HasColumnName("place");
-                builder.Property(c => c.Date).HasColumnName("date");
+                builder.Property(c => c.Date).HasColumnName("date").HasColumnType("nvarchar(10)");
                 builder.Property(c => c.Description).HasColumnName("description");
                 builder.Property(c => c.ShortDescription).HasColumnName("short_description");
                 builder.Property(c => c.Description).HasColumnName("description");
@@ -103,8 +103,8 @@ namespace BookPortal.Web.Domain
                 builder.Property(c => c.NameOriginal).HasColumnName("name_original");
                 builder.Property(c => c.NameSort).HasColumnName("name_sort");
                 builder.Property(c => c.Gender).HasColumnName("gender");
-                builder.Property(c => c.Birthdate).HasColumnName("birthdate");
-                builder.Property(c => c.Deathdate).HasColumnName("deathdate");
+                builder.Property(c => c.Birthdate).HasColumnName("birthdate").HasColumnType("nvarchar(10)");
+                builder.Property(c => c.Deathdate).HasColumnName("deathdate").HasColumnType("nvarchar(10)");
                 builder.Property(c => c.CountryId).HasColumnName("country_id");
                 builder.Property(c => c.LanguageId).HasColumnName("language_id");
                 builder.Property(c => c.Biography).HasColumnName("biography");
@@ -164,6 +164,8 @@ namespace BookPortal.Web.Domain
             });
 
             modelBuilder.Entity<TranslationWorkPerson>().ToTable("translation_work_persons");
+            modelBuilder.Entity<TranslationWorkPerson>().Index(c => c.TranslationWorkId);
+            modelBuilder.Entity<TranslationWorkPerson>().Index(c => c.PersonId);
             modelBuilder.Entity<TranslationWorkPerson>(builder =>
             {
                 builder.Property(c => c.Id).HasColumnName("translation_work_person_id").UseSqlServerIdentityColumn();
@@ -197,7 +199,7 @@ namespace BookPortal.Web.Domain
             modelBuilder.Entity<EditionPublisher>().ToTable("edition_publishers");
             modelBuilder.Entity<EditionPublisher>(builder =>
             {
-                builder.Property(c => c.Id).HasColumnName("id").UseSqlServerIdentityColumn();
+                builder.Property(c => c.Id).HasColumnName("edition_publisher_id").UseSqlServerIdentityColumn();
                 builder.Property(c => c.EditionId).HasColumnName("edition_id");
                 builder.Property(c => c.PublisherId).HasColumnName("publisher_id");
             });
@@ -205,7 +207,7 @@ namespace BookPortal.Web.Domain
             modelBuilder.Entity<EditionSerie>().ToTable("edition_series");
             modelBuilder.Entity<EditionSerie>(builder =>
             {
-                builder.Property(c => c.Id).HasColumnName("id").UseSqlServerIdentityColumn();
+                builder.Property(c => c.Id).HasColumnName("edition_serie_id").UseSqlServerIdentityColumn();
                 builder.Property(c => c.Sort).HasColumnName("sort");
                 builder.Property(c => c.EditionId).HasColumnName("edition_id");
                 builder.Property(c => c.SerieId).HasColumnName("serie_id");
@@ -214,7 +216,7 @@ namespace BookPortal.Web.Domain
             modelBuilder.Entity<EditionTranslation>().ToTable("edition_translations");
             modelBuilder.Entity<EditionTranslation>(builder =>
             {
-                builder.Property(c => c.Id).HasColumnName("translation_edition_id").UseSqlServerIdentityColumn();
+                builder.Property(c => c.Id).HasColumnName("edition_translation_id").UseSqlServerIdentityColumn();
                 builder.Property(c => c.Name).HasColumnName("name");
                 builder.Property(c => c.TranslationWorkId).HasColumnName("translation_work_id");
                 builder.Property(c => c.EditionId).HasColumnName("edition_id");
@@ -223,7 +225,7 @@ namespace BookPortal.Web.Domain
             modelBuilder.Entity<EditionWork>().ToTable("edition_works");
             modelBuilder.Entity<EditionWork>(builder =>
             {
-                builder.Property(c => c.Id).HasColumnName("id").UseSqlServerIdentityColumn();
+                builder.Property(c => c.Id).HasColumnName("edition_work_id").UseSqlServerIdentityColumn();
                 builder.Property(c => c.EditionId).HasColumnName("edition_id");
                 builder.Property(c => c.WorkId).HasColumnName("work_id");
             });

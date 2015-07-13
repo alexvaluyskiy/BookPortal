@@ -4,7 +4,7 @@ namespace BookPortal.Web.Models
 {
     public class SerieTreeItem
     {
-        public int Id { get; set; }
+        public int SerieId { get; set; }
 
         public string Name { get; set; }
 
