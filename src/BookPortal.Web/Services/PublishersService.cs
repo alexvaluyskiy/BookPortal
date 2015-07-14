@@ -40,25 +40,18 @@ namespace BookPortal.Web.Services
         }
 
         // TODO: add paging
-        public async Task<IReadOnlyList<Edition>> GetPublisherEditionsAsync(int publisherId)
+        public async Task<IReadOnlyList<EditionResponse>> GetPublisherEditionsAsync(int publisherId)
         {
-            var seriesIds = _bookContext.PublisherSeries
-                .Where(c => c.PublisherId == publisherId)
-                .Select(c => c.SerieId)
-                .ToList();
-
-            if (seriesIds.Count == 0)
-                return null;
-
-            var editionsIds = _bookContext.EditionSeries
-                .Where(c => seriesIds.Contains(c.SerieId))
-                .Select(c => c.EditionId)
-                .ToList();
-
-            if (editionsIds.Count == 0)
-                return null;
-
-            var query = _bookContext.Editions.Where(c => editionsIds.Contains(c.Id));
+            var query = from e in _bookContext.Editions
+                        join ep in _bookContext.EditionPublishers on e.Id equals ep.EditionId
+                        where ep.PublisherId == publisherId
+                        select new EditionResponse
+                        {
+                            EditionId = e.Id,
+                            Name = e.Name,
+                            Year = e.Year,
+                            Correct = 1
+                        };
 
             return await query.ToListAsync();
         }

@@ -79,60 +79,37 @@ namespace BookPortal.Web.Services
             return serie;
         }
 
-        public async Task<IEnumerable<Edition>> GetSerieEditionsAsync(SerieRequest request)
+        public async Task<IEnumerable<EditionResponse>> GetSerieEditionsAsync(SerieRequest request)
         {
-            string sql = @"
-                SELECT e.*
-                FROM edition_series es INNER JOIN editions e ON e.edition_id = es.edition_id
-                WHERE es.serie_id = @serie_id
-            ";
+            var query = from e in _bookContext.Editions
+                        join es in _bookContext.EditionSeries on e.Id equals es.EditionId
+                        where es.SerieId == request.SerieId
+                        select new EditionResponse
+                        {
+                            EditionId = e.Id,
+                            Name = e.Name,
+                            Year = e.Year,
+                            Correct = 1,
+                            SerieSort = es.Sort
+                        };
 
             switch (request.Sort)
             {
                 case SerieEditionsSort.Name:
-                    sql += "ORDER BY e.name, e.year";
+                    query = query.OrderBy(c => c.Name).ThenBy(c => c.Year); ;
                     break;
                 case SerieEditionsSort.Authors:
-                    sql += "ORDER BY e.authors, es.sort, e.year";
+                    query = query.OrderBy(c => c.Authors).ThenBy(c => c.SerieSort).ThenBy(c => c.Year);
                     break;
                 case SerieEditionsSort.Year:
-                    sql += "ORDER BY e.year, es.sort, e.name";
+                    query = query.OrderBy(c => c.Year).ThenBy(c => c.SerieSort).ThenBy(c => c.Name);
                     break;
                 default:
-                    sql += "ORDER BY e.release_date DESC, es.sort";
+                    query = query.OrderByDescending(c => c.Year).ThenBy(c => c.SerieSort);
                     break;
             }
 
-            List<Edition> editions = new List<Edition>();
-
-            var connection = _bookContext.Database.GetDbConnection() as SqlConnection;
-            if (connection != null)
-            {
-                connection.Open();
-                using (var command = new SqlCommand(sql, connection))
-                {
-                    command.Parameters.AddWithValue("@serie_id", request.SerieId);
-                    using (var reader = await command.ExecuteReaderAsync())
-                    {
-                        while (await reader.ReadAsync())
-                        {
-                            var edition = new Edition();
-                            edition.Id = reader.GetValue<int>("edition_id");
-                            edition.Name = reader.GetValue<string>("name");
-                            edition.Year = reader.GetValue<int>("year");
-                            edition.CoverType = (EditionCoverType)reader.GetValue<int>("cover_type");
-                            edition.Format = reader.GetValue<string>("format");
-                            edition.Authors = reader.GetValue<string>("authors");
-                            edition.Description = reader.GetValue<string>("description");
-                            edition.ReleaseDate = reader.GetValue<string>("release_date");
-                            editions.Add(edition);
-                        }
-                    }
-                }
-                connection.Close();
-            }
-
-            return editions.Skip(request.Offset).Take(request.Limit);
+            return await query.Skip(request.Offset).Take(request.Limit).ToListAsync();
         }
 
         public async Task<SerieTreeItem> GetSerieTreeAsync(int serieId)
