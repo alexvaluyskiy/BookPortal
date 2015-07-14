@@ -26,20 +26,5 @@ namespace BookPortal.Web.Services
         {
             return _bookContext.ContestWorks.Where(c => c.Id == contestWorkId).SingleOrDefaultAsync();
         }
-
-        public Task<ContestWork> AddContestWorkAsync(ContestWork request)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ContestWork> UpdateContestWorkAsync(int contestWorkId, ContestWork request)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ContestWork> DeleteContestWorkAsync(int contestWorkId)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

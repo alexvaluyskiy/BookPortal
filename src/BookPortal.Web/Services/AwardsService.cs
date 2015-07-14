@@ -131,43 +131,5 @@ namespace BookPortal.Web.Services
 
             return await query.FirstOrDefaultAsync();
         }
-
-        public virtual async Task<AwardResponse> AddAwardAsync(Award request)
-        {
-            var added = _bookContext.Add(request);
-            await _bookContext.SaveChangesAsync();
-
-            return Mapper.Map<AwardResponse>(added.Entity);
-        }
-
-        public virtual async Task<AwardResponse> UpdateAwardAsync(int awardId, Award request)
-        {
-            Award award = await _bookContext.Awards.Where(a => a.Id == awardId).SingleOrDefaultAsync();
-
-            if (award != null)
-            {
-                _bookContext.Update(request);
-                await _bookContext.SaveChangesAsync();
-
-                return Mapper.Map<AwardResponse>(award);
-            }
-
-            return null;
-        }
-
-        public virtual async Task<AwardResponse> DeleteAwardAsync(int awardId)
-        {
-            Award award = await _bookContext.Awards.Where(a => a.Id == awardId).SingleOrDefaultAsync();
-
-            if (award != null)
-            {
-                _bookContext.Remove(award);
-                await _bookContext.SaveChangesAsync();
-
-                return Mapper.Map<AwardResponse>(award);
-            }
-
-            return null;
-        }
     }
 }

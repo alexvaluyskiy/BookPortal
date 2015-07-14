@@ -25,39 +25,5 @@ namespace BookPortal.Web.Services
         {
             return _bookContext.Nominations.Where(n => n.AwardId == awardId && n.Id == nominationId).SingleOrDefaultAsync();
         }
-
-        public async Task<Nomination> AddNominationAsync(Nomination request)
-        {
-            _bookContext.Add(request);
-            await _bookContext.SaveChangesAsync();
-
-            return request;
-        }
-
-        public async Task<Nomination> UpdateNominationAsync(int id, Nomination request)
-        {
-            Nomination nomination = await _bookContext.Nominations.Where(a => a.Id == id).SingleOrDefaultAsync();
-
-            if (nomination == null)
-                return await Task.FromResult(default(Nomination));
-
-            _bookContext.Update(request);
-            await _bookContext.SaveChangesAsync();
-
-            return request;
-        }
-
-        public async Task<Nomination> DeleteNominationAsync(int id)
-        {
-            Nomination nomination = await _bookContext.Nominations.Where(a => a.Id == id).SingleOrDefaultAsync();
-
-            if (nomination != null)
-            {
-                _bookContext.Remove(nomination);
-                await _bookContext.SaveChangesAsync();
-            }
-
-            return nomination;
-        }
     }
 }
