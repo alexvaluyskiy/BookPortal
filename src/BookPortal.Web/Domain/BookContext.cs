@@ -79,6 +79,7 @@ namespace BookPortal.Web.Domain
             });
 
             modelBuilder.Entity<ContestWork>().ToTable("contest_works");
+            modelBuilder.Entity<ContestWork>().Index(c => new { c.LinkId, c.LinkType });
             modelBuilder.Entity<ContestWork>(builder =>
             {
                 builder.Property(c => c.Id).HasColumnName("contest_work_id").UseSqlServerIdentityColumn();
@@ -113,6 +114,7 @@ namespace BookPortal.Web.Domain
             });
 
             modelBuilder.Entity<PersonWork>().ToTable("person_works");
+            modelBuilder.Entity<PersonWork>().Index(c => c.PersonId);
             modelBuilder.Entity<PersonWork>(builder =>
             {
                 builder.Property(c => c.Id).HasColumnName("person_work_id").UseSqlServerIdentityColumn();
@@ -205,6 +207,7 @@ namespace BookPortal.Web.Domain
             });
 
             modelBuilder.Entity<EditionSerie>().ToTable("edition_series");
+            modelBuilder.Entity<EditionSerie>().Index(c => c.SerieId);
             modelBuilder.Entity<EditionSerie>(builder =>
             {
                 builder.Property(c => c.Id).HasColumnName("edition_serie_id").UseSqlServerIdentityColumn();
@@ -223,6 +226,7 @@ namespace BookPortal.Web.Domain
             });
 
             modelBuilder.Entity<EditionWork>().ToTable("edition_works");
+            modelBuilder.Entity<EditionWork>().Index(c => c.WorkId);
             modelBuilder.Entity<EditionWork>(builder =>
             {
                 builder.Property(c => c.Id).HasColumnName("edition_work_id").UseSqlServerIdentityColumn();
@@ -257,6 +261,7 @@ namespace BookPortal.Web.Domain
             });
 
             modelBuilder.Entity<PublisherSerie>().ToTable("publisher_series");
+            modelBuilder.Entity<PublisherSerie>().Index(c => c.PublisherId);
             modelBuilder.Entity<PublisherSerie>(builder =>
             {
                 builder.Property(c => c.Id).HasColumnName("publisher_serie_id").UseSqlServerIdentityColumn();
