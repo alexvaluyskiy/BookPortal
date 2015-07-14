@@ -42,7 +42,7 @@ namespace BookPortal.Web.Services
 
 
             // get translation names
-            var translationsNames =    (from a in _bookContext.TranslationEditions
+            var translationsNames =    (from a in _bookContext.EditionTranslations
                                         where translationWorksList.Contains(a.TranslationWorkId)
                                         group a by new {a.TranslationWorkId, a.Name} into g
                                         select new
@@ -66,7 +66,8 @@ namespace BookPortal.Web.Services
                                 TranslationYear = tw.Year,
                                 WorkTypeName = wt.Name,
                                 WorkTypeNameSingle = wt.NameSingle,
-                                WorkTypeLevel = wt.Level
+                                WorkTypeLevel = wt.Level,
+                                LanguageId = tw.LanguageId
                             };
 
             var response = await query.ToListAsync();
@@ -139,7 +140,7 @@ namespace BookPortal.Web.Services
         // TODO: read Corrent field
         public async Task<IReadOnlyList<EditionResponse>> GetTranslationEditionsAsync(int translationWorkId)
         {
-            var query = from te in _bookContext.TranslationEditions
+            var query = from te in _bookContext.EditionTranslations
                         join e in _bookContext.Editions on te.EditionId equals e.Id
                         where te.TranslationWorkId == translationWorkId
                         select new EditionResponse

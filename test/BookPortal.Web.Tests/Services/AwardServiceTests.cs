@@ -158,58 +158,6 @@ namespace BookPortal.Web.Tests.Services
             //Assert.Equal(2015, award.LastContestDate.Value.Year);
         }
 
-        [Fact]
-        public async Task AddNewAwardTest()
-        {
-            var dbContext = _serviceProvider.GetRequiredService<BookContext>();
-            var service = new AwardsService(dbContext);
-
-            var award = new Award { Id = 1, Name = "Hugo" };
-
-            var response = await service.AddAwardAsync(award);
-
-            Assert.NotNull(response);
-            Assert.Equal(response.Name, response.Name);
-            Assert.Equal(award.Id, response.Id);
-        }
-
-        [Fact]
-        public async Task UpdateAwardTest()
-        {
-            var dbContext = _serviceProvider.GetRequiredService<BookContext>();
-            var service = new AwardsService(dbContext);
-
-            var award = new Award { Id = 1, Name = "Hugo" };
-            dbContext.Awards.Add(award);
-            await dbContext.SaveChangesAsync();
-
-            award.RusName = "Хьюго";
-            var response = await service.UpdateAwardAsync(award.Id, award);
-
-            Assert.NotNull(response);
-            Assert.Equal(response.Name, response.Name);
-            Assert.Equal(award.RusName, response.RusName);
-        }
-
-        [Fact]
-        public async Task DeleteAwardTest()
-        {
-            var dbContext = _serviceProvider.GetRequiredService<BookContext>();
-            var service = new AwardsService(dbContext);
-
-            var award = new Award { Id = 1, Name = "Hugo" };
-            dbContext.Awards.Add(award);
-            await dbContext.SaveChangesAsync();
-
-            var countBefore = dbContext.Awards.Count();
-            var response = await service.DeleteAwardAsync(award.Id);
-            var countAfter = dbContext.Awards.Count();
-
-            Assert.NotNull(response);
-            Assert.Equal(1, countBefore);
-            Assert.Equal(0, countAfter);
-        }
-
         private async Task CreateSampleTask(BookContext dbContext)
         {
             var languages = new List<Language>

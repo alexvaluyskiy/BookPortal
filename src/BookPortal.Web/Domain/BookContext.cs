@@ -23,7 +23,7 @@ namespace BookPortal.Web.Domain
         public DbSet<Edition> Editions { get; set; }
         public DbSet<EditionPublisher> EditionPublishers { get; set; }
         public DbSet<EditionSerie> EditionSeries { get; set; }
-        public DbSet<EditionTranslation> TranslationEditions { get; set; }
+        public DbSet<EditionTranslation> EditionTranslations { get; set; }
         public DbSet<EditionWork> EditionWorks { get; set; }
 
         public DbSet<Serie> Series { get; set; }
@@ -157,6 +157,7 @@ namespace BookPortal.Web.Domain
             });
 
             modelBuilder.Entity<TranslationWork>().ToTable("translation_works");
+            modelBuilder.Entity<TranslationWork>().Index(c => c.WorkId);
             modelBuilder.Entity<TranslationWork>(builder =>
             {
                 builder.Property(c => c.Id).HasColumnName("translation_work_id").UseSqlServerIdentityColumn();

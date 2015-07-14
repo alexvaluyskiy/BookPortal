@@ -47,14 +47,25 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet("{workId}/editions")]
-        public async Task<IActionResult> GetEditions(int personId)
+        public async Task<IActionResult> GetEditions(int workId)
         {
-            var editions = await _worksService.GetWorkEditionsAsync(personId);
+            var editions = await _worksService.GetWorkEditionsAsync(workId);
 
             if (editions == null)
-                return this.ErrorObject(404, $"Work (id: {personId}) doesn't contain editions");
+                return this.ErrorObject(404, $"Work (id: {workId}) doesn't contain editions");
 
             return this.PageObject(editions, editions.Count);
+        }
+
+        [HttpGet("{workId}/translations")]
+        public async Task<IActionResult> GetTranslations(int workId)
+        {
+            var translations = await _worksService.GetWorkTranslationsAsync(workId);
+
+            if (translations == null)
+                return this.ErrorObject(404, $"Work (id: {workId}) doesn't contain translations");
+
+            return this.PageObject(translations);
         }
     }
 }

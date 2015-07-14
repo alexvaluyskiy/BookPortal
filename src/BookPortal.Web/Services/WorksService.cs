@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Data.Entity;
@@ -106,6 +107,92 @@ namespace BookPortal.Web.Services
                         };
 
             return await query.ToListAsync();
+        }
+
+        public async Task<IReadOnlyList<TranslationResponse>> GetWorkTranslationsAsync(int workId)
+        {
+            // TODO: rework when EF7 will supports GroupBy with InnerJoin
+            var sql = @"
+                SELECT
+                    tw.translation_work_id,
+                    et.name
+                FROM
+                    translation_works tw
+                    INNER JOIN edition_translations et ON et.translation_work_id = tw.translation_work_id
+                WHERE
+                    tw.work_id = @work_id
+                GROUP BY
+                    tw.translation_work_id,
+                    tw.work_id,
+                    et.name
+                ORDER BY
+                    tw.translation_work_id,
+                    COUNT(*) DESC";
+
+            List<TranslationResponse> translationNames = new List<TranslationResponse>();
+            var connection = _bookContext.Database.GetDbConnection() as SqlConnection;
+            if (connection != null)
+            {
+                connection.Open();
+                using (var command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@work_id", workId);
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            var name = new TranslationResponse
+                            {
+                                TranslationWorkId = reader.GetValue<int>("translation_work_id"),
+                                WorkName = reader.GetValue<string>("name")
+                            };
+                            translationNames.Add(name);
+                        }
+                    }
+                }
+                connection.Close();
+            }
+
+            var query = from tw in _bookContext.TranslationWorks
+                        join twp in _bookContext.TranslationWorkPersons on tw.Id equals twp.TranslationWorkId
+                        join p in _bookContext.Persons on twp.PersonId equals p.Id
+                        where tw.WorkId == workId
+                        orderby tw.LanguageId, tw.Year, tw.Id, twp.PersonOrder
+                        select new
+                        {
+                            TranslationWorkId = tw.Id,
+                            PersonId = twp.PersonId,
+                            Name = p.Name,
+                            LanguageId = tw.LanguageId,
+                            Year = tw.Year
+                        };
+
+
+            var result = await query.ToListAsync();
+
+            // TODO: try to optimize it later
+            List<TranslationResponse> responses = new List<TranslationResponse>();
+            foreach (var item in result.GroupBy(c => c.TranslationWorkId).Select(c => c.Key))
+            {
+                TranslationResponse response = new TranslationResponse();
+
+                var items = result.Where(c => c.TranslationWorkId == item).ToList();
+
+                response.LanguageId = items.First().LanguageId;
+                response.TranslationWorkId = item;
+                response.TranslationYear = items.First().Year;
+                response.Names = translationNames.Where(c => c.TranslationWorkId == item).Select(c => c.WorkName).ToList();
+
+                response.Translators = new List<PersonResponse>();
+                foreach (var person in items)
+                {
+                    response.Translators.Add(new PersonResponse { PersonId = person.PersonId, Name = person.Name});
+                }
+
+                responses.Add(response);
+            }
+
+            return responses;
         }
     }
 }

@@ -9,7 +9,7 @@ namespace BookPortal.Web.Models
 
         public List<PersonResponse> Translators { get; set; }
 
-        public int WorkId { get; set; }
+        public int? WorkId { get; set; }
 
         public string WorkName { get; set; }
 
@@ -23,10 +23,12 @@ namespace BookPortal.Web.Models
 
         public string WorkTypeNameSingle { get; set; }
 
-        public int WorkTypeLevel { get; set; }
+        public int? WorkTypeLevel { get; set; }
 
         public List<string> Names { get; set; }
 
         public List<int> Editions { get; set; }
+
+        public int? LanguageId { get; set; }
     }
 }
