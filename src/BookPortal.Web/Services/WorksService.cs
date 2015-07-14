@@ -91,5 +91,21 @@ namespace BookPortal.Web.Services
 
             return await query.ToListAsync();
         }
+
+        public async Task<IReadOnlyList<EditionResponse>> GetWorkEditionsAsync(int workId)
+        {
+            var query = from e in _bookContext.Editions
+                        join ew in _bookContext.EditionWorks on e.Id equals ew.EditionId
+                        where ew.WorkId == workId
+                        select new EditionResponse
+                        {
+                            EditionId = e.Id,
+                            Name = e.Name,
+                            Year = e.Year,
+                            Correct = 1
+                        };
+
+            return await query.ToListAsync();
+        }
     }
 }

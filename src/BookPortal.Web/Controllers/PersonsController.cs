@@ -25,15 +25,37 @@ namespace BookPortal.Web.Controllers
             return this.PageObject(persons, totalrows, request.Limit, request.Offset);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        [HttpGet("{personId}")]
+        public async Task<IActionResult> Get(int personId)
         {
-            var person = await _personsService.GetPersonAsync(id);
+            var person = await _personsService.GetPersonAsync(personId);
 
             if (person == null)
-                return this.ErrorObject(404, $"Person (id: {id}) is not found");
+                return this.ErrorObject(404, $"Person (id: {personId}) is not found");
 
             return this.SingleObject(200, person);
+        }
+
+        [HttpGet("{personId}/editions")]
+        public async Task<IActionResult> GetEditions(int personId)
+        {
+            var editions = await _personsService.GetPersonEditionsAsync(personId);
+
+            if (editions == null)
+                return this.ErrorObject(404, $"Person (id: {personId}) doesn't contain editions");
+
+            return this.PageObject(editions, editions.Count);
+        }
+
+        [HttpGet("{personId}/awards")]
+        public async Task<IActionResult> GetAwards(int personId)
+        {
+            var awards = await _personsService.GetPersonAwardsAsync(personId);
+
+            if (awards == null)
+                return this.ErrorObject(404, $"Person (id: {personId}) doesn't contain awards");
+
+            return this.PageObject(awards, awards.Count);
         }
     }
 }

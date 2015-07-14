@@ -41,5 +41,80 @@ namespace BookPortal.Web.Services
         {
             return await _bookContext.Persons.Where(c => c.Id == personId).SingleOrDefaultAsync();
         }
+
+        public async Task<IReadOnlyList<EditionResponse>> GetPersonEditionsAsync(int personId)
+        {
+            var query = from e in _bookContext.Editions
+                        join ew in _bookContext.EditionWorks on e.Id equals ew.EditionId
+                        join w in _bookContext.PersonWorks on ew.WorkId equals w.WorkId
+                        where w.PersonId == personId
+                        select new EditionResponse
+                        {
+                            EditionId = e.Id,
+                            Name = e.Name,
+                            Year = e.Year,
+                            Correct = 1
+                        };
+
+            return await query.ToListAsync();
+        }
+
+        public async Task<IReadOnlyList<ContestWorkResponse>> GetPersonAwardsAsync(int personId)
+        {
+            // all person awards
+            var personAwards = await (from cw in _bookContext.ContestWorks
+                                join c in _bookContext.Contests on cw.ContestId equals c.Id
+                                join n in _bookContext.Nominations on cw.NominationId equals n.Id
+                                join a in _bookContext.Awards on c.AwardId equals a.Id
+                                where cw.LinkType == ContestWorkType.Person && cw.LinkId == personId
+                                select new ContestWorkResponse
+                                {
+                                    AwardId = a.Id,
+                                    AwardRusname = a.RusName,
+                                    AwardName = a.Name,
+                                    AwardIsOpened = a.IsOpened,
+                                    ContestId = c.Id,
+                                    ContestName = c.Name,
+                                    ContestYear = c.NameYear,
+                                    NominationId = n.Id,
+                                    NominationRusname = n.RusName,
+                                    NominationName = n.Name,
+                                    ContestWorkId = cw.Id,
+                                    ContestWorkRusname = cw.RusName,
+                                    ContestWorkName = cw.Name,
+                                    ContestWorkPrefix = cw.Prefix,
+                                    ContestWorkPostfix = cw.Postfix
+                                }).ToListAsync();
+
+            // all person's works awards
+            var workAwards = await (from cw in _bookContext.ContestWorks
+                                      join c in _bookContext.Contests on cw.ContestId equals c.Id
+                                      join n in _bookContext.Nominations on cw.NominationId equals n.Id
+                                      join a in _bookContext.Awards on c.AwardId equals a.Id
+                                      join pw in _bookContext.PersonWorks on cw.LinkId equals pw.WorkId
+                                      where cw.LinkType == ContestWorkType.Work && pw.PersonId == personId
+                                      select new ContestWorkResponse
+                                      {
+                                          AwardId = a.Id,
+                                          AwardRusname = a.RusName,
+                                          AwardName = a.Name,
+                                          AwardIsOpened = a.IsOpened,
+                                          ContestId = c.Id,
+                                          ContestName = c.Name,
+                                          ContestYear = c.NameYear,
+                                          NominationId = n.Id,
+                                          NominationRusname = n.RusName,
+                                          NominationName = n.Name,
+                                          ContestWorkId = cw.Id,
+                                          ContestWorkRusname = cw.RusName,
+                                          ContestWorkName = cw.Name,
+                                          ContestWorkPrefix = cw.Prefix,
+                                          ContestWorkPostfix = cw.Postfix
+                                      }).ToListAsync();
+
+            personAwards.AddRange(workAwards);
+
+            return personAwards;
+        }
     }
 }

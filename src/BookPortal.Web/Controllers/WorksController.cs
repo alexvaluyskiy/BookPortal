@@ -45,5 +45,16 @@ namespace BookPortal.Web.Controllers
 
             return this.PageObject(awards, awards.Count);
         }
+
+        [HttpGet("{workId}/editions")]
+        public async Task<IActionResult> GetEditions(int personId)
+        {
+            var editions = await _worksService.GetWorkEditionsAsync(personId);
+
+            if (editions == null)
+                return this.ErrorObject(404, $"Work (id: {personId}) doesn't contain editions");
+
+            return this.PageObject(editions, editions.Count);
+        }
     }
 }
