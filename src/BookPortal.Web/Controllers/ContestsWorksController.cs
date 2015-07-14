@@ -30,38 +30,5 @@ namespace BookPortal.Web.Controllers
 
             return this.SingleObject(200, contestWork);
         }
-
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody]ContestWork request)
-        {
-            ContestWork contestWork = await _contestsWorksService.AddContestWorkAsync(request);
-
-            if (contestWork == null)
-                return this.ErrorObject(400);
-
-            return new HttpStatusCodeResult(204);
-        }
-
-        [HttpPut("{contestWorkId}")]
-        public async Task<IActionResult> Put(int contestWorkId, [FromBody]ContestWork request)
-        {
-            ContestWork contestWork = await _contestsWorksService.UpdateContestWorkAsync(contestWorkId, request);
-
-            if (contestWork == null)
-                return this.ErrorObject(400);
-
-            return new HttpStatusCodeResult(204);
-        }
-
-        [HttpDelete("{contestWorkId}")]
-        public async Task<IActionResult> Delete(int contestWorkId)
-        {
-            ContestWork contestWork = await _contestsWorksService.DeleteContestWorkAsync(contestWorkId);
-
-            if (contestWork == null)
-                return this.ErrorObject(400);
-
-            return new HttpStatusCodeResult(204);
-        }
     }
 }

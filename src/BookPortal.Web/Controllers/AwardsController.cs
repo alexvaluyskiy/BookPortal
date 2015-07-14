@@ -36,38 +36,5 @@ namespace BookPortal.Web.Controllers
 
             return this.SingleObject(award);
         }
-
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody]Award request)
-        {
-            AwardResponse award = await _awardsService.AddAwardAsync(request);
-
-            if (award == null)
-                return this.ErrorObject(400);
-
-            return new CreatedAtRouteResult("GetAward", new {id = award.Id}, award);
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody]Award request)
-        {
-            AwardResponse award = await _awardsService.UpdateAwardAsync(id, request);
-
-            if (award == null)
-                return this.ErrorObject(400);
-                
-            return new HttpStatusCodeResult(204);
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            AwardResponse award = await _awardsService.DeleteAwardAsync(id);
-
-            if (award == null)
-                return this.ErrorObject(400);
-
-            return new HttpStatusCodeResult(204);
-        }
     }
 }

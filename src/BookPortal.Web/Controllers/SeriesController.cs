@@ -55,7 +55,5 @@ namespace BookPortal.Web.Controllers
 
             return this.SingleObject(200, treeItem);
         }
-
-
     }
 }
