@@ -11,6 +11,7 @@
         "Microsoft.AspNet.Server.WebListener": "1.0.0-*",
         "Microsoft.Framework.Configuration.Json": "1.0.0-*",
         "Microsoft.Framework.DependencyInjection.Abstractions": "1.0.0-*",
+        "Microsoft.Framework.Logging.Debug": "1.0.0-*",
         "EntityFramework7.SqlServer": "7.0.0-*",
         "EntityFramework7.Commands": "7.0.0-*",
         "AutoMapper": "4.0.0-*",

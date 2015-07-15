@@ -7,7 +7,6 @@ using BookPortal.Core.Framework;
 using BookPortal.Core.Framework.Filters;
 using BookPortal.Core.Logging;
 using BookPortal.Web.Domain;
-using BookPortal.Web.Infrastructure;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
@@ -92,8 +91,7 @@ namespace BookPortal.Web
                 Configuration.Get("AppSettings:ApplicationName"),
                 LogLevel.Warning);
 
-            //loggerFactory.AddDebug(LogLevel.Verbose);
-            loggerFactory.AddProvider(new DebugLoggerProvider());
+            loggerFactory.AddDebug(LogLevel.Verbose);
 
             app.UseStaticFiles();
 
@@ -105,9 +103,6 @@ namespace BookPortal.Web
             app.UseApplicationInsightsExceptionTelemetry();
 
             app.UseMvc();
-
-            // create mappings
-            MapperInitialization.Initialize();
         }
     }
 }

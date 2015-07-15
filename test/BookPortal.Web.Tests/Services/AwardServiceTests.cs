@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using BookPortal.Web.Domain;
 using BookPortal.Web.Domain.Models;
-using BookPortal.Web.Infrastructure;
 using BookPortal.Web.Models;
 using BookPortal.Web.Services;
 using Microsoft.Data.Entity;
@@ -26,8 +25,6 @@ namespace BookPortal.Web.Tests.Services
                 .AddDbContext<BookContext>(c => c.UseInMemoryDatabase());
 
             _serviceProvider = services.BuildServiceProvider();
-
-            MapperInitialization.Initialize();
         }
 
         [Fact]

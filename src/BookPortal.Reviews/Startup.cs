@@ -69,6 +69,8 @@ namespace BookPortal.Reviews
                 Configuration.Get("AppSettings:ApplicationName"),
                 LogLevel.Warning);
 
+            loggerFactory.AddDebug(LogLevel.Verbose);
+
             app.UseMvc();
 
             // create mappings
