@@ -67,7 +67,7 @@ namespace BookPortal.Web.Services
 
             var queryResults = await query.ToListAsync();
 
-            // TODO: Min/Max is not translating into SQL
+            // TODO: GroupBy is not translating into SQL
             var awardsIds = queryResults.Select(c => c.Id).ToList();
             var awardFirstLastContests = (  from c in _bookContext.Contests
                                             where awardsIds.Contains(c.AwardId)

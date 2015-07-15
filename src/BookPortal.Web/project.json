@@ -22,8 +22,8 @@
         "Microsoft.Framework.Configuration.Json": "1.0.0-*",
         "Microsoft.Framework.Logging.Debug": "1.0.0-*",
         "Microsoft.ApplicationInsights.AspNet": "1.0.0-*",
-        "EntityFramework.SqlServer": "7.0.0-*",
-        "EntityFramework.Commands": "7.0.0-*",
+        "EntityFramework7.SqlServer": "7.0.0-*",
+        "EntityFramework7.Commands": "7.0.0-*",
         "AutoMapper": "4.0.0-*",
         "HtmlAgilityPack": "1.4.9",
         "Autofac.Dnx": "4.0.0-*"

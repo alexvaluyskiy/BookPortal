@@ -7,6 +7,7 @@ using BookPortal.Web.Domain.Models;
 using BookPortal.Web.Infrastructure;
 using BookPortal.Web.Models;
 using BookPortal.Web.Services;
+using Microsoft.Data.Entity;
 using Microsoft.Framework.DependencyInjection;
 using Xunit;
 
@@ -22,7 +23,7 @@ namespace BookPortal.Web.Tests.Services
 
             services.AddEntityFramework()
                 .AddInMemoryDatabase()
-                .AddDbContext<BookContext>();
+                .AddDbContext<BookContext>(c => c.UseInMemoryDatabase());
 
             _serviceProvider = services.BuildServiceProvider();
 
