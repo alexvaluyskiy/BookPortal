@@ -18,7 +18,7 @@ namespace BookPortal.Web.Services
             _bookContext = bookContext;
         }
 
-        public virtual async Task<IReadOnlyList<WorkResponse>> GetWorksAsync(int personId)
+        public async Task<IReadOnlyList<WorkResponse>> GetWorksAsync(int personId)
         {
             var workIds = _bookContext.PersonWorks.Where(c => c.PersonId == personId).Select(c => c.WorkId).ToList();
 
@@ -56,12 +56,25 @@ namespace BookPortal.Web.Services
             return works;
         }
 
-        public virtual async Task<Work> GetWorkAsync(int workId)
+        public async Task<WorkResponse> GetWorkAsync(int workId)
         {
-            return await _bookContext.Works
-                .Include(c => c.WorkType)
-                .Where(c => c.Id == workId)
-                .SingleOrDefaultAsync();
+            var query = from w in _bookContext.Works
+                        join wt in _bookContext.WorkTypes on w.WorkTypeId equals wt.Id
+                        where w.Id == workId
+                        select new WorkResponse
+                        {
+                            WorkId = w.Id,
+                            RusName = w.RusName,
+                            Name = w.Name,
+                            AltName = w.AltName,
+                            Year = w.Year,
+                            Description = w.Description,
+                            WorkTypeId = wt.Id,
+                            WorkTypeName = wt.Name,
+                            WorkTypeLevel = wt.Level
+                        };
+
+            return await query.SingleOrDefaultAsync();
         }
 
         public async Task<IReadOnlyList<ContestWorkResponse>> GetWorkAwardsAsync(int workId)

@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Data.Entity;
 using BookPortal.Web.Domain;
-using BookPortal.Web.Domain.Models;
 
 namespace BookPortal.Web.Services
 {
@@ -16,14 +15,38 @@ namespace BookPortal.Web.Services
             _bookContext = bookContext;
         }
 
-        public async Task<IReadOnlyList<Nomination>> GetNominationsAsync(int awardId)
+        public async Task<IReadOnlyList<NominationResponse>> GetNominationsAsync(int awardId)
         {
-            return await _bookContext.Nominations.Where(n => n.AwardId == awardId).ToListAsync();
+            var query = _bookContext.Nominations
+                .Where(n => n.AwardId == awardId)
+                .Select(c => new NominationResponse
+                {
+                    NominationId = c.Id,
+                    Name = c.Name,
+                    RusName = c.RusName,
+                    Description = c.Description,
+                    Number = c.Number,
+                    AwardId = c.AwardId
+                });
+
+            return await query.ToListAsync();
         }
 
-        public Task<Nomination> GetNominationAsync(int awardId, int nominationId)
+        public async Task<NominationResponse> GetNominationAsync(int awardId, int nominationId)
         {
-            return _bookContext.Nominations.Where(n => n.AwardId == awardId && n.Id == nominationId).SingleOrDefaultAsync();
+            var query = _bookContext.Nominations
+                .Where(n => n.AwardId == awardId && n.Id == nominationId)
+                .Select(c => new NominationResponse
+                {
+                    NominationId = c.Id,
+                    Name = c.Name,
+                    RusName = c.RusName,
+                    Description = c.Description,
+                    Number = c.Number,
+                    AwardId = c.AwardId
+                });
+
+            return await query.SingleOrDefaultAsync();
         }
     }
 }

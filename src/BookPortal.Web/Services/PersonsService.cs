@@ -17,9 +17,25 @@ namespace BookPortal.Web.Services
             _bookContext = bookContext;
         }
 
-        public virtual async Task<IReadOnlyList<Person>> GetPeopleAsync(PersonRequest request)
+        public async Task<IReadOnlyList<PersonResponse>> GetPeopleAsync(PersonRequest request)
         {
-            var query = _bookContext.Persons.AsQueryable();
+            var query = _bookContext.Persons
+                .Select(c => new PersonResponse
+                {
+                    PersonId = c.Id,
+                    Name = c.Name,
+                    NameRp = c.NameRp,
+                    NameOriginal = c.NameOriginal,
+                    NameSort = c.NameSort,
+                    Gender = (int)c.Gender,
+                    Birthdate = c.Birthdate,
+                    Deathdate = c.Deathdate,
+                    CountryId = c.CountryId,
+                    LanguageId = c.LanguageId,
+                    Biography = c.Biography,
+                    BiographySource = c.BiographySource,
+                    Notes = c.Notes
+                });
 
             if (request.Offset > 0)
                 query = query.Skip(request.Offset);
@@ -30,16 +46,35 @@ namespace BookPortal.Web.Services
             return await query.ToListAsync();
         }
 
-        public virtual async Task<int> GetPeopleCountsAsync(PersonRequest request)
+        public async Task<int> GetPeopleCountsAsync(PersonRequest request)
         {
             var query = _bookContext.Persons.AsQueryable();
 
             return await query.CountAsync();
         }
 
-        public virtual async Task<Person> GetPersonAsync(int personId)
+        public async Task<PersonResponse> GetPersonAsync(int personId)
         {
-            return await _bookContext.Persons.Where(c => c.Id == personId).SingleOrDefaultAsync();
+            var query = _bookContext.Persons
+                .Where(c => c.Id == personId)
+                .Select(c => new PersonResponse
+                {
+                    PersonId = c.Id,
+                    Name = c.Name,
+                    NameRp = c.NameRp,
+                    NameOriginal = c.NameOriginal,
+                    NameSort = c.NameSort,
+                    Gender = (int)c.Gender,
+                    Birthdate = c.Birthdate,
+                    Deathdate = c.Deathdate,
+                    CountryId = c.CountryId,
+                    LanguageId = c.LanguageId,
+                    Biography = c.Biography,
+                    BiographySource = c.BiographySource,
+                    Notes = c.Notes
+                });
+
+            return await query.SingleOrDefaultAsync();
         }
 
         public async Task<IReadOnlyList<EditionResponse>> GetPersonEditionsAsync(int personId)

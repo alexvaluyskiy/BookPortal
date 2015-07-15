@@ -27,17 +27,14 @@ namespace BookPortal.Web.Services
 
             // get all translators
             var translationPersons =   (from twp in _bookContext.TranslationWorkPersons
-                                        where translationWorksList.Contains(twp.TranslationWorkId)
                                         join p in _bookContext.Persons on twp.PersonId equals p.Id
+                                        where translationWorksList.Contains(twp.TranslationWorkId)
                                         select new
                                         {
                                             Id = twp.TranslationWorkId,
-                                            Person = new PersonResponse
-                                            {
-                                                PersonId = p.Id,
-                                                Name = p.Name,
-                                                NameSort = p.NameSort
-                                            }
+                                            PersonId = p.Id,
+                                            Name = p.Name,
+                                            NameSort = p.NameSort
                                         }).ToList();
 
 
@@ -73,6 +70,7 @@ namespace BookPortal.Web.Services
             var response = await query.ToListAsync();
 
             // get all persons
+            // TODO: EF7 dorsn't generate where clause
             var translationWorks = response.Select(w => w.WorkId).ToList();
             var translationAuthors = (from pw in _bookContext.PersonWorks
                                     join p in _bookContext.Persons on pw.PersonId equals p.Id
@@ -80,12 +78,9 @@ namespace BookPortal.Web.Services
                                     select new
                                     {
                                         WorkId = pw.WorkId,
-                                        Person = new PersonResponse
-                                        {
-                                            PersonId = p.Id,
-                                            Name = p.Name,
-                                            NameSort = p.NameSort
-                                        }
+                                        PersonId = p.Id,
+                                        Name = p.Name,
+                                        NameSort = p.NameSort
                                     }).ToList();
 
             foreach (var item in response)
@@ -100,14 +95,24 @@ namespace BookPortal.Web.Services
                 // adding all translators, except main
                 // TODO: exclude main translator
                 item.Translators = translationPersons
-                    .Where(c => c.Id == item.TranslationWorkId && c.Person.PersonId != request.PersonId)
-                    .Select(c => c.Person)
+                    .Where(c => c.Id == item.TranslationWorkId && c.PersonId != request.PersonId)
+                    .Select(c => new PersonResponse
+                    {
+                        PersonId = c.PersonId,
+                        Name = c.Name,
+                        NameSort = c.NameSort
+                    })
                     .ToList();
 
                 // get all authors
                 item.Authors = translationAuthors
                     .Where(c => c.WorkId == item.WorkId)
-                    .Select(c => c.Person)
+                    .Select(c => new PersonResponse
+                    {
+                        PersonId = c.PersonId,
+                        Name = c.Name,
+                        NameSort = c.NameSort
+                    })
                     .ToList();
             }
 

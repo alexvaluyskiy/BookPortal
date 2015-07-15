@@ -17,7 +17,7 @@ namespace BookPortal.Web.Services
             _bookContext = bookContext;
         }
 
-        public virtual async Task<IReadOnlyList<AwardResponse>> GetAwardsAsync(AwardRequest request)
+        public async Task<IReadOnlyList<AwardResponse>> GetAwardsAsync(AwardRequest request)
         {
             var query = from a in _bookContext.Awards
                         join l in _bookContext.Languages on a.LanguageId equals l.Id
@@ -93,7 +93,7 @@ namespace BookPortal.Web.Services
             return queryResults;
         }
 
-        public virtual async Task<int> GetAwardCountsAsync(AwardRequest request)
+        public async Task<int> GetAwardCountsAsync(AwardRequest request)
         {
             var query = _bookContext.Awards.AsQueryable();
 

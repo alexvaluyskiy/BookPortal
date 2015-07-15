@@ -14,21 +14,13 @@ namespace BookPortal.Web.Controllers
             _editionsService = editionsService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Index(int workId)
+        [HttpGet("{editionId}")]
+        public async Task<IActionResult> Get(int editionId)
         {
-            var editions = await _editionsService.GetEditionsAsync(workId);
-
-            return this.PageObject(200, editions);
-        }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
-        {
-            var edition = await _editionsService.GetEditionAsync(id);
+            var edition = await _editionsService.GetEditionAsync(editionId);
 
             if (edition == null)
-                return this.ErrorObject(404, $"Edition (id: {id}) is not found");
+                return this.ErrorObject(404, $"Edition (id: {editionId}) is not found");
 
             return this.SingleObject(200, edition);
         }
