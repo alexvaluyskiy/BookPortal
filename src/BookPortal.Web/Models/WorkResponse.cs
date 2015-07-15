@@ -12,7 +12,7 @@ namespace BookPortal.Web.Models
 
         public string AltName { get; set; }
 
-        public int Year { get; set; }
+        public int? Year { get; set; }
 
         public string Description { get; set; }
 
@@ -22,6 +22,11 @@ namespace BookPortal.Web.Models
 
         public int WorkTypeLevel { get; set; }
 
-        public List<WorkResponse> ChildWorks { get; set; } = new List<WorkResponse>(); 
+        public List<WorkResponse> ChildWorks { get; set; } = new List<WorkResponse>();
+        public object GroupIndex { get; internal set; }
+        public bool IsPlan { get; internal set; }
+        public bool NotFinished { get; internal set; }
+        public bool Published { get; internal set; }
+        public int ParentWorkId { get; internal set; }
     }
 }

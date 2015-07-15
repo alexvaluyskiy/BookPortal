@@ -12,7 +12,7 @@ namespace BookPortal.Web.Domain.Models
 
         public string AltName { get; set; }
 
-        public int Year { get; set; }
+        public int? Year { get; set; }
 
         public string Description { get; set; }
 

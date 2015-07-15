@@ -32,3 +32,5 @@ TODO
 TODO Domain Model
 --------------------------
 1. Add pseudonyms to Persons
+2. Add these fields in Works table: published, is_plan, show_subworks_in_biblio
+3. Add these fields in Editions table: correct

@@ -18,19 +18,15 @@ namespace BookPortal.Web.Services
             _bookContext = bookContext;
         }
 
-        public async Task<IReadOnlyList<WorkResponse>> GetWorksAsync(int personId)
+        public async Task<IReadOnlyList<WorkResponse>> GetWorksAsync(int personId, string sortMode)
         {
-            var workIds = _bookContext.PersonWorks.Where(c => c.PersonId == personId).Select(c => c.WorkId).ToList();
+            var workIds = (from pw in _bookContext.PersonWorks
+                        where pw.PersonId == personId
+                        select pw.WorkId).ToList();
 
-            // TODO: add recursive search
-            var workLinks = _bookContext.WorkLinks.Where(c => workIds.Contains(c.WorkId)).ToList();
-            var workLinksIds = workLinks.Select(c => c.WorkId).ToList();
-
-            workLinks.Add( new WorkLink() { WorkId = 1, ParentWorkId = 2 });
-
-            var works = await (from w in _bookContext.Works
+            var works = from w in _bookContext.Works
                         join wt in _bookContext.WorkTypes on w.WorkTypeId equals wt.Id
-                        where workLinksIds.Contains(w.Id)
+                        where workIds.Contains(w.Id)
                         select new WorkResponse
                         {
                             WorkId = w.Id,
@@ -42,18 +38,54 @@ namespace BookPortal.Web.Services
                             WorkTypeId = wt.Id,
                             WorkTypeName = wt.Name,
                             WorkTypeLevel = wt.Level
-                        }).ToListAsync();
+                        };
 
             foreach (var work in works)
             {
-                var childWorks = workLinks.Where(c => c.ParentWorkId == work.WorkId).ToList();
-                if (childWorks.Count > 0)
+                // authors plan
+                if (work.IsPlan)
                 {
+                    work.WorkTypeId = -2;
+                    work.WorkTypeLevel = 0;
+                }
+                else if (work.NotFinished || work.Published)
+                {
+                    work.WorkTypeId = -1;
+                    work.WorkTypeLevel = 100;
+                }
 
+                // combining poems into the one type
+                if (work.WorkTypeId == 5 || work.WorkTypeId == 28 || work.WorkTypeId == 29)
+                {
+                    work.WorkTypeId = 27;
                 }
             }
 
-            return works;
+            switch (sortMode)
+            {
+                case "rusname":
+                    works = works
+                        .OrderBy(c => c.WorkTypeLevel)
+                        .ThenBy(c => c.RusName)
+                        .ThenBy(c => c.GroupIndex);
+                    break;
+                case "name":
+                    works = works
+                        .OrderBy(c => c.WorkTypeLevel)
+                        .ThenBy(c => c.Name)
+                        .ThenBy(c => c.GroupIndex);
+                    break;
+                default:
+                    works = works
+                        .OrderBy(c => c.WorkTypeLevel)
+                        .ThenBy(c => c.Year)
+                        .ThenBy(c => c.GroupIndex)
+                        .ThenBy(c => c.Name)
+                        .ThenBy(c => c.RusName);
+                    break;
+            }
+
+            return await works.ToListAsync();
         }
 
         public async Task<WorkResponse> GetWorkAsync(int workId)

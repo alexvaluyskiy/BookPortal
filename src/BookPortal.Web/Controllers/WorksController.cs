@@ -15,9 +15,9 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(int personId)
+        public async Task<IActionResult> Index(int personId, string sortMode)
         {
-            var works = await _worksService.GetWorksAsync(personId);
+            var works = await _worksService.GetWorksAsync(personId, sortMode);
 
             return this.PageObject(200, works);
         }

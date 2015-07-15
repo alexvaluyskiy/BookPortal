@@ -136,6 +136,7 @@ namespace BookPortal.Web.Domain
             });
 
             modelBuilder.Entity<WorkLink>().ToTable("work_links");
+            modelBuilder.Entity<WorkLink>().Index(c => c.ParentWorkId);
             modelBuilder.Entity<WorkLink>(builder =>
             {
                 builder.Property(c => c.Id).HasColumnName("work_link_id").UseSqlServerIdentityColumn();
