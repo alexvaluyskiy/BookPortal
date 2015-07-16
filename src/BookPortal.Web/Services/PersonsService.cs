@@ -94,7 +94,7 @@ namespace BookPortal.Web.Services
             return await query.ToListAsync();
         }
 
-        public async Task<IReadOnlyList<ContestWorkResponse>> GetPersonAwardsAsync(int personId)
+        public async Task<IReadOnlyList<AwardItemResponse>> GetPersonAwardsAsync(int personId)
         {
             // all person awards
             var personAwards = await (from cw in _bookContext.ContestWorks
@@ -102,7 +102,7 @@ namespace BookPortal.Web.Services
                                 join n in _bookContext.Nominations on cw.NominationId equals n.Id
                                 join a in _bookContext.Awards on c.AwardId equals a.Id
                                 where cw.LinkType == ContestWorkType.Person && cw.LinkId == personId
-                                select new ContestWorkResponse
+                                select new AwardItemResponse
                                 {
                                     AwardId = a.Id,
                                     AwardRusname = a.RusName,
@@ -128,7 +128,7 @@ namespace BookPortal.Web.Services
                                       join a in _bookContext.Awards on c.AwardId equals a.Id
                                       join pw in _bookContext.PersonWorks on cw.LinkId equals pw.WorkId
                                       where cw.LinkType == ContestWorkType.Work && pw.PersonId == personId
-                                      select new ContestWorkResponse
+                                      select new AwardItemResponse
                                       {
                                           AwardId = a.Id,
                                           AwardRusname = a.RusName,

@@ -6,6 +6,7 @@
     "dependencies": {
         "BookPortal.Web": "1.0.0-*",
         "EntityFramework7.InMemory": "7.0.0-*",
+        "Microsoft.Framework.Logging.Debug": "1.0.0-*",
         "AutoFixture": "3.30-*",
         "Moq": "4.2.1507.118",
         "xunit": "2.1.0-*",

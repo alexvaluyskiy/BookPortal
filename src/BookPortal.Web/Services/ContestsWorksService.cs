@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Data.Entity;
 using BookPortal.Web.Domain;
-using BookPortal.Web.Domain.Models;
+using BookPortal.Web.Models;
 
 namespace BookPortal.Web.Services
 {
@@ -17,14 +17,48 @@ namespace BookPortal.Web.Services
             _bookContext = bookContext;
         }
 
-        public async Task<IReadOnlyList<ContestWork>> GetContestsWorksAsync(int contestId)
+        public async Task<IReadOnlyList<ContestWorkResponse>> GetContestsWorksAsync(int contestId)
         {
-            return await _bookContext.ContestWorks.Where(c => c.ContestId == contestId).ToListAsync();
+            var query = _bookContext.ContestWorks
+                .Where(c => c.ContestId == contestId)
+                .Select(c => new ContestWorkResponse
+                {
+                    ContestWorkId = c.Id,
+                    Name = c.Name,
+                    RusName = c.RusName,
+                    Prefix = c.Prefix,
+                    Postfix = c.Postfix,
+                    Number = c.Number,
+                    IsWinner = c.IsWinner,
+                    LinkType = c.LinkType,
+                    LinkId = c.LinkId,
+                    ContestId = c.ContestId,
+                    NominationId = c.NominationId
+                });
+
+            return await query.ToListAsync();
         }
 
-        public Task<ContestWork> GetContestWorkAsync(int contestId, int contestWorkId)
+        public async Task<ContestWorkResponse> GetContestWorkAsync(int contestId, int contestWorkId)
         {
-            return _bookContext.ContestWorks.Where(c => c.Id == contestWorkId).SingleOrDefaultAsync();
+            var query = _bookContext.ContestWorks
+                .Where(c => c.Id == contestWorkId)
+                .Select(c => new ContestWorkResponse
+                {
+                    ContestWorkId = c.Id,
+                    Name = c.Name,
+                    RusName = c.RusName,
+                    Prefix = c.Prefix,
+                    Postfix = c.Postfix,
+                    Number = c.Number,
+                    IsWinner = c.IsWinner,
+                    LinkType = c.LinkType,
+                    LinkId = c.LinkId,
+                    ContestId = c.ContestId,
+                    NominationId = c.NominationId
+                });
+
+            return await query.SingleOrDefaultAsync();
         }
     }
 }

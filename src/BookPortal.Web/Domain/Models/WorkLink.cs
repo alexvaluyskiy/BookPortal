@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace BookPortal.Web.Domain.Models
+﻿namespace BookPortal.Web.Domain.Models
 {
     public class WorkLink
     {
@@ -12,7 +7,7 @@ namespace BookPortal.Web.Domain.Models
         public int WorkId { get; set; }
         public Work Work { get; set; }
 
-        public int ParentWorkId { get; set; }
+        public int? ParentWorkId { get; set; }
         public Work ParentWork { get; set; }
 
         public int LinkType { get; set; }
@@ -21,6 +16,6 @@ namespace BookPortal.Web.Domain.Models
 
         public string BonusText { get; set; }
 
-        public int GroupIndex { get; set; }
+        public int? GroupIndex { get; set; }
     }
 }

@@ -83,14 +83,14 @@ namespace BookPortal.Web.Services
             return series;
         }
 
-        public async Task<IReadOnlyList<ContestWorkResponse>> GetPublisherAwardsAsync(int publisherId)
+        public async Task<IReadOnlyList<AwardItemResponse>> GetPublisherAwardsAsync(int publisherId)
         {
             var query = from cw in _bookContext.ContestWorks
                         join c in _bookContext.Contests on cw.ContestId equals c.Id
                         join n in _bookContext.Nominations on cw.NominationId equals n.Id
                         join a in _bookContext.Awards on c.AwardId equals a.Id
                         where cw.LinkType == ContestWorkType.Publisher && cw.LinkId == publisherId
-                        select new ContestWorkResponse
+                        select new AwardItemResponse
                         {
                             AwardId = a.Id,
                             AwardRusname = a.RusName,

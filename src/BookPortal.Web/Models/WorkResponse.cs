@@ -6,6 +6,8 @@ namespace BookPortal.Web.Models
     {
         public int WorkId { get; set; }
 
+        public List<PersonResponse> Persons { get; set; } 
+
         public string RusName { get; set; }
 
         public string Name { get; set; }
@@ -22,11 +24,16 @@ namespace BookPortal.Web.Models
 
         public int WorkTypeLevel { get; set; }
 
-        public List<WorkResponse> ChildWorks { get; set; } = new List<WorkResponse>();
-        public object GroupIndex { get; internal set; }
-        public bool IsPlan { get; internal set; }
-        public bool NotFinished { get; internal set; }
-        public bool Published { get; internal set; }
-        public int ParentWorkId { get; internal set; }
+        public List<int> ChildWorks { get; set; } = new List<int>();
+
+        public object GroupIndex { get; set; }
+
+        public bool IsPlan { get; set; }
+
+        public bool NotFinished { get; set; }
+
+        public bool Published { get; set; }
+
+        public int ParentWorkId { get; set; }
     }
 }

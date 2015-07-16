@@ -6,6 +6,7 @@ using BookPortal.Web.Models;
 using BookPortal.Web.Services;
 using Microsoft.Data.Entity;
 using Microsoft.Framework.DependencyInjection;
+using Microsoft.Framework.Logging;
 using Xunit;
 
 namespace BookPortal.Web.Tests.Services
@@ -23,6 +24,9 @@ namespace BookPortal.Web.Tests.Services
                 .AddDbContext<BookContext>(c => c.UseInMemoryDatabase());
 
             var serviceProvider = services.BuildServiceProvider();
+
+            var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+            loggerFactory.AddDebug(LogLevel.Verbose);
 
             var dbContext = serviceProvider.GetRequiredService<BookContext>();
             CreateSampleData(dbContext);

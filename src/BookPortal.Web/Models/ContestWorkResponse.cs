@@ -1,35 +1,29 @@
-﻿namespace BookPortal.Web.Models
+﻿using BookPortal.Web.Domain.Models;
+
+namespace BookPortal.Web.Models
 {
     public class ContestWorkResponse
     {
-        public int AwardId { get; set; }
+        public int ContestWorkId { get; set; }
 
-        public string AwardRusname { get; set; }
+        public string Name { get; set; }
 
-        public string AwardName { get; set; }
+        public string RusName { get; set; }
 
-        public bool AwardIsOpened { get; set; }
+        public string Prefix { get; set; }
+
+        public string Postfix { get; set; }
+
+        public int Number { get; set; }
+
+        public bool IsWinner { get; set; }
+
+        public ContestWorkType LinkType { get; set; }
+
+        public int? LinkId { get; set; }
 
         public int ContestId { get; set; }
 
-        public string ContestName { get; set; }
-        
-        public int ContestYear { get; set; }
-
         public int NominationId { get; set; }
-
-        public string NominationRusname { get; set; }
-
-        public string NominationName { get; set; }
-
-        public int ContestWorkId { get; set; }
-
-        public string ContestWorkRusname { get; set; }
-
-        public string ContestWorkName { get; set; }
-
-        public string ContestWorkPrefix { get; set; }
-
-        public string ContestWorkPostfix { get; set; }
     }
 }
