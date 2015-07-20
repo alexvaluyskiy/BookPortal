@@ -3,9 +3,9 @@
     "version": "1.0.0-*",
 
     "dependencies": {
-        "Microsoft.AspNet.Mvc": "6.0.0-beta4",
-        "Microsoft.AspNet.Server.IIS": "1.0.0-beta4",
-        "Microsoft.AspNet.Server.WebListener": "1.0.0-beta4"
+        "Microsoft.AspNet.Mvc": "6.0.0-*",
+        "Microsoft.AspNet.Server.IIS": "1.0.0-*",
+        "Microsoft.AspNet.Server.WebListener": "1.0.0-*"
     },
 
     "commands": {
@@ -27,7 +27,8 @@
     "exclude": [
         "wwwroot",
         "node_modules",
-        "bower_components"
+        "bower_components",
+        ".tmp"
     ],
 
     "scripts": {
