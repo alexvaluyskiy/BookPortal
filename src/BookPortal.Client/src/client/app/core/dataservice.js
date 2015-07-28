@@ -44,9 +44,7 @@
                 .catch(fail);
 
             function success(response) {
-                logger.info('Award information is loaded');
-                var temp = _.map(response.data.result.rows, function (item) { return item });
-                return temp;
+                return _.map(response.data.result.rows, function (item) { return item });
             }
 
             function fail(e) {

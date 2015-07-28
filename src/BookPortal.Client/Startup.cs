@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNet.Builder;
+using Microsoft.AspNet.Hosting;
 using Microsoft.Framework.DependencyInjection;
 
 namespace BookPortal.Client
@@ -10,8 +11,10 @@ namespace BookPortal.Client
             services.AddMvc();
         }
 
-        public void Configure(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseFileServer();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute("",

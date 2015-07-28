@@ -7,6 +7,7 @@
         'app.admin',
         'app.dashboard',
         'app.layout',
-        'app.awardslist'
+        'app.awardslist',
+        'app.seriesview'
     ]);
 })();

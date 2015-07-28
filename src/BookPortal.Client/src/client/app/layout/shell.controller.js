@@ -14,7 +14,7 @@
         $rootScope.showSplash = true;
         vm.navline = {
             title: config.appTitle,
-            text: 'Created by John Papa',
+            text: 'Created by Alex Valuyskiy',
             link: 'http://twitter.com/john_papa'
         };
 
