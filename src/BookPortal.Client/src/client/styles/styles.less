@@ -1945,61 +1945,6 @@ a {
 /*#endregion */
 
 
-/*#region AwardsList */
-.tableaward {
-  border-spacing: 0;
-
-  thead {
-    tr {
-      background-color: #F9FAFB;
-
-      td {
-        border-top: 1px solid #D8E1E6;
-        border-bottom: 1px solid #D8E1E6;
-        padding: 4px;
-      }
-    }
-  }
-
-  tbody {
-    tr {
-      height: 25px;
-      vertical-align: middle;
-
-      td {
-        border-bottom: 1px solid #D2E0E8;
-        padding: 4px;
-
-        img {
-          margin: 0;
-        }
-      }
-    }
-  }
-
-  .award-icon img {
-    max-width: 30px;
-    height: 30px;
-  }
-
-  .tableaward-nominations {
-    white-space: nowrap;
-    padding-right: 0;
-  }
-
-  .tableaward-contests {
-    padding-left: 0;
-  }
-}
-
-.awardtitle {
-  background-color: #E0E8F0;
-  font-weight: bold;
-}
-
-.awardtitle td {
-    border-top:1px solid black;
-    width: 100%;
-}
-
-/*#endregion */
+/* IMPORTS */
+@import "../app/awards/awards.less";
+@import "../app/series/series.less";
