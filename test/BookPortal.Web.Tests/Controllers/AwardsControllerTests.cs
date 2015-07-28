@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using BookPortal.Core.Framework.Models;
 using BookPortal.Web.Controllers;
 using BookPortal.Web.Domain.Models;
 using BookPortal.Web.Models;
@@ -18,7 +19,7 @@ namespace BookPortal.Web.Tests.Controllers
         //[Fact]
         public async Task AwardsControllerGetAwardsListTest()
         {
-            var responses = _fixture.Create<List<AwardResponse>>();
+            var responses = _fixture.Create<ApiObject<AwardResponse>>();
 
             var awardsService = new Mock<AwardsService>(null);
             awardsService.Setup(c => c.GetAwardsAsync(It.IsAny<AwardRequest>())).ReturnsAsync(responses);
@@ -34,7 +35,7 @@ namespace BookPortal.Web.Tests.Controllers
 
             Assert.NotNull(content);
             Assert.Equal(3, content.Count);
-            Assert.Equal(responses[0].Name, content[0].Name);
+            Assert.Equal(responses.Values[0].Name, content[0].Name);
             //Assert.Equal(200, contentResult.StatusCode);
         }
 
@@ -48,7 +49,7 @@ namespace BookPortal.Web.Tests.Controllers
 
             AwardsController controller = new AwardsController(awardsService.Object);
 
-            IActionResult actionResult = await controller.Get(response.Id);
+            IActionResult actionResult = await controller.Get(response.AwardId);
             var contentResult = actionResult as ObjectResult;
 
             Assert.NotNull(contentResult);
@@ -56,7 +57,7 @@ namespace BookPortal.Web.Tests.Controllers
             var content = contentResult.Value as Award;
 
             Assert.NotNull(content);
-            Assert.Equal(response.Id, content.Id);
+            Assert.Equal(response.AwardId, content.Id);
             Assert.Equal(response.Name, content.Name);
             //Assert.Equal(200, contentResult.StatusCode);
         }

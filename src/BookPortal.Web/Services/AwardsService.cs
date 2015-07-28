@@ -26,7 +26,7 @@ namespace BookPortal.Web.Services
                         join c in _bookContext.Countries on a.CountryId equals c.Id
                         select new AwardResponse
                         {
-                            Id = a.Id,
+                            AwardId = a.Id,
                             RusName = a.RusName,
                             Name = a.Name,
                             Homepage = a.Homepage,
@@ -47,7 +47,7 @@ namespace BookPortal.Web.Services
             switch (request.Sort)
             {
                 case AwardSort.Id:
-                    query = query.OrderBy(c => c.Id).ThenBy(c => c.RusName); ;
+                    query = query.OrderBy(c => c.AwardId).ThenBy(c => c.RusName); ;
                     break;
                 case AwardSort.Rusname:
                     query = query.OrderBy(c => c.RusName);
@@ -69,7 +69,7 @@ namespace BookPortal.Web.Services
             var queryResults = await query.ToListAsync();
 
             // TODO: GroupBy is not translating into SQL
-            var awardsIds = queryResults.Select(c => c.Id).ToList();
+            var awardsIds = queryResults.Select(c => c.AwardId).ToList();
             var awardFirstLastContests = (  from c in _bookContext.Contests
                                             where awardsIds.Contains(c.AwardId)
                                             group c by c.AwardId into g
@@ -83,11 +83,11 @@ namespace BookPortal.Web.Services
             foreach (var queryResult in queryResults)
             {
                 queryResult.FirstContestDate = awardFirstLastContests
-                    .Where(c => c.AwardId == queryResult.Id)
+                    .Where(c => c.AwardId == queryResult.AwardId)
                     .Select(c => c.FirstContestDate)
                     .SingleOrDefault();
                 queryResult.LastContestDate = awardFirstLastContests
-                    .Where(c => c.AwardId == queryResult.Id)
+                    .Where(c => c.AwardId == queryResult.AwardId)
                     .Select(c => c.LastContestDate)
                     .SingleOrDefault();
             }
@@ -109,7 +109,7 @@ namespace BookPortal.Web.Services
                         where a.Id == awardId
                         select new AwardResponse
                         {
-                            Id = a.Id,
+                            AwardId = a.Id,
                             RusName = a.RusName,
                             Name = a.Name,
                             Homepage = a.Homepage,

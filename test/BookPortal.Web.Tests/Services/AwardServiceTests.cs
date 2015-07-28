@@ -39,13 +39,13 @@ namespace BookPortal.Web.Tests.Services
             var response = await service.GetAwardsAsync(request);
 
             Assert.NotNull(response);
-            Assert.Equal(3, response.Count);
-            Assert.Equal(1, response[0].Id);
-            Assert.Equal("Nebula", response[0].Name);
+            Assert.Equal(3, response.Values.Count);
+            Assert.Equal(1, response.Values[0].AwardId);
+            Assert.Equal("Nebula", response.Values[0].Name);
 
-            Assert.NotNull(response[0].FirstContestDate);
+            Assert.NotNull(response.Values[0].FirstContestDate);
             //Assert.Equal(1992, response[0].FirstContestDate.Value.Year);
-            Assert.NotNull(response[0].LastContestDate);
+            Assert.NotNull(response.Values[0].LastContestDate);
             //Assert.Equal(2015, response[0].LastContestDate.Value.Year);
         }
 
@@ -61,9 +61,9 @@ namespace BookPortal.Web.Tests.Services
             var response = await service.GetAwardsAsync(request);
 
             Assert.NotNull(response);
-            Assert.Equal(2, response.Count);
-            Assert.Equal(1, response[0].Id);
-            Assert.Equal("Nebula", response[0].Name);
+            Assert.Equal(2, response.Values.Count);
+            Assert.Equal(1, response.Values[0].AwardId);
+            Assert.Equal("Nebula", response.Values[0].Name);
         }
 
         [Fact(Skip = "strange behavior of MemoryStorage")]
@@ -78,9 +78,9 @@ namespace BookPortal.Web.Tests.Services
             var response = await service.GetAwardsAsync(request);
 
             Assert.NotNull(response);
-            Assert.Equal(1, response.Count);
-            Assert.Equal(2, response[0].Id);
-            Assert.Equal("Hugo", response[0].Name);
+            Assert.Equal(1, response.Values.Count);
+            Assert.Equal(2, response.Values[0].AwardId);
+            Assert.Equal("Hugo", response.Values[0].Name);
         }
 
         [Fact]
@@ -95,10 +95,10 @@ namespace BookPortal.Web.Tests.Services
             var response = await service.GetAwardsAsync(request);
 
             Assert.NotNull(response);
-            Assert.Equal(3, response.Count);
-            Assert.Equal("Nebula", response[0].Name);
-            Assert.Equal("Oscar", response[1].Name);
-            Assert.Equal("Hugo", response[2].Name);
+            Assert.Equal(3, response.Values.Count);
+            Assert.Equal("Nebula", response.Values[0].Name);
+            Assert.Equal("Oscar", response.Values[1].Name);
+            Assert.Equal("Hugo", response.Values[2].Name);
         }
 
         [Fact]
@@ -113,10 +113,10 @@ namespace BookPortal.Web.Tests.Services
             var response = await service.GetAwardsAsync(request);
 
             Assert.NotNull(response);
-            Assert.Equal(3, response.Count);
-            Assert.Equal("Oscar", response[0].Name);
-            Assert.Equal("Nebula", response[1].Name);
-            Assert.Equal("Hugo", response[2].Name);
+            Assert.Equal(3, response.Values.Count);
+            Assert.Equal("Oscar", response.Values[0].Name);
+            Assert.Equal("Nebula", response.Values[1].Name);
+            Assert.Equal("Hugo", response.Values[2].Name);
         }
 
         [Fact]
@@ -131,10 +131,10 @@ namespace BookPortal.Web.Tests.Services
             var response = await service.GetAwardsAsync(request);
 
             Assert.NotNull(response);
-            Assert.Equal(3, response.Count);
-            Assert.Equal("Hugo", response[0].Name);
-            Assert.Equal("Nebula", response[1].Name);
-            Assert.Equal("Oscar", response[2].Name);
+            Assert.Equal(3, response.Values.Count);
+            Assert.Equal("Hugo", response.Values[0].Name);
+            Assert.Equal("Nebula", response.Values[1].Name);
+            Assert.Equal("Oscar", response.Values[2].Name);
         }
 
         [Fact]
@@ -148,7 +148,7 @@ namespace BookPortal.Web.Tests.Services
             var award = await service.GetAwardAsync(1);
 
             Assert.NotNull(award);
-            Assert.Equal(1, award.Id);
+            Assert.Equal(1, award.AwardId);
             Assert.Equal("Nebula", award.Name);
             Assert.NotNull(award.FirstContestDate);
             //Assert.Equal(1992, award.FirstContestDate.Value.Year);

@@ -4,7 +4,7 @@ namespace BookPortal.Web.Models
 {
     public class AwardResponse
     {
-        public int Id { get; set; }
+        public int AwardId { get; set; }
 
         public string Name { get; set; }
 
