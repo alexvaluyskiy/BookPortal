@@ -17,6 +17,7 @@ namespace BookPortal.Web.Services
             _bookContext = bookContext;
         }
 
+        // TODO: add nominationsCount and contestsCount
         public async Task<IReadOnlyList<AwardResponse>> GetAwardsAsync(AwardRequest request)
         {
             var query = from a in _bookContext.Awards
