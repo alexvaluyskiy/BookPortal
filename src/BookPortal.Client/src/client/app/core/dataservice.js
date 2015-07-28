@@ -14,6 +14,7 @@
             getPeople: getPeople,
             getMessageCount: getMessageCount,
             getAwards: getAwards,
+            getAward: getAward,
             getSerie: getSerie,
             getSerieTree: getSerieTree,
             getSerieEditions: getSerieEditions
@@ -50,6 +51,18 @@
                 })
                 .catch(function (e) {
                     return exception.catcher('XHR Failed for getAwards')(e);
+                });
+        }
+
+        function getAward(awardId) {
+            var url = mainServiceUrl + '/api/awards/' + awardId;
+
+            return $http.get(url)
+                .then(function (response) {
+                    return response.data.result;
+                })
+                .catch(function (e) {
+                    return exception.catcher('XHR Failed for getAward')(e);
                 });
         }
 

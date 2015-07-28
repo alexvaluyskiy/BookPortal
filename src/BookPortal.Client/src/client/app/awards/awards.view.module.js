@@ -1,7 +1,7 @@
 ﻿(function () {
     'use strict';
 
-    angular.module('app.series.view', [
+    angular.module('app.awards.view', [
         'app.core',
         'app.widgets'
       ]);

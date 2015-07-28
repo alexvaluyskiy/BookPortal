@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('app.awardslist')
+        .module('app.awards.list')
         .run(appRun);
 
     appRun.$inject = ['routerHelper'];
@@ -20,10 +20,10 @@
                     templateUrl: 'app/awards/awards.list.html',
                     controller: 'AwardsListController',
                     controllerAs: 'vm',
-                    title: 'Премии',
+                    title: 'Список премий',
                     settings: {
                         nav: 2,
-                        content: '<i class="fa fa-lock"></i> Премии'
+                        content: '<i class="fa fa-lock"></i> Список премий'
                     }
                 }
             }

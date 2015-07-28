@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('app.awardslist')
+        .module('app.awards.list')
         .controller('AwardsListController', AwardsListController);
 
     function Award(data) {
@@ -26,9 +26,9 @@
             }
         }
 
-        this.id = data.id;
-        this.awardUrl = "/award/" + data.id;
-        this.awardIconUrl = imagesCdnUrl + "awards/icons/" + data.id + "_icon";
+        this.id = data.award_id;
+        this.awardUrl = "/award/" + this.id;
+        this.awardIconUrl = imagesCdnUrl + "awards/icons/" + this.id + "_icon";
         this.fullName = getFullName(data.rus_name, data.name);
         this.countryUrl = imagesCdnUrl + "flags/" + data.country_id + ".png";
         this.countryName = data.country_name;
@@ -44,7 +44,7 @@
     function AwardsListController($http, $q, dataservice, logger) {
         var vm = this;
         vm.awards = [];
-        vm.title = 'Премии';
+        vm.title = 'Список премий';
         vm.changeSort = changeSort;
 
         vm.sortTypes = [

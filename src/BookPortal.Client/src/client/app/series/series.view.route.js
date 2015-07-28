@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('app.seriesview')
+        .module('app.series.view')
         .run(appRun);
 
     appRun.$inject = ['routerHelper'];
@@ -22,7 +22,7 @@
                     controllerAs: 'vm',
                     title: 'Просмотр серии',
                     settings: {
-                        nav: 2,
+                        nav: 10,
                         content: '<i class="fa fa-lock"></i> Просмотр серии'
                     }
                 }

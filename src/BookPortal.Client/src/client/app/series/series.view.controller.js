@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('app.seriesview')
+        .module('app.series.view')
         .controller('SeriesViewController', SeriesViewController);
 
     function Serie(data) {

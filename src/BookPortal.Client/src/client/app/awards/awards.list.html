@@ -23,7 +23,7 @@
                             <tr ng-repeat="award in vm.awards">
                                 <td class="award-icon"><img ng-src='{{award.awardIconUrl}}' alt=''></td>
                                 <td>
-                                    <a href="{{award.awardUrl}}">{{award.fullName}}</a>
+                                    <a ui-sref="awardsview({ awardId: award.id })">{{award.fullName}}</a>
                                     <br>
                                     <span>
                                         <img class="country-icon" ng-src='{{award.countryUrl}}' alt=''>
