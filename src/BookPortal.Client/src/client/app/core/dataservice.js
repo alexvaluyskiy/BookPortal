@@ -8,10 +8,15 @@
     dataservice.$inject = ['$http', '$q', 'exception', 'logger'];
     /* @ngInject */
     function dataservice($http, $q, exception, logger) {
+        var mainServiceUrl = 'http://aspnet5-bookportal-web.azurewebsites.net';
+
         var service = {
             getPeople: getPeople,
             getMessageCount: getMessageCount,
-            getAwards: getAwards
+            getAwards: getAwards,
+            getSerie: getSerie,
+            getSerieTree: getSerieTree,
+            getSerieEditions: getSerieEditions
         };
 
         return service;
@@ -33,23 +38,57 @@
         }
 
         function getAwards(sortType) {
-            var url = 'http://aspnet5-bookportal-web.azurewebsites.net' + '/api/awards?isopened=true';
+            var url = mainServiceUrl + '/api/awards?isopened=true';
 
             if (sortType !== undefined) {
                 url = url + '&sort=' + sortType;
             }
 
             return $http.get(url)
-                .then(success)
-                .catch(fail);
+                .then(function (response) {
+                    return _.map(response.data.result.rows, function (item) { return item });
+                })
+                .catch(function (e) {
+                    return exception.catcher('XHR Failed for getAwards')(e);
+                });
+        }
 
-            function success(response) {
-                return _.map(response.data.result.rows, function (item) { return item });
-            }
+        function getSerie(serieId) {
+            var url = mainServiceUrl + '/api/series/' + serieId;
 
-            function fail(e) {
-                return exception.catcher('XHR Failed for getAwards')(e);
-            }
+            return $http.get(url)
+                .then(function (response) {
+                    return response.data.result;
+                })
+                .catch(function (e) {
+                    return exception.catcher('XHR Failed for getSerie')(e);
+                });
+        }
+
+        function getSerieTree(serieId) {
+            var url = mainServiceUrl + '/api/series/' + serieId + '/tree';
+
+            return $http.get(url)
+                .then(function (response) {
+                    return response.data.result;
+                })
+                .catch(function (e) {
+                    return exception.catcher('XHR Failed for getSerieTree')(e);
+                });
+        }
+
+        function getSerieEditions(serieId, sortType) {
+            var url = mainServiceUrl + '/api/series/' + serieId + '/editions';
+
+            url = url + "?sort=" + sortType;
+
+            return $http.get(url)
+                .then(function (response) {
+                    return _.map(response.data.result.rows, function (item) { return item });
+                })
+                .catch(function (e) {
+                    return exception.catcher('XHR Failed for getSerieEditions')(e);
+                });
         }
     }
 })();

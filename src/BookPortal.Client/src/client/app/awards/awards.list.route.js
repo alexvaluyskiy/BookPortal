@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('app.seriesview')
+        .module('app.awardslist')
         .run(appRun);
 
     appRun.$inject = ['routerHelper'];
@@ -14,16 +14,16 @@
     function getStates() {
         return [
             {
-                state: 'seriesview',
+                state: 'awardslist',
                 config: {
-                    url: '/series/:serieId',
-                    templateUrl: 'app/series/view/seriesview.html',
-                    controller: 'SeriesViewController',
+                    url: '/awards',
+                    templateUrl: 'app/awards/awards.list.html',
+                    controller: 'AwardsListController',
                     controllerAs: 'vm',
-                    title: 'Просмотр серии',
+                    title: 'Премии',
                     settings: {
                         nav: 2,
-                        content: '<i class="fa fa-lock"></i> Просмотр серии'
+                        content: '<i class="fa fa-lock"></i> Премии'
                     }
                 }
             }

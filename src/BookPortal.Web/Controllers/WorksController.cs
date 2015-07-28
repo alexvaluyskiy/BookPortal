@@ -19,7 +19,7 @@ namespace BookPortal.Web.Controllers
         {
             var works = await _worksService.GetWorksAsync(personId, sortMode);
 
-            return this.PageObject(200, works);
+            return this.PageObject(works);
         }
 
         [HttpGet("{id}")]
@@ -32,7 +32,7 @@ namespace BookPortal.Web.Controllers
                 return this.ErrorObject(404, $"Work (id: {id}) is not found");
             }
 
-            return this.SingleObject(200, work);
+            return this.SingleObject(work);
         }
 
         [HttpGet("{workId}/awards")]

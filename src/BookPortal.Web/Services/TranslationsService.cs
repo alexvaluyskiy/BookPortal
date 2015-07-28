@@ -70,7 +70,7 @@ namespace BookPortal.Web.Services
             var response = await query.ToListAsync();
 
             // get all persons
-            // TODO: EF7 dorsn't generate where clause
+            // TODO: EF7 doesn't generate where clause
             var translationWorks = response.Select(w => w.WorkId).ToList();
             var translationAuthors = (from pw in _bookContext.PersonWorks
                                     join p in _bookContext.Persons on pw.PersonId equals p.Id
@@ -142,7 +142,7 @@ namespace BookPortal.Web.Services
             return response;
         }
 
-        // TODO: read Corrent field
+        // TODO: read Correct field
         public async Task<IReadOnlyList<EditionResponse>> GetTranslationEditionsAsync(int translationWorkId)
         {
             var query = from te in _bookContext.EditionTranslations

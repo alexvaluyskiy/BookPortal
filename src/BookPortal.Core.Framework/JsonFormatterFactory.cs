@@ -9,7 +9,7 @@ namespace BookPortal.Core.Framework
         {
             var jsonOutputFormatter = new JsonOutputFormatter();
             jsonOutputFormatter.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            jsonOutputFormatter.SerializerSettings.Formatting = Formatting.Indented;
+            //jsonOutputFormatter.SerializerSettings.Formatting = Formatting.Indented;
             jsonOutputFormatter.SerializerSettings.ContractResolver = new LowerCaseUnderscorePropertyNamesContractResolver();
             jsonOutputFormatter.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
 

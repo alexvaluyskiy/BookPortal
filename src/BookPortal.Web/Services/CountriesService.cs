@@ -16,12 +16,12 @@ namespace BookPortal.Web.Services
             _bookContext = bookContext;
         }
 
-        public virtual async Task<IReadOnlyList<Country>> GetCountriesAsync()
+        public async Task<IReadOnlyList<Country>> GetCountriesAsync()
         {
             return await _bookContext.Countries.ToListAsync();
         }
 
-        public virtual Task<Country> GetCountryAsync(int id)
+        public Task<Country> GetCountryAsync(int id)
         {
             return _bookContext.Countries.Where(c => c.Id == id).SingleOrDefaultAsync();
         }

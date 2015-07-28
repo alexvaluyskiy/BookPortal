@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Autofac;
-using Autofac.Dnx;
+using Autofac.Framework.DependencyInjection;
 using BookPortal.Core.Configuration;
 using BookPortal.Core.Framework;
 using BookPortal.Core.Framework.Filters;

@@ -19,7 +19,7 @@ namespace BookPortal.Web.Controllers
         {
             var countries = await _countriesService.GetCountriesAsync();
 
-            return this.PageObject(200, countries);
+            return this.PageObject(countries);
         }
 
         [HttpGet("{id}")]
@@ -30,7 +30,7 @@ namespace BookPortal.Web.Controllers
             if (country == null)
                 return this.ErrorObject(404, $"Country (id: {id}) is not found");
 
-            return this.SingleObject(200, country);
+            return this.SingleObject(country);
         }
     }
 }

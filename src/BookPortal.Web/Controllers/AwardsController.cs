@@ -21,9 +21,7 @@ namespace BookPortal.Web.Controllers
         {
             var awards = await _awardsService.GetAwardsAsync(request);
 
-            var totalrows = await _awardsService.GetAwardCountsAsync(request);
-
-            return this.PageObject(awards, totalrows, request.Limit, request.Offset);
+            return this.PageObject(awards.Values, awards.TotalRows, request.Limit, request.Offset);
         }
 
         [HttpGet("{id}", Name = "GetAward")]

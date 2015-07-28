@@ -30,7 +30,7 @@ namespace BookPortal.Web.Controllers
                 string html = await response.Content.ReadAsStringAsync();
 
                 var importEdition = _importersService.ParseOzonPage(html);
-                return this.SingleObject(200, importEdition);
+                return this.SingleObject(importEdition);
             }
         }
     }

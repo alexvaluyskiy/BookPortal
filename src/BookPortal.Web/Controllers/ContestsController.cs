@@ -20,7 +20,7 @@ namespace BookPortal.Web.Controllers
         {
             var contests = await _contestsService.GetContestsAsync(awardId);
 
-            return this.PageObject(200, contests);
+            return this.PageObject(contests);
         }
 
         [HttpGet("{contestId}")]
@@ -28,7 +28,7 @@ namespace BookPortal.Web.Controllers
         {
             var contest = await _contestsService.GetContestAsync(awardId, contestId);
 
-            return this.SingleObject(200, contest);
+            return this.SingleObject(contest);
         }
     }
 }

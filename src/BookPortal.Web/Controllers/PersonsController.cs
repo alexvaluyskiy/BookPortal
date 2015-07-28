@@ -33,7 +33,7 @@ namespace BookPortal.Web.Controllers
             if (person == null)
                 return this.ErrorObject(404, $"Person (id: {personId}) is not found");
 
-            return this.SingleObject(200, person);
+            return this.SingleObject(person);
         }
 
         [HttpGet("{personId}/editions")]

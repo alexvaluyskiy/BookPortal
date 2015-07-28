@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using BookPortal.Core.Framework.Models;
 using BookPortal.Web.Domain;
 using BookPortal.Web.Domain.Models;
 using BookPortal.Web.Domain.Models.Types;
@@ -65,7 +66,6 @@ namespace BookPortal.Web.Services
                 .ToList();
 
             // get publisher
-
             var publishers = _bookContext.Publishers
                 .Where(c => publisherIds.Contains(c.Id))
                 .Select(c => new PublisherResponse
@@ -79,7 +79,8 @@ namespace BookPortal.Web.Services
             return serie;
         }
 
-        public async Task<IEnumerable<EditionResponse>> GetSerieEditionsAsync(SerieRequest request)
+        // TODO: add Correct field
+        public async Task<ApiObject<EditionResponse>> GetSerieEditionsAsync(SerieRequest request)
         {
             var query = from e in _bookContext.Editions
                         join es in _bookContext.EditionSeries on e.Id equals es.EditionId
@@ -109,7 +110,11 @@ namespace BookPortal.Web.Services
                     break;
             }
 
-            return await query.Skip(request.Offset).Take(request.Limit).ToListAsync();
+            var result = new ApiObject<EditionResponse>();
+            result.Values = await query.Skip(request.Offset).Take(request.Limit).ToListAsync();
+            result.TotalRows = await _bookContext.EditionSeries.CountAsync(c => c.SerieId == request.SerieId);
+
+            return result;
         }
 
         public async Task<SerieTreeItem> GetSerieTreeAsync(int serieId)

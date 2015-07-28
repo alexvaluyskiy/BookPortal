@@ -22,7 +22,7 @@ namespace BookPortal.Web.Controllers
             if (edition == null)
                 return this.ErrorObject(404, $"Edition (id: {editionId}) is not found");
 
-            return this.SingleObject(200, edition);
+            return this.SingleObject(edition);
         }
     }
 }

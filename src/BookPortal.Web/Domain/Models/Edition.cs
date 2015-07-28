@@ -4,6 +4,8 @@ using BookPortal.Web.Domain.Models.Types;
 
 namespace BookPortal.Web.Domain.Models
 {
+    // TODO: add a field AuthorsRaw
+    // TODO: add a field Correct
     public class Edition
     {
         public int Id { get; set; }

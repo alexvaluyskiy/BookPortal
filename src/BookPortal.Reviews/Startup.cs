@@ -13,7 +13,7 @@ using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
 using System.Linq;
 using Autofac;
-using Autofac.Dnx;
+using Autofac.Framework.DependencyInjection;
 using BookPortal.Core.Framework;
 using BookPortal.Core.Framework.Filters;
 using Microsoft.Framework.Runtime;

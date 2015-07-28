@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BookPortal.Core.Framework.Models;
 using Microsoft.Data.Entity;
 using BookPortal.Web.Domain;
 using BookPortal.Web.Domain.Models;
@@ -18,7 +19,7 @@ namespace BookPortal.Web.Services
         }
 
         // TODO: add nominationsCount and contestsCount
-        public async Task<IReadOnlyList<AwardResponse>> GetAwardsAsync(AwardRequest request)
+        public async Task<ApiObject<AwardResponse>> GetAwardsAsync(AwardRequest request)
         {
             var query = from a in _bookContext.Awards
                         join l in _bookContext.Languages on a.LanguageId equals l.Id
@@ -91,20 +92,16 @@ namespace BookPortal.Web.Services
                     .SingleOrDefault();
             }
 
-            return queryResults;
+            var result = new ApiObject<AwardResponse>();
+            result.Values = queryResults;
+            result.TotalRows = request.IsOpened
+                ? await _bookContext.Awards.CountAsync(a => a.IsOpened)
+                : await _bookContext.Awards.CountAsync();
+
+            return result;
         }
 
-        public async Task<int> GetAwardCountsAsync(AwardRequest request)
-        {
-            var query = _bookContext.Awards.AsQueryable();
-
-            if (request.IsOpened)
-                query = query.Where(a => a.IsOpened);
-
-            return await query.CountAsync();
-        }
-
-        public virtual async Task<AwardResponse> GetAwardAsync(int awardId)
+        public async Task<AwardResponse> GetAwardAsync(int awardId)
         {
             var query = from a in _bookContext.Awards
                         join l in _bookContext.Languages on a.LanguageId equals l.Id

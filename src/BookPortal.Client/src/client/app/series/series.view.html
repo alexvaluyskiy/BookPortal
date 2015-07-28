@@ -1,0 +1,63 @@
+<section class="mainbar">
+    <section class="matter">
+        <div class="container">
+            <div class="row">
+                <div class="widget wviolet">
+                    <div ht-widget-header title="{{vm.title}}"></div>
+                    <div class="widget-content user">
+                        <table>
+                            <tr>
+                                <td>Id:</td>
+                                <td>{{vm.serie.serie_id}}</td>
+                            </tr>
+                            <tr>
+                                <td>Name:</td>
+                                <td>{{vm.serie.name}}</td>
+                            </tr>
+                            <tr>
+                                <td>Описание</td>
+                                <td>{{vm.serie.description}}</td>
+                            </tr>
+                            <tr>
+                                <td>Год открытия:</td>
+                                <td>{{vm.serie.year_open}}</td>
+                            </tr>
+                            <tr>
+                                <td>Год закрытия</td>
+                                <td>{{vm.serie.year_close}}</td>
+                            </tr>
+                            <tr>
+                                <td>Издатели</td>
+                                <td>
+                                    <a href="/publishers/{{publisher.publisher_id}}" n ng-repeat="publisher in vm.serie.publishers">
+                                        {{publisher.name}}{{$last ? '' : ', '}}
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+                        <hr />
+                        <seriesviewtree family="vm.serietree" serieid="{{vm.serie.serie_id}}"></seriesviewtree>
+                        <hr />
+                        <p>
+                            Сортировка:
+                            <select ng-options="i.sortName for i in vm.sortTypes"
+                                    ng-model="vm.selectedSortType" ng-change='vm.changeSort()'></select>
+                        </p>
+                        <table style="width: 50%">
+                            <tr ng-repeat="edition in vm.serieeditions">
+                                <td><img ng-src="http://data.fantlab.org/images/editions/big/{{edition.edition_id}}"></td>
+                                <td><a href="/editions/{{edition.edition_id}}">{{edition.name}}</a></td>
+                                <td>{{edition.year}}</td>
+                                <td>{{edition.serie_sort}}</td>
+                                <td>{{edition.correct}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="widget-foot">
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>

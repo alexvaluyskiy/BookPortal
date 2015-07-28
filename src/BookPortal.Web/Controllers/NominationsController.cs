@@ -19,7 +19,7 @@ namespace BookPortal.Web.Controllers
         {
             var nominations = await _nominationsService.GetNominationsAsync(awardId);
 
-            return this.PageObject(200, nominations);
+            return this.PageObject(nominations);
         }
 
         [HttpGet("{nominationId}")]
@@ -27,7 +27,7 @@ namespace BookPortal.Web.Controllers
         {
             var nomination = await _nominationsService.GetNominationAsync(awardId, nominationId);
 
-            return this.SingleObject(200, nomination);
+            return this.SingleObject(nomination);
         }
     }
 }

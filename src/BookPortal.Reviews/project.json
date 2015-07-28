@@ -15,7 +15,7 @@
         "EntityFramework7.SqlServer": "7.0.0-*",
         "EntityFramework7.Commands": "7.0.0-*",
         "AutoMapper": "4.0.0-*",
-        "Autofac.Dnx": "4.0.0-*"
+        "Autofac.Framework.DependencyInjection": "4.0.0-*"
     },
 
     "commands": {

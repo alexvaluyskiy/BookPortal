@@ -19,7 +19,7 @@ namespace BookPortal.Web.Controllers
         {
             var languages = await _languagesService.GetLanguagesAsync();
 
-            return this.PageObject(200, languages);
+            return this.PageObject(languages);
         }
 
         [HttpGet("{id}")]
@@ -30,7 +30,7 @@ namespace BookPortal.Web.Controllers
             if (language == null)
                 return this.ErrorObject(404, $"Language (id: {id}) is not found");
 
-            return this.SingleObject(200, language);
+            return this.SingleObject(language);
         }
     }
 }

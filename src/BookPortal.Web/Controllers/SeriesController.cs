@@ -20,7 +20,7 @@ namespace BookPortal.Web.Controllers
         {
             var series = await _seriesService.GetSeriesAsync(publisherId);
 
-            return this.PageObject(200, series);
+            return this.PageObject(series);
         }
 
         [HttpGet("{serieId}")]
@@ -31,7 +31,7 @@ namespace BookPortal.Web.Controllers
             if (serie == null)
                 return this.ErrorObject(404, $"Serie (id: {serieId}) is not found");
 
-            return this.SingleObject(200, serie);
+            return this.SingleObject(serie);
         }
 
         [HttpGet("{serieId}/editions")]
@@ -40,9 +40,9 @@ namespace BookPortal.Web.Controllers
             var editions = await _seriesService.GetSerieEditionsAsync(request);
 
             if (editions == null)
-                return this.ErrorObject(404, $"Serie (id: {request.SerieId}) is not found");
+                return this.ErrorObject(404, $"Serie (id: {request.SerieId}) editions are not found");
 
-            return this.SingleObject(200, editions);
+            return this.PageObject(editions.Values, editions.TotalRows, request.Limit, request.Offset);
         }
 
         [HttpGet("{serieId}/tree")]
@@ -51,9 +51,9 @@ namespace BookPortal.Web.Controllers
             var treeItem = await _seriesService.GetSerieTreeAsync(serieId);
 
             if (treeItem == null)
-                return this.ErrorObject(404, $"Serie (id: {serieId}) is not found");
+                return this.ErrorObject(404, $"Serie (id: {serieId}) tree is not found");
 
-            return this.SingleObject(200, treeItem);
+            return this.SingleObject(treeItem);
         }
     }
 }
