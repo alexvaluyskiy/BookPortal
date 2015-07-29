@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Mvc;
 
@@ -15,6 +16,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet]
+        [Produces(typeof(IEnumerable<NominationResponse>))]
         public async Task<IActionResult> Index(int awardId)
         {
             var nominations = await _nominationsService.GetNominationsAsync(awardId);
@@ -23,6 +25,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet("{nominationId}")]
+        [Produces(typeof(NominationResponse))]
         public async Task<IActionResult> Get(int awardId, int nominationId)
         {
             var nomination = await _nominationsService.GetNominationAsync(awardId, nominationId);

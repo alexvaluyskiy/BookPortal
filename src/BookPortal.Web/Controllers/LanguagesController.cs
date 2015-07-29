@@ -1,4 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using BookPortal.Core.Framework.Models;
+using BookPortal.Web.Domain.Models;
+using BookPortal.Web.Models;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Mvc;
 
@@ -15,6 +19,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet]
+        [Produces(typeof(IEnumerable<LanguageResponse>))]
         public async Task<IActionResult> Index()
         {
             var languages = await _languagesService.GetLanguagesAsync();
@@ -23,6 +28,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet("{id}")]
+        [Produces(typeof(LanguageResponse))]
         public async Task<IActionResult> Get(int id)
         {
             var language = await _languagesService.GetLanguageAsync(id);

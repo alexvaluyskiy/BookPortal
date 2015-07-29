@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using BookPortal.Core.Framework.Models;
 using BookPortal.Web.Models;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Mvc;
@@ -16,6 +18,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet]
+        [Produces(typeof(IEnumerable<SerieResponse>))]
         public async Task<IActionResult> Index(int publisherId)
         {
             var series = await _seriesService.GetSeriesAsync(publisherId);
@@ -24,6 +27,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet("{serieId}")]
+        [Produces(typeof(SerieResponse))]
         public async Task<IActionResult> Get(int serieId)
         {
             var serie = await _seriesService.GetSerieAsync(serieId);
@@ -35,6 +39,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet("{serieId}/editions")]
+        [Produces(typeof(IEnumerable<EditionResponse>))]
         public async Task<IActionResult> GetEditions(SerieRequest request)
         {
             var editions = await _seriesService.GetSerieEditionsAsync(request);
@@ -46,6 +51,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet("{serieId}/tree")]
+        [Produces(typeof(SerieTreeItem))]
         public async Task<IActionResult> GetTree(int serieId)
         {
             var treeItem = await _seriesService.GetSerieTreeAsync(serieId);

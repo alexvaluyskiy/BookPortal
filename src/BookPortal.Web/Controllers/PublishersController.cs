@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using BookPortal.Core.Framework.Models;
+using BookPortal.Web.Models;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Mvc;
 
@@ -15,6 +18,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet("{publisherId}")]
+        [Produces(typeof(PublisherResponse))]
         public async Task<IActionResult> Get(int publisherId)
         {
             var publisher = await _publishersService.GetPublisherAsync(publisherId);
@@ -26,6 +30,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet("{publisherId}/editions")]
+        [Produces(typeof(IEnumerable<EditionResponse>))]
         public async Task<IActionResult> GetEditions(int publisherId)
         {
             var editions = await _publishersService.GetPublisherEditionsAsync(publisherId);
@@ -37,6 +42,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet("{publisherId}/series")]
+        [Produces(typeof(IEnumerable<SerieResponse>))]
         public async Task<IActionResult> GetSeries(int publisherId)
         {
             var series = await _publishersService.GetPublisherSeriesAsync(publisherId);
@@ -48,6 +54,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet("{publisherId}/awards")]
+        [Produces(typeof(IEnumerable<AwardItemResponse>))]
         public async Task<IActionResult> GetAwards(int publisherId)
         {
             var awards = await _publishersService.GetPublisherAwardsAsync(publisherId);

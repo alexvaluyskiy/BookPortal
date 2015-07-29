@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using BookPortal.Web.Models;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Mvc;
 
@@ -15,6 +16,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet("{editionId}")]
+        [Produces(typeof(EditionResponse))]
         public async Task<IActionResult> Get(int editionId)
         {
             var edition = await _editionsService.GetEditionAsync(editionId);

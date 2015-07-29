@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using BookPortal.Core.Framework.Models;
 using BookPortal.Web.Models;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Mvc;
@@ -16,6 +18,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet("")]
+        [Produces(typeof(IEnumerable<TranslationResponse>))]
         public async Task<IActionResult> TranslationsList(TranslationRequest request)
         {
             var translations = await _translationsService.GetTranslationsAsync(request);
@@ -24,6 +27,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet("{translationWorkId}/editions")]
+        [Produces(typeof(ApiObject<EditionResponse>))]
         public async Task<IActionResult> GetEditions(int translationWorkId)
         {
             var translations = await _translationsService.GetTranslationEditionsAsync(translationWorkId);

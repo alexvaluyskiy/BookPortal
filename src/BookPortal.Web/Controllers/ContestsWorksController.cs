@@ -1,5 +1,6 @@
-﻿using System.Threading.Tasks;
-using BookPortal.Web.Domain.Models;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using BookPortal.Web.Models;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Mvc;
 
@@ -16,6 +17,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet]
+        [Produces(typeof(IEnumerable<ContestWorkResponse>))]
         public async Task<IActionResult> Index(int contestId)
         {
             var contestWorks = await _contestsWorksService.GetContestsWorksAsync(contestId);
@@ -24,6 +26,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet("{contestWorkId}")]
+        [Produces(typeof(ContestWorkResponse))]
         public async Task<IActionResult> Get(int contestId, int contestWorkId)
         {
             var contestWork = await _contestsWorksService.GetContestWorkAsync(contestId, contestWorkId);

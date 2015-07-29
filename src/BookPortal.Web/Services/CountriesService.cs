@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BookPortal.Core.Framework.Models;
 using Microsoft.Data.Entity;
 using BookPortal.Web.Domain;
 using BookPortal.Web.Domain.Models;
+using BookPortal.Web.Models;
 
 namespace BookPortal.Web.Services
 {
@@ -16,14 +18,33 @@ namespace BookPortal.Web.Services
             _bookContext = bookContext;
         }
 
-        public async Task<IReadOnlyList<Country>> GetCountriesAsync()
+        public async Task<ApiObject<CountryResponse>> GetCountriesAsync()
         {
-            return await _bookContext.Countries.ToListAsync();
+            var query = _bookContext.Countries
+                .Select(c => new CountryResponse
+                {
+                    CountryId = c.Id,
+                    Name = c.Name
+                });
+
+            var result = new ApiObject<CountryResponse>();
+            result.Values = await query.ToListAsync();
+            result.TotalRows = result.Values.Count;
+
+            return result;
         }
 
-        public Task<Country> GetCountryAsync(int id)
+        public Task<CountryResponse> GetCountryAsync(int id)
         {
-            return _bookContext.Countries.Where(c => c.Id == id).SingleOrDefaultAsync();
+            var query = _bookContext.Languages
+                .Where(c => c.Id == id)
+                .Select(c => new CountryResponse
+                {
+                    CountryId = c.Id,
+                    Name = c.Name
+                });
+
+            return query.SingleOrDefaultAsync();
         }
     }
 }

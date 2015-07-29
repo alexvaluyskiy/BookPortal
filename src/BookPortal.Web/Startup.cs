@@ -16,6 +16,7 @@ using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
 using Microsoft.Framework.Runtime;
+using Swashbuckle.Swagger;
 
 namespace BookPortal.Web
 {
@@ -49,6 +50,19 @@ namespace BookPortal.Web
 
                 // add filters
                 options.Filters.Add(new ValidateModelAttribute());
+            });
+
+            // TODO: untill swagger updates to beta6
+            services.AddSwaggerBeta6(c =>
+            {
+                c.SwaggerGeneratorOptions.Schemes = new[] { "http", "https" };
+                c.SwaggerGeneratorOptions.SingleApiVersion(new Info
+                {
+                    Version = "v1",
+                    Title = "BookPortal Ratings API"
+                });
+
+                c.SchemaGeneratorOptions.DescribeAllEnumsAsStrings = true;
             });
 
             services.AddEntityFramework()
@@ -103,6 +117,9 @@ namespace BookPortal.Web
             app.UseApplicationInsightsExceptionTelemetry();
 
             app.UseMvc();
+
+            app.UseSwagger();
+            app.UseSwaggerUi();
         }
     }
 }

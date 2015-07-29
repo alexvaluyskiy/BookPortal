@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using BookPortal.Core.Framework.Models;
+using BookPortal.Web.Models;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Mvc;
 
@@ -15,6 +18,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet]
+        [Produces(typeof(IEnumerable<WorkResponse>))]
         public async Task<IActionResult> Index(int personId, string sortMode)
         {
             var works = await _worksService.GetWorksAsync(personId, sortMode);
@@ -23,6 +27,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet("{id}")]
+        [Produces(typeof(WorkResponse))]
         public async Task<IActionResult> Get(int id)
         {
             var work = await _worksService.GetWorkAsync(id);
@@ -36,6 +41,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet("{workId}/awards")]
+        [Produces(typeof(IEnumerable<AwardItemResponse>))]
         public async Task<IActionResult> GetAwards(int workId)
         {
             var awards = await _worksService.GetWorkAwardsAsync(workId);
@@ -47,6 +53,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet("{workId}/editions")]
+        [Produces(typeof(IEnumerable<EditionResponse>))]
         public async Task<IActionResult> GetEditions(int workId)
         {
             var editions = await _worksService.GetWorkEditionsAsync(workId);
@@ -58,6 +65,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet("{workId}/translations")]
+        [Produces(typeof(IEnumerable<TranslationResponse>))]
         public async Task<IActionResult> GetTranslations(int workId)
         {
             var translations = await _worksService.GetWorkTranslationsAsync(workId);

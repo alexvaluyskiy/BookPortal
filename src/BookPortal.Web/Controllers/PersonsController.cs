@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using BookPortal.Core.Framework.Models;
 using BookPortal.Web.Models;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Mvc;
@@ -16,6 +18,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet]
+        [Produces(typeof(IEnumerable<PersonResponse>))]
         public async Task<IActionResult> Index(PersonRequest request)
         {
             var persons = await _personsService.GetPeopleAsync(request);
@@ -26,6 +29,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet("{personId}")]
+        [Produces(typeof(PersonResponse))]
         public async Task<IActionResult> Get(int personId)
         {
             var person = await _personsService.GetPersonAsync(personId);
@@ -37,6 +41,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet("{personId}/editions")]
+        [Produces(typeof(IEnumerable<EditionResponse>))]
         public async Task<IActionResult> GetEditions(int personId)
         {
             var editions = await _personsService.GetPersonEditionsAsync(personId);
@@ -48,6 +53,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet("{personId}/awards")]
+        [Produces(typeof(IEnumerable<AwardItemResponse>))]
         public async Task<IActionResult> GetAwards(int personId)
         {
             var awards = await _personsService.GetPersonAwardsAsync(personId);
