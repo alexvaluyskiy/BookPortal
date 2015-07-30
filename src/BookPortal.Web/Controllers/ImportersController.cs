@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Framework.OptionsModel;
+using BookPortal.Web.Models;
 
 namespace BookPortal.Web.Controllers
 {
@@ -20,6 +21,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet("ozon/{bookid}")]
+        [Produces(typeof(ImportEditionDto))]
         public async Task<IActionResult> ImportOzon(int bookid)
         {
             using (var client = new HttpClient())
