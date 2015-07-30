@@ -52,7 +52,6 @@ namespace BookPortal.Ratings
             // TODO: untill swagger updates to beta6
             services.AddSwaggerBeta6(c =>
             {
-                c.SwaggerGeneratorOptions.BasePath = "/api";
                 c.SwaggerGeneratorOptions.Schemes = new[] { "http", "https" };
                 c.SwaggerGeneratorOptions.SingleApiVersion(new Info
                 {
@@ -88,6 +87,8 @@ namespace BookPortal.Ratings
                 LogLevel.Warning);
 
             loggerFactory.AddDebug(LogLevel.Verbose);
+
+            app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseMvc();
 

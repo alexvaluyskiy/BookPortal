@@ -2,6 +2,7 @@
 
 namespace BookPortal.Web.Domain.Models
 {
+    // TODO: add fields: published, is_plan, show_subworks_in_biblio
     public class Work
     {
         public int Id { get; set; }

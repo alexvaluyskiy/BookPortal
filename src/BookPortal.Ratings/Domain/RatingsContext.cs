@@ -22,7 +22,8 @@ namespace BookPortal.Ratings.Domain
             modelBuilder.Entity<WorkExpectRating>().Property(c => c.WorkExpectRatingId).UseSqlServerIdentityColumn();
 
             modelBuilder.Entity<WorkRating>().Property(c => c.WorkRatingId).UseSqlServerIdentityColumn();
-            modelBuilder.Entity<WorkRating>().Index(c => c.WorkId).Unique();
+            modelBuilder.Entity<WorkRating>().Property(c => c.RatingType).HasColumnType("nvarchar(50");
+            modelBuilder.Entity<WorkRating>().Index(c => new { c.WorkId, c.RatingType }).Unique();
 
             modelBuilder.Entity<Mark>().Property(c => c.MarkId).UseSqlServerIdentityColumn();
             modelBuilder.Entity<Mark>().Index(c => c.WorkId);
