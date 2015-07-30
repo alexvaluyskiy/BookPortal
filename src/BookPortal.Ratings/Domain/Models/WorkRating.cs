@@ -17,7 +17,7 @@ namespace BookPortal.Ratings.Domain.Models
         [Column("marks_count")]
         public int MarksCount { get; set; }
 
-        [Column("work_type")]
-        public int WorkType { get; set; }
+        [Column("rating_type")]
+        public string RatingType { get; set; }
     }
 }

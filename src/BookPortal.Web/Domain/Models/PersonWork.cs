@@ -1,5 +1,6 @@
 ﻿namespace BookPortal.Web.Domain.Models
 {
+    // TODO: add a field: Order
     public class PersonWork
     {
         public int Id { get; set; }

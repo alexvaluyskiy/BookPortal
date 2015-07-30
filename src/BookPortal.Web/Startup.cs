@@ -90,8 +90,6 @@ namespace BookPortal.Web
             builder.RegisterType<CountriesService>();
             builder.RegisterType<LanguagesService>();
 
-            builder.RegisterType<ImportersService>();
-
             builder.Populate(services);
             var container = builder.Build();
 

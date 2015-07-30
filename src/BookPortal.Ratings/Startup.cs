@@ -14,7 +14,6 @@ using BookPortal.Core.Framework;
 using BookPortal.Core.Framework.Filters;
 using BookPortal.Ratings.Domain;
 using BookPortal.Ratings.Services;
-using Microsoft.AspNet.Routing;
 using Microsoft.Framework.Runtime;
 using Swashbuckle.Swagger;
 using Microsoft.Data.Entity;
@@ -53,6 +52,7 @@ namespace BookPortal.Ratings
             // TODO: untill swagger updates to beta6
             services.AddSwaggerBeta6(c =>
             {
+                c.SwaggerGeneratorOptions.BasePath = "/api";
                 c.SwaggerGeneratorOptions.Schemes = new[] { "http", "https" };
                 c.SwaggerGeneratorOptions.SingleApiVersion(new Info
                 {
@@ -70,7 +70,10 @@ namespace BookPortal.Ratings
 
             ContainerBuilder builder = new ContainerBuilder();
 
+            builder.RegisterType<GenresService>();
+            builder.RegisterType<MarksService>();
             builder.RegisterType<RatingsService>();
+            builder.RegisterType<ReviewsService>();
 
             builder.Populate(services);
             var container = builder.Build();

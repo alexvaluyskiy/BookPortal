@@ -1,15 +1,23 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using BookPortal.Ratings.Models.Shims;
 
 namespace BookPortal.Ratings.Models
 {
     public class WorkRatingResponse
     {
         public int WorkId { get; set; }
+
+        public string WorkRusName { get; set; }
+
+        public string WorkName { get; set; }
+
+        public int WorkYear { get; set; }
+
+        public IEnumerable<PersonResponseShim> Persons { get; set; }
+
         public double Rating { get; set; }
-        public int MarkCount { get; set; }
-        public int WorkType { get; set; }
+
+        public int MarksCount { get; set; }
     }
 }

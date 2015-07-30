@@ -35,10 +35,6 @@
     },
 
     "frameworks": {
-        "dnx451": {
-            "frameworkAssemblies": {
-                "System.Net.Http": ""
-            }
-        }
+        "dnx451": {}
     }
 }

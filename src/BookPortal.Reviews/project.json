@@ -14,8 +14,8 @@
         "Microsoft.Framework.DependencyInjection.Abstractions": "1.0.0-beta6",
         "Microsoft.Framework.Logging.Debug": "1.0.0-beta6",
 
-        "EntityFramework7.SqlServer": "7.0.0-beta6",
-        "EntityFramework7.Commands": "7.0.0-beta6",
+        "EntityFramework.SqlServer": "7.0.0-beta6",
+        "EntityFramework.Commands": "7.0.0-beta6",
 
         "AutoMapper": "4.0.0-*",
         "Autofac.Framework.DependencyInjection": "4.0.0-*"
