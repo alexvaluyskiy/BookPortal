@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BookPortal.Core.Framework.Models;
 using Microsoft.Data.Entity;
 using BookPortal.Web.Domain;
 using BookPortal.Web.Models;
@@ -17,7 +18,7 @@ namespace BookPortal.Web.Services
             _bookContext = bookContext;
         }
 
-        public async Task<IReadOnlyList<ContestWorkResponse>> GetContestsWorksAsync(int contestId)
+        public async Task<ApiObject<ContestWorkResponse>> GetContestsWorksAsync(int contestId)
         {
             var query = _bookContext.ContestWorks
                 .Where(c => c.ContestId == contestId)
@@ -36,7 +37,11 @@ namespace BookPortal.Web.Services
                     NominationId = c.NominationId
                 });
 
-            return await query.ToListAsync();
+            var result = new ApiObject<ContestWorkResponse>();
+            result.Values = await query.ToListAsync();
+            result.TotalRows = result.Values.Count;
+
+            return result;
         }
 
         public async Task<ContestWorkResponse> GetContestWorkAsync(int contestId, int contestWorkId)

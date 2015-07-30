@@ -107,8 +107,6 @@ namespace BookPortal.Web
 
             loggerFactory.AddDebug(LogLevel.Verbose);
 
-            app.UseStaticFiles();
-
             app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseErrorHandler(builder => builder.Run(ErrorRequestHandler.HandleErrorRequest));

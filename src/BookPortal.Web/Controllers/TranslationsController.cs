@@ -17,7 +17,7 @@ namespace BookPortal.Web.Controllers
             _translationsService = translationsService;
         }
 
-        [HttpGet("")]
+        [HttpGet]
         [Produces(typeof(IEnumerable<TranslationResponse>))]
         public async Task<IActionResult> TranslationsList(TranslationRequest request)
         {

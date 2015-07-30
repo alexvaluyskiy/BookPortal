@@ -6,14 +6,17 @@
         "BookPortal.Core.Framework": "1.0.0",
         "BookPortal.Core.Configuration": "1.0.0",
         "BookPortal.Core.Logging": "1.0.0",
-        "Microsoft.AspNet.Mvc": "6.0.0-*",
-        "Microsoft.AspNet.Server.IIS": "1.0.0-*",
-        "Microsoft.AspNet.Server.WebListener": "1.0.0-*",
-        "Microsoft.Framework.Configuration.Json": "1.0.0-*",
-        "Microsoft.Framework.DependencyInjection.Abstractions": "1.0.0-*",
-        "Microsoft.Framework.Logging.Debug": "1.0.0-*",
-        "EntityFramework.SqlServer": "7.0.0-*",
-        "EntityFramework.Commands": "7.0.0-*",
+
+        "Microsoft.AspNet.Mvc": "6.0.0-beta6",
+        "Microsoft.AspNet.Server.IIS": "1.0.0-beta6",
+        "Microsoft.AspNet.Server.WebListener": "1.0.0-beta6",
+        "Microsoft.Framework.Configuration.Json": "1.0.0-beta6",
+        "Microsoft.Framework.DependencyInjection.Abstractions": "1.0.0-beta6",
+        "Microsoft.Framework.Logging.Debug": "1.0.0-beta6",
+
+        "EntityFramework.SqlServer": "7.0.0-beta6",
+        "EntityFramework.Commands": "7.0.0-beta6",
+
         "Autofac.Framework.DependencyInjection": "4.0.0-*",
         "Swashbuckle":  "6.0.0-*"
     },

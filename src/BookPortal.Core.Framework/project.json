@@ -4,7 +4,7 @@
     "authors": [ "Alex Valuyskiy" ],
 
     "dependencies": {
-        "Microsoft.AspNet.Mvc": "6.0.0-*"
+        "Microsoft.AspNet.Mvc": "6.0.0-beta6"
     },
 
     "frameworks": {

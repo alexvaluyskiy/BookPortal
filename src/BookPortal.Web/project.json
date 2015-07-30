@@ -1,9 +1,7 @@
 ﻿{
     "webroot": "wwwroot",
     "version": "1.0.0-*",
-    "authors": [
-        "Alex Valuyskiy"
-    ],
+    "authors": [ "Alex Valuyskiy" ],
 
     "compilationOptions": {
         "warningsAsErrors": false
@@ -13,24 +11,26 @@
         "BookPortal.Core.Framework": "1.0.0",
         "BookPortal.Core.Configuration": "1.0.0",
         "BookPortal.Core.Logging": "1.0.0",
-        "Microsoft.AspNet.Mvc": "6.0.0-*",
-        "Microsoft.AspNet.Server.IIS": "1.0.0-*",
-        "Microsoft.AspNet.Server.WebListener": "1.0.0-*",
-        "Microsoft.AspNet.StaticFiles": "1.0.0-*",
-        "Microsoft.AspNet.Diagnostics": "1.0.0-*",
-        "Microsoft.AspNet.Cors": "1.0.0-*",
-        "Microsoft.Framework.Configuration.Json": "1.0.0-*",
-        "Microsoft.Framework.Logging.Debug": "1.0.0-*",
-        "Microsoft.ApplicationInsights.AspNet": "1.0.0-*",
-        "EntityFramework7.SqlServer": "7.0.0-*",
-        "EntityFramework7.Commands": "7.0.0-*",
+
+        "Microsoft.AspNet.Mvc.Core": "6.0.0-beta6",
+        "Microsoft.AspNet.Mvc.DataAnnotations": "6.0.0-beta6",
+        "Microsoft.AspNet.Mvc.Formatters.Json": "6.0.0-beta6",
+        "Microsoft.AspNet.Server.IIS": "1.0.0-beta6",
+        "Microsoft.AspNet.Diagnostics": "1.0.0-beta6",
+        "Microsoft.AspNet.Cors": "1.0.0-beta6",
+        "Microsoft.Framework.Configuration.Json": "1.0.0-beta6",
+        "Microsoft.Framework.Logging.Debug": "1.0.0-beta6",
+        "Microsoft.ApplicationInsights.AspNet": "1.0.0-beta6",
+
+        "EntityFramework.SqlServer": "7.0.0-beta6",
+        "EntityFramework.Commands": "7.0.0-beta6",
+
         "HtmlAgilityPack": "1.4.9",
         "Autofac.Framework.DependencyInjection": "4.0.0-*",
-        "Swashbuckle":  "6.0.0-*"
+        "Swashbuckle": "6.0.0-*"
     },
-                    
+
     "commands": {
-        "web": "Microsoft.AspNet.Hosting --server Microsoft.AspNet.Server.WebListener --server.urls http://localhost:5000",
         "ef": "EntityFramework.Commands"
     },
 
