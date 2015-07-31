@@ -17,6 +17,7 @@ using BookPortal.Ratings.Services;
 using Microsoft.Framework.Runtime;
 using Swashbuckle.Swagger;
 using Microsoft.Data.Entity;
+using Microsoft.Framework.Caching.Redis;
 
 namespace BookPortal.Ratings
 {
@@ -73,6 +74,11 @@ namespace BookPortal.Ratings
             builder.RegisterType<MarksService>();
             builder.RegisterType<RatingsService>();
             builder.RegisterType<ReviewsService>();
+
+            builder.RegisterInstance(new RedisCache(new RedisCacheOptions
+            {
+                Configuration = "aspnet5-bookportal-cache.redis.cache.windows.net,ssl=true,password=+RoCREJvEK9gzZURHmFxNgMuF8tuhH2gKrr2omjrc7w="
+            }));
 
             builder.Populate(services);
             var container = builder.Build();

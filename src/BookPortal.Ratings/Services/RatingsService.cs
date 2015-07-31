@@ -1,21 +1,28 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using BookPortal.Core.Framework.Models;
 using BookPortal.Ratings.Domain;
 using BookPortal.Ratings.Models;
 using BookPortal.Ratings.Models.Shims;
 using Microsoft.Data.Entity;
+using Microsoft.Framework.Caching.Distributed;
+using Microsoft.Framework.Caching.Redis;
+using Newtonsoft.Json;
 
 namespace BookPortal.Ratings.Services
 {
     public class RatingsService
     {
         private readonly RatingsContext _ratingsContext;
+        private readonly RedisCache _cache;
 
-        public RatingsService(RatingsContext ratingsContext)
+        public RatingsService(RatingsContext ratingsContext, RedisCache cache)
         {
             _ratingsContext = ratingsContext;
+            _cache = cache;
         }
 
         public async Task<ApiObject<AuthorRatingResponse>> GetAuthorsRating()
@@ -40,29 +47,45 @@ namespace BookPortal.Ratings.Services
 
         public async Task<ApiObject<WorkRatingResponse>> GetWorkRating(string type)
         {
-            var ratings = _ratingsContext.WorkRating
+            var cacheEntryBytes = await _cache.GetAsync($"ratings:works:{type}");
+
+            List<WorkRatingResponse> workRating = null;
+
+            if (cacheEntryBytes == null)
+            {
+                var ratings = _ratingsContext.WorkRating
                 .Where(c => c.RatingType == type)
                 .Select(c => new WorkRatingResponse
                 {
                     WorkId = c.WorkId,
                     WorkRusName = "not implemented yet", // TODO: not implemented yet
-                    WorkName = "not implemented yet", // TODO: not implemented yet
-                    WorkYear = -1, // TODO: not implemented yet
-                    Persons = new List<PersonResponseShim> // TODO: not implemented yet
-                    {
-                        new PersonResponseShim
-                        {
-                            PersonId = -1,
-                            Name = "not implemented yet", 
-                            NameOriginal = "not implemented yet"
-                        }
+                                WorkName = "not implemented yet", // TODO: not implemented yet
+                                WorkYear = -1, // TODO: not implemented yet
+                                Persons = new List<PersonResponseShim> // TODO: not implemented yet
+                                {
+                                    new PersonResponseShim
+                                    {
+                                        PersonId = -1,
+                                        Name = "not implemented yet",
+                                        NameOriginal = "not implemented yet"
+                                    }
                     },
                     Rating = c.Rating,
                     MarksCount = c.MarksCount
                 });
 
+                workRating = await ratings.ToListAsync();
+                string serialized = JsonConvert.SerializeObject(workRating);
+                await _cache.SetAsync($"ratings:works:{type}", Encoding.UTF8.GetBytes(serialized), 
+                    new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1)});
+            }
+            else
+            {
+                workRating = JsonConvert.DeserializeObject<List<WorkRatingResponse>>(Encoding.UTF8.GetString(cacheEntryBytes));
+            }
+
             var apiObject = new ApiObject<WorkRatingResponse>();
-            apiObject.Values = await ratings.ToListAsync();
+            apiObject.Values = workRating;
             apiObject.TotalRows = apiObject.Values.Count;
 
             return apiObject;
