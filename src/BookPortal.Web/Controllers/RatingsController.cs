@@ -36,7 +36,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet("expects")]
-        [Produces(typeof(IEnumerable<WorkExpectRating>))]
+        [Produces(typeof(IEnumerable<RatingWorkExpectView>))]
         public async Task<IActionResult> GetWorkExpectRating(string type)
         {
             var ratings = await _ratingsService.GetWorkExpectRating(type);

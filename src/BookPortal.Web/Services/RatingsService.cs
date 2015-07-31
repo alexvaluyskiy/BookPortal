@@ -26,7 +26,7 @@ namespace BookPortal.Web.Services
 
         public async Task<ApiObject<AuthorRatingResponse>> GetAuthorsRating()
         {
-            var ratings = _bookContext.AuthorRatings.Select(c => new AuthorRatingResponse
+            var ratings = _bookContext.AuthorRatingsView.Select(c => new AuthorRatingResponse
             {
                 PersonId = c.PersonId,
                 PersonName = "not implemented yet", // TODO: not implemented yet
@@ -52,12 +52,12 @@ namespace BookPortal.Web.Services
 
             if (cacheEntryBytes == null)
             {
-                var ratings = _bookContext.WorkRating
-                .Where(c => c.RatingType == type)
-                .Select(c => new WorkRatingResponse
-                {
-                    WorkId = c.WorkId,
-                    WorkRusName = "not implemented yet", // TODO: not implemented yet
+                var ratings = _bookContext.WorkRatingView
+                            .Where(c => c.RatingType == type)
+                            .Select(c => new WorkRatingResponse
+                            {
+                                WorkId = c.WorkId,
+                                WorkRusName = "not implemented yet", // TODO: not implemented yet
                                 WorkName = "not implemented yet", // TODO: not implemented yet
                                 WorkYear = -1, // TODO: not implemented yet
                                 Persons = new List<PersonResponse> // TODO: not implemented yet
@@ -68,10 +68,10 @@ namespace BookPortal.Web.Services
                                         Name = "not implemented yet",
                                         NameOriginal = "not implemented yet"
                                     }
-                    },
-                    Rating = c.Rating,
-                    MarksCount = c.MarksCount
-                });
+                                },
+                                Rating = c.Rating,
+                                MarksCount = c.MarksCount
+                            });
 
                 workRating = await ratings.ToListAsync();
                 string serialized = JsonConvert.SerializeObject(workRating);

@@ -6,7 +6,7 @@ namespace BookPortal.Web.Domain.Models
     public class Mark
     {
         [Column("mark_id")]
-        public int MarkId { get; set; }
+        public int Id { get; set; }
 
         [Column("user_id")]
         public int UserId { get; set; }

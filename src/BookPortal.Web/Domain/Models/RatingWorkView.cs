@@ -3,14 +3,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BookPortal.Web.Domain.Models
 {
-    [Table("work_rating")]
-    public class WorkRating
+    [Table("rating_work_view")]
+    public class RatingWorkView
     {
-        [Column("work_rating_id")]
-        public int WorkRatingId { get; set; }
+        [Column("rating_work_id")]
+        public int Id { get; set; }
 
         [Column("work_id")]
         public int WorkId { get; set; }
+        public Work Work { get; set; }
 
         [Column("rating")]
         public double Rating { get; set; }

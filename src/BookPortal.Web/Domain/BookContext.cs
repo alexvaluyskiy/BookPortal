@@ -5,42 +5,43 @@ namespace BookPortal.Web.Domain
 {
     public class BookContext : DbContext
     {
-        public DbSet<Award> Awards { get; set; }
-        public DbSet<Contest> Contests { get; set; }
-        public DbSet<Nomination> Nominations { get; set; }
-        public DbSet<ContestWork> ContestWorks { get; set; }
-
         public DbSet<Person> Persons { get; set; }
         public DbSet<PersonWork> PersonWorks { get; set; }
-
         public DbSet<Work> Works { get; set; }
         public DbSet<WorkLink> WorkLinks { get; set; }
         public DbSet<WorkType> WorkTypes { get; set; }
-
         public DbSet<TranslationWork> TranslationWorks { get; set; }
         public DbSet<TranslationWorkPerson> TranslationWorkPersons { get; set; }
-        
         public DbSet<Edition> Editions { get; set; }
         public DbSet<EditionPublisher> EditionPublishers { get; set; }
         public DbSet<EditionSerie> EditionSeries { get; set; }
         public DbSet<EditionTranslation> EditionTranslations { get; set; }
         public DbSet<EditionWork> EditionWorks { get; set; }
+        public DbSet<Language> Languages { get; set; }
+        public DbSet<Country> Countries { get; set; }
+
+        public DbSet<Award> Awards { get; set; }
+        public DbSet<Contest> Contests { get; set; }
+        public DbSet<Nomination> Nominations { get; set; }
+        public DbSet<ContestWork> ContestWorks { get; set; }
 
         public DbSet<Serie> Series { get; set; }
         public DbSet<Publisher> Publishers { get; set; }
         public DbSet<PublisherSerie> PublisherSeries { get; set; }
 
-        public DbSet<Language> Languages { get; set; }
-        public DbSet<Country> Countries { get; set; }
-
-        public DbSet<AuthorRating> AuthorRatings { get; set; }
-        public DbSet<WorkExpectRating> WorkExpectRating { get; set; }
-        public DbSet<WorkRating> WorkRating { get; set; }
+        public DbSet<RatingAuthorView> AuthorRatingsView { get; set; }
+        public DbSet<RatingWorkExpectView> WorkExpectRatingView { get; set; }
+        public DbSet<RatingWorkView> WorkRatingView { get; set; }
 
         public DbSet<Mark> Marks { get; set; }
 
         public DbSet<Review> Reviews { get; set; }
         public DbSet<ReviewVote> ReviewVotes { get; set; }
+
+        public DbSet<GenrePersonView> GenrePersonsView { get; set; }
+        public DbSet<GenreWork> GenreWorks { get; set; }
+        public DbSet<GenreWorkView> GenreWorksView { get; set; }
+        public DbSet<GenreWorkUser> GenreWorkUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -270,24 +271,26 @@ namespace BookPortal.Web.Domain
                 builder.Property(c => c.SerieId).HasColumnName("serie_id");
             });
 
-            modelBuilder.Entity<AuthorRating>().Property(c => c.AuthorRatingId).UseSqlServerIdentityColumn();
-            modelBuilder.Entity<AuthorRating>().Index(c => c.PersonId).Unique();
+            modelBuilder.Entity<RatingAuthorView>().Property(c => c.Id).UseSqlServerIdentityColumn();
+            modelBuilder.Entity<RatingAuthorView>().Index(c => c.PersonId).Unique();
+            modelBuilder.Entity<RatingWorkExpectView>().Property(c => c.Id).UseSqlServerIdentityColumn();
+            modelBuilder.Entity<RatingWorkView>().Property(c => c.Id).UseSqlServerIdentityColumn();
+            modelBuilder.Entity<RatingWorkView>().Index(c => new { c.WorkId, c.RatingType }).Unique();
 
-            modelBuilder.Entity<WorkExpectRating>().Property(c => c.WorkExpectRatingId).UseSqlServerIdentityColumn();
-
-            modelBuilder.Entity<WorkRating>().Property(c => c.WorkRatingId).UseSqlServerIdentityColumn();
-            modelBuilder.Entity<WorkRating>().Index(c => new { c.WorkId, c.RatingType }).Unique();
-
-            modelBuilder.Entity<Mark>().Property(c => c.MarkId).UseSqlServerIdentityColumn();
+            modelBuilder.Entity<Mark>().Property(c => c.Id).UseSqlServerIdentityColumn();
             modelBuilder.Entity<Mark>().Index(c => c.WorkId);
             modelBuilder.Entity<Mark>().Index(c => new { c.WorkId, c.UserId });
 
             modelBuilder.Entity<Review>().Property(c => c.Id).UseSqlServerIdentityColumn();
             modelBuilder.Entity<Review>().Index(c => c.WorkId);
             modelBuilder.Entity<Review>().Index(c => c.UserId);
-
             modelBuilder.Entity<ReviewVote>().Property(c => c.Id).UseSqlServerIdentityColumn();
             modelBuilder.Entity<ReviewVote>().Index(c => c.ReviewId);
+
+            modelBuilder.Entity<GenrePersonView>().Property(c => c.Id).UseSqlServerIdentityColumn();
+            modelBuilder.Entity<GenreWork>().Property(c => c.Id).UseSqlServerIdentityColumn();
+            modelBuilder.Entity<GenreWorkUser>().Property(c => c.Id).UseSqlServerIdentityColumn();
+            modelBuilder.Entity<GenreWorkView>().Property(c => c.Id).UseSqlServerIdentityColumn();
 
             base.OnModelCreating(modelBuilder);
         }

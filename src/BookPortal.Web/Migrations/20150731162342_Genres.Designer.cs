@@ -7,9 +7,19 @@ using BookPortal.Web.Domain;
 namespace BookPortalWebMigrations
 {
     [ContextType(typeof(BookContext))]
-    partial class BookContextModelSnapshot : ModelSnapshot
+    partial class Genres
     {
-        public override void BuildModel(ModelBuilder builder)
+        public override string Id
+        {
+            get { return "20150731162342_Genres"; }
+        }
+
+        public override string ProductVersion
+        {
+            get { return "7.0.0-beta6-13815"; }
+        }
+
+        public override void BuildTargetModel(ModelBuilder builder)
         {
             builder
                 .Annotation("ProductVersion", "7.0.0-beta6-13815")
@@ -306,7 +316,7 @@ namespace BookPortalWebMigrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .Annotation("Relational:ColumnName", "genre_person_view_id")
+                        .Annotation("Relational:ColumnName", "genre_person_id")
                         .Annotation("SqlServer:ValueGenerationStrategy", "IdentityColumn");
 
                     b.Property<int>("GenreCount")
@@ -315,15 +325,15 @@ namespace BookPortalWebMigrations
                     b.Property<int>("GenreTotal")
                         .Annotation("Relational:ColumnName", "genre_total");
 
-                    b.Property<int>("GenreWorkId")
-                        .Annotation("Relational:ColumnName", "work_genre_id");
-
                     b.Property<int>("PersonId")
                         .Annotation("Relational:ColumnName", "person_id");
 
+                    b.Property<int>("WorkGenreId")
+                        .Annotation("Relational:ColumnName", "work_genre_id");
+
                     b.Key("Id");
 
-                    b.Annotation("Relational:TableName", "genre_persons_view");
+                    b.Annotation("Relational:TableName", "person_genres");
                 });
 
             builder.Entity("BookPortal.Web.Domain.Models.GenreWork", b =>
@@ -350,7 +360,7 @@ namespace BookPortalWebMigrations
 
                     b.Key("Id");
 
-                    b.Annotation("Relational:TableName", "genre_works");
+                    b.Annotation("Relational:TableName", "genre_work");
                 });
 
             builder.Entity("BookPortal.Web.Domain.Models.GenreWorkUser", b =>
@@ -381,21 +391,21 @@ namespace BookPortalWebMigrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .Annotation("Relational:ColumnName", "genre_work_view_id")
+                        .Annotation("Relational:ColumnName", "genre_work_id")
                         .Annotation("SqlServer:ValueGenerationStrategy", "IdentityColumn");
 
                     b.Property<int>("GenreCount")
                         .Annotation("Relational:ColumnName", "genre_count");
 
-                    b.Property<int>("GenreWorkId")
-                        .Annotation("Relational:ColumnName", "genre_work_id");
+                    b.Property<int>("WorkGenreId")
+                        .Annotation("Relational:ColumnName", "work_genre_id");
 
                     b.Property<int>("WorkId")
                         .Annotation("Relational:ColumnName", "work_id");
 
                     b.Key("Id");
 
-                    b.Annotation("Relational:TableName", "genre_works_view");
+                    b.Annotation("Relational:TableName", "genre_works");
                 });
 
             builder.Entity("BookPortal.Web.Domain.Models.Language", b =>
@@ -622,7 +632,7 @@ namespace BookPortalWebMigrations
                     b.Index("PersonId")
                         .Unique();
 
-                    b.Annotation("Relational:TableName", "rating_author_view");
+                    b.Annotation("Relational:TableName", "rating_author");
                 });
 
             builder.Entity("BookPortal.Web.Domain.Models.RatingWorkExpectView", b =>
@@ -646,7 +656,7 @@ namespace BookPortalWebMigrations
 
                     b.Key("Id");
 
-                    b.Annotation("Relational:TableName", "rating_work_expect_view");
+                    b.Annotation("Relational:TableName", "rating_work_expect");
                 });
 
             builder.Entity("BookPortal.Web.Domain.Models.RatingWorkView", b =>
@@ -674,7 +684,7 @@ namespace BookPortalWebMigrations
                     b.Index("WorkId", "RatingType")
                         .Unique();
 
-                    b.Annotation("Relational:TableName", "rating_work_view");
+                    b.Annotation("Relational:TableName", "rating_work");
                 });
 
             builder.Entity("BookPortal.Web.Domain.Models.Review", b =>
@@ -978,10 +988,6 @@ namespace BookPortalWebMigrations
 
             builder.Entity("BookPortal.Web.Domain.Models.GenrePersonView", b =>
                 {
-                    b.Reference("BookPortal.Web.Domain.Models.GenreWorkUser")
-                        .InverseCollection()
-                        .ForeignKey("GenreWorkId");
-
                     b.Reference("BookPortal.Web.Domain.Models.Person")
                         .InverseCollection()
                         .ForeignKey("PersonId");

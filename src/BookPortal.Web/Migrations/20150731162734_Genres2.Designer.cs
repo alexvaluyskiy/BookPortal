@@ -7,9 +7,19 @@ using BookPortal.Web.Domain;
 namespace BookPortalWebMigrations
 {
     [ContextType(typeof(BookContext))]
-    partial class BookContextModelSnapshot : ModelSnapshot
+    partial class Genres2
     {
-        public override void BuildModel(ModelBuilder builder)
+        public override string Id
+        {
+            get { return "20150731162734_Genres2"; }
+        }
+
+        public override string ProductVersion
+        {
+            get { return "7.0.0-beta6-13815"; }
+        }
+
+        public override void BuildTargetModel(ModelBuilder builder)
         {
             builder
                 .Annotation("ProductVersion", "7.0.0-beta6-13815")
@@ -306,7 +316,7 @@ namespace BookPortalWebMigrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .Annotation("Relational:ColumnName", "genre_person_view_id")
+                        .Annotation("Relational:ColumnName", "genre_person_id")
                         .Annotation("SqlServer:ValueGenerationStrategy", "IdentityColumn");
 
                     b.Property<int>("GenreCount")
@@ -315,11 +325,11 @@ namespace BookPortalWebMigrations
                     b.Property<int>("GenreTotal")
                         .Annotation("Relational:ColumnName", "genre_total");
 
-                    b.Property<int>("GenreWorkId")
-                        .Annotation("Relational:ColumnName", "work_genre_id");
-
                     b.Property<int>("PersonId")
                         .Annotation("Relational:ColumnName", "person_id");
+
+                    b.Property<int>("WorkGenreId")
+                        .Annotation("Relational:ColumnName", "work_genre_id");
 
                     b.Key("Id");
 
@@ -381,14 +391,14 @@ namespace BookPortalWebMigrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .Annotation("Relational:ColumnName", "genre_work_view_id")
+                        .Annotation("Relational:ColumnName", "genre_work_id")
                         .Annotation("SqlServer:ValueGenerationStrategy", "IdentityColumn");
 
                     b.Property<int>("GenreCount")
                         .Annotation("Relational:ColumnName", "genre_count");
 
-                    b.Property<int>("GenreWorkId")
-                        .Annotation("Relational:ColumnName", "genre_work_id");
+                    b.Property<int>("WorkGenreId")
+                        .Annotation("Relational:ColumnName", "work_genre_id");
 
                     b.Property<int>("WorkId")
                         .Annotation("Relational:ColumnName", "work_id");
@@ -978,10 +988,6 @@ namespace BookPortalWebMigrations
 
             builder.Entity("BookPortal.Web.Domain.Models.GenrePersonView", b =>
                 {
-                    b.Reference("BookPortal.Web.Domain.Models.GenreWorkUser")
-                        .InverseCollection()
-                        .ForeignKey("GenreWorkId");
-
                     b.Reference("BookPortal.Web.Domain.Models.Person")
                         .InverseCollection()
                         .ForeignKey("PersonId");

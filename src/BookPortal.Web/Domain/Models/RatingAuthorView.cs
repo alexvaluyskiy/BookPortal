@@ -2,14 +2,15 @@
 
 namespace BookPortal.Web.Domain.Models
 {
-    [Table("autor_rating")]
-    public class AuthorRating
+    [Table("rating_author_view")]
+    public class RatingAuthorView
     {
-        [Column("author_rating_id")]
-        public int AuthorRatingId { get; set; }
+        [Column("rating_author_id")]
+        public int Id { get; set; }
 
         [Column("person_id")]
         public int PersonId { get; set; }
+        public Person Person { get; set; }
 
         [Column("rating")]
         public double Rating { get; set; }
