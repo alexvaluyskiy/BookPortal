@@ -5,7 +5,6 @@ using Autofac.Framework.DependencyInjection;
 using BookPortal.Core.Configuration;
 using BookPortal.Core.Framework;
 using BookPortal.Core.Framework.Filters;
-using BookPortal.Core.Logging;
 using BookPortal.Web.Domain;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Builder;
@@ -59,7 +58,7 @@ namespace BookPortal.Web
                 c.SwaggerGeneratorOptions.SingleApiVersion(new Info
                 {
                     Version = "v1",
-                    Title = "BookPortal Ratings API"
+                    Title = "BookPortal Main API"
                 });
 
                 c.SchemaGeneratorOptions.DescribeAllEnumsAsStrings = true;
@@ -90,6 +89,8 @@ namespace BookPortal.Web
             builder.RegisterType<CountriesService>();
             builder.RegisterType<LanguagesService>();
 
+            builder.RegisterType<ReviewsService>();
+
             builder.Populate(services);
             var container = builder.Build();
 
@@ -98,11 +99,6 @@ namespace BookPortal.Web
 
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddLoggingService(
-                Configuration.Get("Services:LoggingService"),
-                Configuration.Get("AppSettings:ApplicationName"),
-                LogLevel.Warning);
-
             loggerFactory.AddDebug(LogLevel.Verbose);
 
             app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());

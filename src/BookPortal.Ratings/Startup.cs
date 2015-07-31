@@ -1,6 +1,5 @@
 ﻿using System;
 using BookPortal.Core.Configuration;
-using BookPortal.Core.Logging;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Mvc;
@@ -87,11 +86,6 @@ namespace BookPortal.Ratings
 
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddLoggingService(
-                Configuration.Get("Services:LoggingService"),
-                Configuration.Get("AppSettings:ApplicationName"),
-                LogLevel.Warning);
-
             loggerFactory.AddDebug(LogLevel.Verbose);
 
             app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());

@@ -5,7 +5,6 @@
     "dependencies": {
         "BookPortal.Core.Framework": "1.0.0",
         "BookPortal.Core.Configuration": "1.0.0",
-        "BookPortal.Core.Logging": "1.0.0",
 
         "Microsoft.AspNet.Mvc": "6.0.0-beta6",
         "Microsoft.AspNet.Server.IIS": "1.0.0-beta6",
