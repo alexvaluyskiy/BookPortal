@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using BookPortal.Core.Framework.Models;
 using BookPortal.Web.Models;
+using BookPortal.Web.Models.Requests;
+using BookPortal.Web.Models.Responses;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Mvc;
 
@@ -11,10 +13,14 @@ namespace BookPortal.Web.Controllers
     public class SeriesController : Controller
     {
         private readonly SeriesService _seriesService;
+        private readonly EditionsService _editionsService;
 
-        public SeriesController(SeriesService seriesService)
+        public SeriesController(
+            SeriesService seriesService,
+            EditionsService editionsService)
         {
             _seriesService = seriesService;
+            _editionsService = editionsService;
         }
 
         [HttpGet]
@@ -42,7 +48,7 @@ namespace BookPortal.Web.Controllers
         [Produces(typeof(IEnumerable<EditionResponse>))]
         public async Task<IActionResult> GetEditions(SerieRequest request)
         {
-            var editions = await _seriesService.GetSerieEditionsAsync(request);
+            var editions = await _editionsService.GetEditionsBySerieAsync(request);
 
             if (editions == null)
                 return this.ErrorObject(404, $"Serie (id: {request.SerieId}) editions are not found");

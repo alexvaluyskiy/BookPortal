@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using BookPortal.Web.Models;
+using BookPortal.Web.Models.Responses;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Mvc;
 
@@ -22,7 +22,7 @@ namespace BookPortal.Web.Controllers
         {
             var contests = await _contestsService.GetContestsAsync(awardId);
 
-            return this.PageObject(contests);
+            return this.PageObject(contests.Values, contests.TotalRows);
         }
 
         [HttpGet("{contestId}")]

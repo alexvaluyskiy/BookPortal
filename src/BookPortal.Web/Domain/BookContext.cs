@@ -32,7 +32,16 @@ namespace BookPortal.Web.Domain
 
         public DbSet<Language> Languages { get; set; }
         public DbSet<Country> Countries { get; set; }
-        
+
+        public DbSet<AuthorRating> AuthorRatings { get; set; }
+        public DbSet<WorkExpectRating> WorkExpectRating { get; set; }
+        public DbSet<WorkRating> WorkRating { get; set; }
+
+        public DbSet<Mark> Marks { get; set; }
+
+        public DbSet<Review> Reviews { get; set; }
+        public DbSet<ReviewVote> ReviewVotes { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Award>().ToTable("awards");
@@ -107,7 +116,6 @@ namespace BookPortal.Web.Domain
                 builder.Property(c => c.Birthdate).HasColumnName("birthdate").HasColumnType("nvarchar(10)");
                 builder.Property(c => c.Deathdate).HasColumnName("deathdate").HasColumnType("nvarchar(10)");
                 builder.Property(c => c.CountryId).HasColumnName("country_id");
-                builder.Property(c => c.LanguageId).HasColumnName("language_id");
                 builder.Property(c => c.Biography).HasColumnName("biography");
                 builder.Property(c => c.BiographySource).HasColumnName("biography_source");
                 builder.Property(c => c.Notes).HasColumnName("notes");
@@ -146,15 +154,6 @@ namespace BookPortal.Web.Domain
                 builder.Property(c => c.IsAddition).HasColumnName("is_addition");
                 builder.Property(c => c.BonusText).HasColumnName("bonus_text");
                 builder.Property(c => c.GroupIndex).HasColumnName("group_index");
-            });
-
-            modelBuilder.Entity<WorkType>().ToTable("work_types");
-            modelBuilder.Entity<WorkType>(builder =>
-            {
-                builder.Property(c => c.Id).HasColumnName("work_type_id").UseSqlServerIdentityColumn();
-                builder.Property(c => c.Name).HasColumnName("name");
-                builder.Property(c => c.NameSingle).HasColumnName("name_single");
-                builder.Property(c => c.Level).HasColumnName("level");
             });
 
             modelBuilder.Entity<TranslationWork>().ToTable("translation_works");
@@ -271,19 +270,24 @@ namespace BookPortal.Web.Domain
                 builder.Property(c => c.SerieId).HasColumnName("serie_id");
             });
 
-            modelBuilder.Entity<Country>().ToTable("countries");
-            modelBuilder.Entity<Country>(builder =>
-            {
-                builder.Property(c => c.Id).HasColumnName("country_id").UseSqlServerIdentityColumn();
-                builder.Property(c => c.Name).Required().HasColumnName("name");
-            });
+            modelBuilder.Entity<AuthorRating>().Property(c => c.AuthorRatingId).UseSqlServerIdentityColumn();
+            modelBuilder.Entity<AuthorRating>().Index(c => c.PersonId).Unique();
 
-            modelBuilder.Entity<Language>().ToTable("languages");
-            modelBuilder.Entity<Language>(builder =>
-            {
-                builder.Property(c => c.Id).HasColumnName("language_id").UseSqlServerIdentityColumn();
-                builder.Property(c => c.Name).Required().HasColumnName("name");
-            });
+            modelBuilder.Entity<WorkExpectRating>().Property(c => c.WorkExpectRatingId).UseSqlServerIdentityColumn();
+
+            modelBuilder.Entity<WorkRating>().Property(c => c.WorkRatingId).UseSqlServerIdentityColumn();
+            modelBuilder.Entity<WorkRating>().Index(c => new { c.WorkId, c.RatingType }).Unique();
+
+            modelBuilder.Entity<Mark>().Property(c => c.MarkId).UseSqlServerIdentityColumn();
+            modelBuilder.Entity<Mark>().Index(c => c.WorkId);
+            modelBuilder.Entity<Mark>().Index(c => new { c.WorkId, c.UserId });
+
+            modelBuilder.Entity<Review>().Property(c => c.Id).UseSqlServerIdentityColumn();
+            modelBuilder.Entity<Review>().Index(c => c.WorkId);
+            modelBuilder.Entity<Review>().Index(c => c.UserId);
+
+            modelBuilder.Entity<ReviewVote>().Property(c => c.Id).UseSqlServerIdentityColumn();
+            modelBuilder.Entity<ReviewVote>().Index(c => c.ReviewId);
 
             base.OnModelCreating(modelBuilder);
         }

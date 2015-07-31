@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BookPortal.Core.Framework.Models;
 using Microsoft.Data.Entity;
 using BookPortal.Web.Domain;
+using BookPortal.Web.Models.Responses;
 
 namespace BookPortal.Web.Services
 {
@@ -15,7 +17,7 @@ namespace BookPortal.Web.Services
             _bookContext = bookContext;
         }
 
-        public async Task<IReadOnlyList<NominationResponse>> GetNominationsAsync(int awardId)
+        public async Task<ApiObject<NominationResponse>> GetNominationsAsync(int awardId)
         {
             var query = _bookContext.Nominations
                 .Where(n => n.AwardId == awardId)
@@ -29,7 +31,7 @@ namespace BookPortal.Web.Services
                     AwardId = c.AwardId
                 });
 
-            return await query.ToListAsync();
+            return new ApiObject<NominationResponse>(await query.ToListAsync());
         }
 
         public async Task<NominationResponse> GetNominationAsync(int awardId, int nominationId)

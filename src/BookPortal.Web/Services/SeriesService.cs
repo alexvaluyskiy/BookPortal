@@ -8,6 +8,8 @@ using BookPortal.Web.Domain;
 using BookPortal.Web.Domain.Models;
 using BookPortal.Web.Domain.Models.Types;
 using BookPortal.Web.Models;
+using BookPortal.Web.Models.Requests;
+using BookPortal.Web.Models.Responses;
 using Microsoft.Data.Entity;
 
 namespace BookPortal.Web.Services
@@ -79,42 +81,31 @@ namespace BookPortal.Web.Services
             return serie;
         }
 
-        // TODO: add Correct field
-        public async Task<ApiObject<EditionResponse>> GetSerieEditionsAsync(SerieRequest request)
+        public async Task<IReadOnlyList<SerieResponse>> GetSerieByPublisher(int publisherId)
         {
-            var query = from e in _bookContext.Editions
-                        join es in _bookContext.EditionSeries on e.Id equals es.EditionId
-                        where es.SerieId == request.SerieId
-                        select new EditionResponse
+            // TODO: EF7 bug: No inner join
+            var series2 = _bookContext.PublisherSeries
+                .Include(c => c.Serie)
+                .Where(c => c.PublisherId == publisherId)
+                .Select(c => c.Serie);
+
+            var query = from ps in _bookContext.PublisherSeries
+                        join s in _bookContext.Series on ps.SerieId equals s.Id
+                        where ps.PublisherId == publisherId
+                        orderby s.SerieClosed
+                        select new SerieResponse
                         {
-                            EditionId = e.Id,
-                            Name = e.Name,
-                            Year = e.Year,
-                            Correct = 1,
-                            SerieSort = es.Sort
+                            SerieId = s.Id,
+                            Name = s.Name,
+                            Description = s.Description,
+                            YearOpen = s.YearOpen,
+                            YearClose = s.YearClose,
+                            SerieClosed = s.SerieClosed
                         };
 
-            switch (request.Sort)
-            {
-                case SerieEditionsSort.Name:
-                    query = query.OrderBy(c => c.Name).ThenBy(c => c.Year); ;
-                    break;
-                case SerieEditionsSort.Authors:
-                    query = query.OrderBy(c => c.Authors).ThenBy(c => c.SerieSort).ThenBy(c => c.Year);
-                    break;
-                case SerieEditionsSort.Year:
-                    query = query.OrderBy(c => c.Year).ThenBy(c => c.SerieSort).ThenBy(c => c.Name);
-                    break;
-                default:
-                    query = query.OrderByDescending(c => c.Year).ThenBy(c => c.SerieSort);
-                    break;
-            }
+            var series = await query.ToListAsync();
 
-            var result = new ApiObject<EditionResponse>();
-            result.Values = await query.Skip(request.Offset).Take(request.Limit).ToListAsync();
-            result.TotalRows = await _bookContext.EditionSeries.CountAsync(c => c.SerieId == request.SerieId);
-
-            return result;
+            return series;
         }
 
         public async Task<SerieTreeItem> GetSerieTreeAsync(int serieId)

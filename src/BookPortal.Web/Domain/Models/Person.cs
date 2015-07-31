@@ -1,8 +1,8 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BookPortal.Web.Domain.Models
 {
-    // TODO: rename to LanguageId to DefaultLanguageId
     public class Person
     {
         public int Id { get; set; }
@@ -24,6 +24,7 @@ namespace BookPortal.Web.Domain.Models
         public int? CountryId { get; set; }
         public Country Country { get; set; }
 
+        [Column("default_language_id")]
         public int? LanguageId { get; set; }
         public Language Language { get; set; }
 
@@ -32,5 +33,8 @@ namespace BookPortal.Web.Domain.Models
         public string BiographySource { get; set; }
 
         public string Notes { get; set; }
+
+        [Column("is_opened")]
+        public bool IsOpened { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using BookPortal.Core.Framework.Models;
 using BookPortal.Web.Domain.Models;
 using BookPortal.Web.Models;
+using BookPortal.Web.Models.Responses;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Mvc;
 
@@ -24,7 +25,7 @@ namespace BookPortal.Web.Controllers
         {
             var languages = await _languagesService.GetLanguagesAsync();
 
-            return this.PageObject(languages);
+            return this.PageObject(languages.Values, languages.TotalRows);
         }
 
         [HttpGet("{id}")]

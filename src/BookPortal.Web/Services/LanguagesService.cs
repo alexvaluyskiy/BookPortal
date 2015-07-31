@@ -4,6 +4,7 @@ using BookPortal.Core.Framework.Models;
 using Microsoft.Data.Entity;
 using BookPortal.Web.Domain;
 using BookPortal.Web.Models;
+using BookPortal.Web.Models.Responses;
 
 namespace BookPortal.Web.Services
 {

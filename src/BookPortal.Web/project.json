@@ -20,6 +20,7 @@
         "Microsoft.Framework.Configuration.Json": "1.0.0-beta6",
         "Microsoft.Framework.Logging.Debug": "1.0.0-beta6",
         "Microsoft.ApplicationInsights.AspNet": "1.0.0-beta6",
+        "Microsoft.Framework.Caching.Redis": "1.0.0-beta6",
 
         "EntityFramework.SqlServer": "7.0.0-beta6",
         "EntityFramework.Commands": "7.0.0-beta6",

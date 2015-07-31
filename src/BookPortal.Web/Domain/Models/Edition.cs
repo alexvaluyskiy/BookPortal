@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using BookPortal.Web.Domain.Models.Types;
 
 namespace BookPortal.Web.Domain.Models
 {
     // TODO: add a field AuthorsRaw
-    // TODO: add a field Correct
     public class Edition
     {
         public int Id { get; set; }
@@ -39,6 +39,9 @@ namespace BookPortal.Web.Domain.Models
         public string Content { get; set; }
 
         public string Notes { get; set; }
+
+        [Column("correct")]
+        public int Correct { get; set; }
 
         public int? LanguageId { get; set; }
         public Language Language { get; set; }

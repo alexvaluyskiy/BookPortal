@@ -90,6 +90,8 @@ namespace BookPortal.Web
             builder.RegisterType<LanguagesService>();
 
             builder.RegisterType<ReviewsService>();
+            builder.RegisterType<GenresService>();
+            builder.RegisterType<RatingsService>();
 
             builder.Populate(services);
             var container = builder.Build();

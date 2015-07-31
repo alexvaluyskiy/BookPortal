@@ -6,6 +6,7 @@ using Microsoft.Data.Entity;
 using BookPortal.Web.Domain;
 using BookPortal.Web.Domain.Models;
 using BookPortal.Web.Models;
+using BookPortal.Web.Models.Responses;
 
 namespace BookPortal.Web.Services
 {
@@ -20,8 +21,7 @@ namespace BookPortal.Web.Services
 
         public async Task<IReadOnlyList<WorkResponse>> GetWorksAsync(int personId, string sortMode)
         {
-            var workLinks = await BuildWorksTree2(personId);
-            //var workLinksIds = workLinks.Select(c => c.Key).ToList();
+            var workLinks = await BuildWorksTree(personId);
 
             var workIds = (from pw in _bookContext.PersonWorks
                            where pw.PersonId == personId
@@ -141,204 +141,7 @@ namespace BookPortal.Web.Services
             return await query.SingleOrDefaultAsync();
         }
 
-        public async Task<IReadOnlyList<AwardItemResponse>> GetWorkAwardsAsync(int workId)
-        {
-            var query = from cw in _bookContext.ContestWorks
-                        join c in _bookContext.Contests on cw.ContestId equals c.Id
-                        join n in _bookContext.Nominations on cw.NominationId equals n.Id
-                        join a in _bookContext.Awards on c.AwardId equals a.Id
-                        where cw.LinkType == ContestWorkType.Work && cw.LinkId == workId
-                        select new AwardItemResponse
-                        {
-                            AwardId = a.Id,
-                            AwardRusname = a.RusName,
-                            AwardName = a.Name,
-                            AwardIsOpened = a.IsOpened,
-                            ContestId = c.Id,
-                            ContestName = c.Name,
-                            ContestYear = c.NameYear,
-                            NominationId = n.Id,
-                            NominationRusname = n.RusName,
-                            NominationName = n.Name,
-                            ContestWorkId = cw.Id,
-                            ContestWorkRusname = cw.RusName,
-                            ContestWorkName = cw.Name,
-                            ContestWorkPrefix = cw.Prefix,
-                            ContestWorkPostfix = cw.Postfix
-                        };
-
-            return await query.ToListAsync();
-        }
-
-        public async Task<IReadOnlyList<EditionResponse>> GetWorkEditionsAsync(int workId)
-        {
-            var query = from e in _bookContext.Editions
-                        join ew in _bookContext.EditionWorks on e.Id equals ew.EditionId
-                        where ew.WorkId == workId
-                        select new EditionResponse
-                        {
-                            EditionId = e.Id,
-                            Name = e.Name,
-                            Year = e.Year,
-                            Correct = 1
-                        };
-
-            return await query.ToListAsync();
-        }
-
-        public async Task<IReadOnlyList<TranslationResponse>> GetWorkTranslationsAsync(int workId)
-        {
-            // TODO: rework when EF7 will supports GroupBy with InnerJoin
-            var sql = @"
-                SELECT
-                    tw.translation_work_id,
-                    et.name
-                FROM
-                    translation_works tw
-                    INNER JOIN edition_translations et ON et.translation_work_id = tw.translation_work_id
-                WHERE
-                    tw.work_id = @work_id
-                GROUP BY
-                    tw.translation_work_id,
-                    tw.work_id,
-                    et.name
-                ORDER BY
-                    tw.translation_work_id,
-                    COUNT(*) DESC";
-
-            List<TranslationResponse> translationNames = new List<TranslationResponse>();
-            var connection = _bookContext.Database.GetDbConnection() as SqlConnection;
-            if (connection != null)
-            {
-                connection.Open();
-                using (var command = new SqlCommand(sql, connection))
-                {
-                    command.Parameters.AddWithValue("@work_id", workId);
-                    using (var reader = await command.ExecuteReaderAsync())
-                    {
-                        while (await reader.ReadAsync())
-                        {
-                            var name = new TranslationResponse
-                            {
-                                TranslationWorkId = reader.GetValue<int>("translation_work_id"),
-                                WorkName = reader.GetValue<string>("name")
-                            };
-                            translationNames.Add(name);
-                        }
-                    }
-                }
-                connection.Close();
-            }
-
-            var query = from tw in _bookContext.TranslationWorks
-                        join twp in _bookContext.TranslationWorkPersons on tw.Id equals twp.TranslationWorkId
-                        join p in _bookContext.Persons on twp.PersonId equals p.Id
-                        where tw.WorkId == workId
-                        orderby tw.LanguageId, tw.Year, tw.Id, twp.PersonOrder
-                        select new
-                        {
-                            TranslationWorkId = tw.Id,
-                            PersonId = twp.PersonId,
-                            Name = p.Name,
-                            LanguageId = tw.LanguageId,
-                            Year = tw.Year
-                        };
-
-
-            var result = await query.ToListAsync();
-
-            // TODO: try to optimize it later
-            List<TranslationResponse> responses = new List<TranslationResponse>();
-            foreach (var item in result.GroupBy(c => c.TranslationWorkId).Select(c => c.Key))
-            {
-                TranslationResponse response = new TranslationResponse();
-
-                var items = result.Where(c => c.TranslationWorkId == item).ToList();
-
-                response.LanguageId = items.First().LanguageId;
-                response.TranslationWorkId = item;
-                response.TranslationYear = items.First().Year;
-                response.Names = translationNames.Where(c => c.TranslationWorkId == item).Select(c => c.WorkName).ToList();
-
-                response.Translators = new List<PersonResponse>();
-                foreach (var person in items)
-                {
-                    response.Translators.Add(new PersonResponse { PersonId = person.PersonId, Name = person.Name });
-                }
-
-                responses.Add(response);
-            }
-
-            return responses;
-        }
-
-        private async Task<Dictionary<int, Dictionary<int, WorkLink>>> BuildWorksTree(int personId)
-        {
-            var workLinks = new Dictionary<int, Dictionary<int, WorkLink>>();
-
-            var sql = @"
-                WITH tree AS
-                (
-                    SELECT wl.work_link_id, wl.work_id, wl.parent_work_id, wl.link_type, wl.is_addition, wl.group_index, wl.bonus_text
-	                FROM work_links wl JOIN person_works pw ON pw.work_id = wl.work_id
-	                WHERE pw.person_id = @person_id
-
-                    UNION ALL
-
-                    SELECT wl.work_link_id, wl.work_id, wl.parent_work_id, wl.link_type, wl.is_addition, wl.group_index, wl.bonus_text
-	                FROM work_links wl JOIN tree t ON wl.work_id = t.parent_work_id
-                )
-                SELECT DISTINCT * FROM tree";
-
-            var connection = _bookContext.Database.GetDbConnection() as SqlConnection;
-            if (connection != null)
-            {
-                connection.Open();
-                using (var command = new SqlCommand(sql, connection))
-                {
-                    command.Parameters.AddWithValue("@person_id", personId);
-                    using (var reader = await command.ExecuteReaderAsync())
-                    {
-                        while (await reader.ReadAsync())
-                        {
-                            int workId = reader.GetValue<int>("work_id");
-                            int? parentWorkId = reader.GetValue<int?>("parent_work_id");
-
-                            if (parentWorkId.HasValue)
-                            {
-                                if (!workLinks.ContainsKey(workId))
-                                {
-                                    workLinks.Add(workId, new Dictionary<int, WorkLink>());
-                                }
-
-                                if (!workLinks[workId].ContainsKey(parentWorkId.Value))
-                                {
-                                    var workLink = new WorkLink();
-                                    workLink.WorkId = workId;
-                                    workLink.ParentWorkId = parentWorkId;
-                                    workLink.LinkType = reader.GetValue<int>("link_type");
-                                    workLink.IsAddition = reader.GetValue<bool>("work_id");
-                                    workLink.BonusText = (string)reader["bonus_text"];
-                                    workLink.GroupIndex = reader.GetValue<int?>("group_index");
-
-                                    workLinks[workId].Add(parentWorkId.Value, workLink);
-                                }
-                            }
-                            else
-                            {
-                                workLinks.Add(workId, new Dictionary<int, WorkLink>());
-                            }
-                        }
-                    }
-                }
-                connection.Close();
-            }
-
-            return workLinks;
-        }
-
-
-        private async Task<Dictionary<int, WorkLink>> BuildWorksTree2(int personId)
+        private async Task<Dictionary<int, WorkLink>> BuildWorksTree(int personId)
         {
             var workLinks = new Dictionary<int, WorkLink>();
 

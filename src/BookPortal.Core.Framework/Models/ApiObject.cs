@@ -9,6 +9,18 @@ namespace BookPortal.Core.Framework.Models
             Values = new List<T>();
         }
 
+        public ApiObject(IReadOnlyList<T> values)
+        {
+            Values = values;
+            TotalRows = Values.Count;
+        }
+
+        public ApiObject(IReadOnlyList<T> values, int totalRows)
+        {
+            Values = values;
+            TotalRows = totalRows;
+        }
+
         public int TotalRows { get; set; }
 
         public IReadOnlyList<T> Values { get; set; }
