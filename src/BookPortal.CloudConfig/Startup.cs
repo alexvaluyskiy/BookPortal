@@ -9,7 +9,6 @@ using Microsoft.Framework.Logging;
 using System.Linq;
 using BookPortal.Core.Framework;
 using BookPortal.Core.Framework.Filters;
-using BookPortal.Core.Logging;
 using Microsoft.Framework.Runtime;
 
 namespace BookPortal.CloudConfig
