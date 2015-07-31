@@ -48,7 +48,7 @@ namespace BookPortal.Web.Services
         {
             var cacheEntryBytes = await _cache.GetAsync($"ratings:works:{type}");
 
-            List<WorkRatingResponse> workRating = null;
+            List<WorkRatingResponse> workRating;
 
             if (cacheEntryBytes == null)
             {
@@ -92,7 +92,7 @@ namespace BookPortal.Web.Services
 
         public Task<ApiObject<WorkExpectRatingResponse>> GetWorkExpectRating(string type)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

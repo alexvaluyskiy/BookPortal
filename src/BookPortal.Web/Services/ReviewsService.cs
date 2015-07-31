@@ -97,7 +97,7 @@ namespace BookPortal.Web.Services
                 reviews = reviews.Skip(reviewRequest.Offset).ToList();
 
             if (reviewRequest.Limit > 0)
-                reviews = reviews.Take(reviewRequest.Offset).ToList();
+                reviews = reviews.Take(reviewRequest.Limit).ToList();
 
             var apiObject = new ApiObject<ReviewResponse>();
             apiObject.Values = reviews;
@@ -156,7 +156,7 @@ namespace BookPortal.Web.Services
                 reviews = reviews.Skip(reviewRequest.Offset).ToList();
 
             if (reviewRequest.Limit > 0)
-                reviews = reviews.Take(reviewRequest.Offset).ToList();
+                reviews = reviews.Take(reviewRequest.Limit).ToList();
 
             var apiObject = new ApiObject<ReviewResponse>();
             apiObject.Values = reviews;

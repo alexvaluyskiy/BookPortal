@@ -11,6 +11,7 @@ using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Data.Entity;
+using Microsoft.Framework.Caching.Redis;
 using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
@@ -92,6 +93,11 @@ namespace BookPortal.Web
             builder.RegisterType<ReviewsService>();
             builder.RegisterType<GenresService>();
             builder.RegisterType<RatingsService>();
+
+            builder.RegisterInstance(new RedisCache(new RedisCacheOptions
+            {
+                Configuration = "aspnet5-bookportal-cache.redis.cache.windows.net,ssl=true,password=+RoCREJvEK9gzZURHmFxNgMuF8tuhH2gKrr2omjrc7w="
+            }));
 
             builder.Populate(services);
             var container = builder.Build();
