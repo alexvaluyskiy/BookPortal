@@ -5,6 +5,7 @@ using Autofac.Framework.DependencyInjection;
 using BookPortal.Core.Configuration;
 using BookPortal.Core.Framework;
 using BookPortal.Core.Framework.Filters;
+using BookPortal.Core.Logging;
 using BookPortal.Web.Domain;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Builder;
@@ -113,6 +114,9 @@ namespace BookPortal.Web
 
             app.UseErrorHandler(builder => builder.Run(ErrorRequestHandler.HandleErrorRequest));
 
+            app.ApplicationServices.GetService<ILoggerFactory>();
+
+            app.UseApplicationInsightsTracingTelemetry(LogLevel.Information);
             app.UseApplicationInsightsRequestTelemetry();
             app.UseApplicationInsightsExceptionTelemetry();
 
