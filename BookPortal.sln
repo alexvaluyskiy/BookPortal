@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.22823.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{365DCF6D-CDCA-48DF-A959-8F24BC737B2E}"
 EndProject
@@ -29,7 +29,7 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BookPortal.CloudConfig.Test
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BookPortal.Core.Framework.Test", "test\BookPortal.Core.Framework.Test\BookPortal.Core.Framework.Test.xproj", "{1354CA1B-D4B5-4BF2-9847-B22A1C3772DF}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BookPortal.Core.Logging", "BookPortal.Core.Logging\BookPortal.Core.Logging.xproj", "{47B9A72D-8EC3-461F-AFCA-89865B404A94}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BookPortal.Core.Logging", "src\BookPortal.Core.Logging\BookPortal.Core.Logging.xproj", "{47B9A72D-8EC3-461F-AFCA-89865B404A94}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
