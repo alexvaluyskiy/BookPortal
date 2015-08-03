@@ -1,4 +1,4 @@
-namespace BookPortal.Web.Domain.Models
+namespace BookPortal.Web.Domain.Models.Types
 {
     public enum GenderType
     {

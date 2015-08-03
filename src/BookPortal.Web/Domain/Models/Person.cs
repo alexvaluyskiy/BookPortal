@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using BookPortal.Web.Domain.Models.Types;
 
 namespace BookPortal.Web.Domain.Models
 {

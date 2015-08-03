@@ -10,7 +10,7 @@ namespace BookPortal.Web.Domain.Models
         public int Id { get; set; }
 
         [Column("parent_genre_work_id")]
-        public int ParentGenreWorkId { get; set; }
+        public int? ParentGenreWorkId { get; set; }
 
         [Column("name")]
         public string Name { get; set; }

@@ -13,7 +13,7 @@ namespace BookPortal.Web.Domain.Models
         public int PersonId { get; set; }
         public Person Person { get; set; }
 
-        [Column("work_genre_id")]
+        [Column("genre_work_id")]
         public int GenreWorkId { get; set; }
         public GenreWorkUser GenreWork { get; set; }
 

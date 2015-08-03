@@ -1,4 +1,6 @@
-﻿namespace BookPortal.Web.Domain.Models
+﻿using BookPortal.Web.Domain.Models.Types;
+
+namespace BookPortal.Web.Domain.Models
 {
     public class ContestWork
     {

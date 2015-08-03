@@ -1,22 +1,44 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using BookPortal.Web.Domain.Models.Types;
 
 namespace BookPortal.Web.Domain.Models
 {
-    // TODO: add fields: published, is_plan, show_subworks_in_biblio
+    [Table("works")]
     public class Work
     {
+        [Column("work_id")]
         public int Id { get; set; }
 
+        [Column("rusname")]
+        [MaxLength(255)]
         public string RusName { get; set; }
 
+        [Column("name")]
+        [MaxLength(255)]
         public string Name { get; set; }
 
+        [Column("altname")]
+        [MaxLength(255)]
         public string AltName { get; set; }
 
+        [Column("year")]
         public int? Year { get; set; }
 
+        [Column("description")]
         public string Description { get; set; }
 
+        [Column("publish_type")]
+        public PublishType PublishType { get; set; } = PublishType.NotPublished;
+
+        [Column("in_plans")]
+        public bool InPlans { get; set; }
+
+        [Column("show_subworks_in_biblio")]
+        public bool ShowSubworksInBiblio { get; set; }
+
+        [Column("work_type_id")]
         public int WorkTypeId { get; set; }
         public WorkType WorkType { get; set; }
 

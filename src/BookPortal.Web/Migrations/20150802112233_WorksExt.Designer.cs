@@ -7,9 +7,19 @@ using BookPortal.Web.Domain;
 namespace BookPortalWebMigrations
 {
     [ContextType(typeof(BookContext))]
-    partial class BookContextModelSnapshot : ModelSnapshot
+    partial class WorksExt
     {
-        public override void BuildModel(ModelBuilder builder)
+        public override string Id
+        {
+            get { return "20150802112233_WorksExt"; }
+        }
+
+        public override string ProductVersion
+        {
+            get { return "7.0.0-beta6-13815"; }
+        }
+
+        public override void BuildTargetModel(ModelBuilder builder)
         {
             builder
                 .Annotation("ProductVersion", "7.0.0-beta6-13815")

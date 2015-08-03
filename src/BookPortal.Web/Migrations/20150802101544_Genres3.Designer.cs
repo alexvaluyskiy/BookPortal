@@ -7,9 +7,19 @@ using BookPortal.Web.Domain;
 namespace BookPortalWebMigrations
 {
     [ContextType(typeof(BookContext))]
-    partial class BookContextModelSnapshot : ModelSnapshot
+    partial class Genres3
     {
-        public override void BuildModel(ModelBuilder builder)
+        public override string Id
+        {
+            get { return "20150802101544_Genres3"; }
+        }
+
+        public override string ProductVersion
+        {
+            get { return "7.0.0-beta6-13815"; }
+        }
+
+        public override void BuildTargetModel(ModelBuilder builder)
         {
             builder
                 .Annotation("ProductVersion", "7.0.0-beta6-13815")
@@ -823,30 +833,19 @@ namespace BookPortalWebMigrations
                         .Annotation("SqlServer:ValueGenerationStrategy", "IdentityColumn");
 
                     b.Property<string>("AltName")
-                        .Annotation("MaxLength", 255)
                         .Annotation("Relational:ColumnName", "altname");
 
                     b.Property<string>("Description")
                         .Annotation("Relational:ColumnName", "description");
 
-                    b.Property<bool>("InPlans")
-                        .Annotation("Relational:ColumnName", "in_plans");
-
                     b.Property<string>("Name")
-                        .Annotation("MaxLength", 255)
                         .Annotation("Relational:ColumnName", "name");
 
-                    b.Property<int>("PublishType")
-                        .Annotation("Relational:ColumnName", "publish_type");
-
                     b.Property<string>("RusName")
-                        .Annotation("MaxLength", 255)
                         .Annotation("Relational:ColumnName", "rusname");
 
-                    b.Property<bool>("ShowSubworksInBiblio")
-                        .Annotation("Relational:ColumnName", "show_subworks_in_biblio");
-
-                    b.Property<int>("WorkTypeId");
+                    b.Property<int>("WorkTypeId")
+                        .Annotation("Relational:ColumnName", "work_type_id");
 
                     b.Property<int?>("Year")
                         .Annotation("Relational:ColumnName", "year");

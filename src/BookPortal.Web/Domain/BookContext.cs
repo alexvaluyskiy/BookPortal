@@ -132,17 +132,7 @@ namespace BookPortal.Web.Domain
                 builder.Property(c => c.WorkId).HasColumnName("work_id");
             });
 
-            modelBuilder.Entity<Work>().ToTable("works");
-            modelBuilder.Entity<Work>(builder =>
-            {
-                builder.Property(c => c.Id).HasColumnName("work_id").UseSqlServerIdentityColumn();
-                builder.Property(c => c.RusName).HasColumnName("rusname");
-                builder.Property(c => c.Name).HasColumnName("name");
-                builder.Property(c => c.AltName).HasColumnName("altname");
-                builder.Property(c => c.Year).HasColumnName("year");
-                builder.Property(c => c.Description).HasColumnName("description");
-                builder.Property(c => c.WorkTypeId).HasColumnName("work_type_id");
-            });
+            modelBuilder.Entity<Work>().Property(c => c.Id).UseSqlServerIdentityColumn();
 
             modelBuilder.Entity<WorkLink>().ToTable("work_links");
             modelBuilder.Entity<WorkLink>().Index(c => c.ParentWorkId);
@@ -288,6 +278,7 @@ namespace BookPortal.Web.Domain
             modelBuilder.Entity<ReviewVote>().Index(c => c.ReviewId);
 
             modelBuilder.Entity<GenrePersonView>().Property(c => c.Id).UseSqlServerIdentityColumn();
+            modelBuilder.Entity<GenrePersonView>().Index(c => new { c.PersonId, c.GenreWorkId}).Unique();
             modelBuilder.Entity<GenreWork>().Property(c => c.Id).UseSqlServerIdentityColumn();
             modelBuilder.Entity<GenreWorkUser>().Property(c => c.Id).UseSqlServerIdentityColumn();
             modelBuilder.Entity<GenreWorkView>().Property(c => c.Id).UseSqlServerIdentityColumn();
