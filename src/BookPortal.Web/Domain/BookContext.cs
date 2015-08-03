@@ -122,16 +122,10 @@ namespace BookPortal.Web.Domain
                 builder.Property(c => c.Notes).HasColumnName("notes");
             });
 
-            modelBuilder.Entity<PersonWork>().ToTable("person_works");
+            modelBuilder.Entity<PersonWork>().Property(c => c.Id).UseSqlServerIdentityColumn();
             modelBuilder.Entity<PersonWork>().Index(c => c.PersonId);
-            modelBuilder.Entity<PersonWork>(builder =>
-            {
-                builder.Property(c => c.Id).HasColumnName("person_work_id").UseSqlServerIdentityColumn();
-                builder.Property(c => c.Type).HasColumnName("type");
-                builder.Property(c => c.PersonId).HasColumnName("person_id");
-                builder.Property(c => c.WorkId).HasColumnName("work_id");
-            });
-
+            modelBuilder.Entity<PersonWork>().Index(c => c.WorkId);
+            
             modelBuilder.Entity<Work>().Property(c => c.Id).UseSqlServerIdentityColumn();
 
             modelBuilder.Entity<WorkLink>().ToTable("work_links");
