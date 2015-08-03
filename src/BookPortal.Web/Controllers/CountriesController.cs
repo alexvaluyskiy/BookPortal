@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using BookPortal.Web.Models.Responses;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Mvc;
+using Swashbuckle.Swagger.Annotations;
 
 namespace BookPortal.Web.Controllers
 {
@@ -27,6 +28,7 @@ namespace BookPortal.Web.Controllers
 
         [HttpGet("{id}")]
         [Produces(typeof(CountryResponse))]
+        [SwaggerResponse(404, "Country is not found")]
         public async Task<IActionResult> Get(int id)
         {
             var country = await _countriesService.GetCountryAsync(id);

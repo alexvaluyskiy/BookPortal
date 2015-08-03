@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using BookPortal.Web.Models.Responses;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Mvc;
+using Swashbuckle.Swagger.Annotations;
 
 namespace BookPortal.Web.Controllers
 {
@@ -27,9 +28,13 @@ namespace BookPortal.Web.Controllers
 
         [HttpGet("{contestId}")]
         [Produces(typeof(ContestResponse))]
+        [SwaggerResponse(404, "Contest is not found")]
         public async Task<IActionResult> Get(int awardId, int contestId)
         {
             var contest = await _contestsService.GetContestAsync(awardId, contestId);
+
+            if (contest == null)
+                return this.ErrorObject(404, $"Contest (id: {contestId}) is not found");
 
             return this.SingleObject(contest);
         }

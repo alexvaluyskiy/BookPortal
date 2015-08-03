@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
+using BookPortal.Web.Models.Responses;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Mvc;
+using Swashbuckle.Swagger.Annotations;
 
 namespace BookPortal.Web.Controllers
 {
@@ -15,6 +17,8 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet("{reviewId}")]
+        [Produces(typeof(ReviewResponse))]
+        [SwaggerResponse(404, "Review is not found")]
         public async Task<IActionResult> GetReview(int reviewId)
         {
             var review = await _reviewsService.GetReviewAsync(reviewId);

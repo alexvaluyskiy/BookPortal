@@ -4,6 +4,7 @@ using BookPortal.Web.Models.Requests;
 using BookPortal.Web.Models.Responses;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Mvc;
+using Swashbuckle.Swagger.Annotations;
 
 namespace BookPortal.Web.Controllers
 {
@@ -41,6 +42,7 @@ namespace BookPortal.Web.Controllers
 
         [HttpGet("{personId}")]
         [Produces(typeof(PersonResponse))]
+        [SwaggerResponse(404, "Person is not found")]
         public async Task<IActionResult> Get(int personId)
         {
             var person = await _personsService.GetPersonAsync(personId);

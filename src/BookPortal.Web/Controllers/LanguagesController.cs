@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using BookPortal.Core.Framework.Models;
-using BookPortal.Web.Domain.Models;
-using BookPortal.Web.Models;
 using BookPortal.Web.Models.Responses;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Mvc;
+using Swashbuckle.Swagger.Annotations;
 
 namespace BookPortal.Web.Controllers
 {
@@ -30,6 +28,7 @@ namespace BookPortal.Web.Controllers
 
         [HttpGet("{id}")]
         [Produces(typeof(LanguageResponse))]
+        [SwaggerResponse(404, "Language is not found")]
         public async Task<IActionResult> Get(int id)
         {
             var language = await _languagesService.GetLanguageAsync(id);

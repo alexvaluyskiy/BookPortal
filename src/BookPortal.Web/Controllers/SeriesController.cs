@@ -6,6 +6,7 @@ using BookPortal.Web.Models.Requests;
 using BookPortal.Web.Models.Responses;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Mvc;
+using Swashbuckle.Swagger.Annotations;
 
 namespace BookPortal.Web.Controllers
 {
@@ -34,6 +35,7 @@ namespace BookPortal.Web.Controllers
 
         [HttpGet("{serieId}")]
         [Produces(typeof(SerieResponse))]
+        [SwaggerResponse(404, "Serie is not found")]
         public async Task<IActionResult> Get(int serieId)
         {
             var serie = await _seriesService.GetSerieAsync(serieId);

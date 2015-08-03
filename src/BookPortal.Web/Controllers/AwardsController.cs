@@ -4,6 +4,7 @@ using BookPortal.Web.Models.Requests;
 using BookPortal.Web.Models.Responses;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Mvc;
+using Swashbuckle.Swagger.Annotations;
 
 namespace BookPortal.Web.Controllers
 {
@@ -28,6 +29,7 @@ namespace BookPortal.Web.Controllers
 
         [HttpGet("{id}")]
         [Produces(typeof(AwardResponse))]
+        [SwaggerResponse(404, "Award is not found")]
         public async Task<IActionResult> Get(int id)
         {
             var award = await _awardsService.GetAwardAsync(id);

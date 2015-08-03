@@ -2,6 +2,7 @@
 using BookPortal.Web.Models.Responses;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Mvc;
+using Swashbuckle.Swagger.Annotations;
 
 namespace BookPortal.Web.Controllers
 {
@@ -17,6 +18,7 @@ namespace BookPortal.Web.Controllers
 
         [HttpGet("{editionId}")]
         [Produces(typeof(EditionResponse))]
+        [SwaggerResponse(404, "Edition is not found")]
         public async Task<IActionResult> Get(int editionId)
         {
             var edition = await _editionsService.GetEditionAsync(editionId);

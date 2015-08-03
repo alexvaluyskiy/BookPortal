@@ -4,6 +4,7 @@ using BookPortal.Web.Models.Requests;
 using BookPortal.Web.Models.Responses;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Mvc;
+using Swashbuckle.Swagger.Annotations;
 
 namespace BookPortal.Web.Controllers
 {
@@ -44,6 +45,7 @@ namespace BookPortal.Web.Controllers
 
         [HttpGet("{id}")]
         [Produces(typeof(WorkResponse))]
+        [SwaggerResponse(404, "Work is not found")]
         public async Task<IActionResult> Get(int id)
         {
             var work = await _worksService.GetWorkAsync(id);

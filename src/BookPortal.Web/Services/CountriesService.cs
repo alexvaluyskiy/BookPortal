@@ -38,7 +38,8 @@ namespace BookPortal.Web.Services
                             {
                                 CountryId = c.Id,
                                 Name = c.Name
-                            });
+                            })
+                            .OrderBy(c => c.Name);
 
                 countryResponses = await query.ToListAsync();
 

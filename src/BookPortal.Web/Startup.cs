@@ -60,7 +60,7 @@ namespace BookPortal.Web
                 c.SwaggerGeneratorOptions.SingleApiVersion(new Info
                 {
                     Version = "v1",
-                    Title = "BookPortal Main API"
+                    Title = "BookPortal Main API",
                 });
 
                 c.SchemaGeneratorOptions.DescribeAllEnumsAsStrings = true;
@@ -113,8 +113,6 @@ namespace BookPortal.Web
             app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseErrorHandler(builder => builder.Run(ErrorRequestHandler.HandleErrorRequest));
-
-            app.ApplicationServices.GetService<ILoggerFactory>();
 
             app.UseApplicationInsightsTracingTelemetry(LogLevel.Information);
             app.UseApplicationInsightsRequestTelemetry();

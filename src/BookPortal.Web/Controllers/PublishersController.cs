@@ -5,6 +5,7 @@ using BookPortal.Web.Models;
 using BookPortal.Web.Models.Responses;
 using BookPortal.Web.Services;
 using Microsoft.AspNet.Mvc;
+using Swashbuckle.Swagger.Annotations;
 
 namespace BookPortal.Web.Controllers
 {
@@ -30,6 +31,7 @@ namespace BookPortal.Web.Controllers
 
         [HttpGet("{publisherId}")]
         [Produces(typeof(PublisherResponse))]
+        [SwaggerResponse(404, "Publisher is not found")]
         public async Task<IActionResult> Get(int publisherId)
         {
             var publisher = await _publishersService.GetPublisherAsync(publisherId);
