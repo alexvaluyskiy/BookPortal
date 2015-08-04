@@ -1,0 +1,47 @@
+﻿.work-info {
+  td:nth-child(1) {
+    width: 100px;
+    font-weight: bold;
+  }
+
+  .altnames {
+    color: gray;
+  }
+
+  .work-not-published {
+    span:after {
+      content: ", "
+    }
+
+    span:last-child:after {
+      content: ""
+    }
+  }
+
+  .translators {
+    a:after {
+      content: ", "
+    }
+
+    a:last-of-type:after {
+      content: ""
+    }
+
+    span:after {
+      content: ", "
+    }
+
+    span:last-of-type:after {
+      content: ""
+    }
+  }
+
+  .award-item img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .award-item.nominations {
+    opacity: 0.5;
+  }
+}

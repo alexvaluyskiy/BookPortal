@@ -10,6 +10,7 @@
         'app.awards.list',
         'app.awards.view',
         'app.series.view',
-        'app.works.view'
+        'app.works.view',
+        'app.persons.view'
     ]);
 })();
