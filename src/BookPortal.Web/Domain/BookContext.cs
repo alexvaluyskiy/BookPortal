@@ -276,6 +276,7 @@ namespace BookPortal.Web.Domain
             modelBuilder.Entity<GenreWork>().Property(c => c.Id).UseSqlServerIdentityColumn();
             modelBuilder.Entity<GenreWorkUser>().Property(c => c.Id).UseSqlServerIdentityColumn();
             modelBuilder.Entity<GenreWorkView>().Property(c => c.Id).UseSqlServerIdentityColumn();
+            modelBuilder.Entity<GenreWorkView>().Index(c => c.WorkId);
 
             base.OnModelCreating(modelBuilder);
         }

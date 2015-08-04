@@ -28,7 +28,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet("{translationWorkId}/editions")]
-        [Produces(typeof(ApiObject<EditionResponse>))]
+        [Produces(typeof(IEnumerable<EditionResponse>))]
         public async Task<IActionResult> GetEditions(int personId, int translationWorkId)
         {
             var translations = await _translationsService.GetTranslationEditionsAsync(translationWorkId);

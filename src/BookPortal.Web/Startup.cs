@@ -45,14 +45,14 @@ namespace BookPortal.Web
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.Configure<AppSettings>(Configuration.GetConfigurationSection("AppSettings"));
+
             services.AddCors();
 
             services.AddMvc().Configure<MvcOptions>(options =>
             {
                 // setup json output serializer
-                var formatter = options.OutputFormatters
-                    .SingleOrDefault(c => c.GetType() == typeof (JsonOutputFormatter));
-                options.OutputFormatters.Remove(formatter);
+                options.OutputFormatters.Clear();
                 options.OutputFormatters.Add(JsonFormatterFactory.Create());
 
                 // add filters
@@ -63,6 +63,7 @@ namespace BookPortal.Web
             services.AddSwaggerBeta6(c =>
             {
                 c.SwaggerGeneratorOptions.Schemes = new[] { "http", "https" };
+                c.SwaggerGeneratorOptions.BasePath = "/";
                 c.SwaggerGeneratorOptions.SingleApiVersion(new Info
                 {
                     Version = "v1",

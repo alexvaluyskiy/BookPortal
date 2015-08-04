@@ -2,8 +2,8 @@
 {
     public class AppSettings
     {
-        public string LoggingService { get; set; }
+        public int PersonGenreLimit { get; set; }
 
-        public string ImportOzonUrl { get; set; }
+        public int WorksGenreLimit { get; set; }
     }
 }

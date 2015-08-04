@@ -105,6 +105,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet("{personId}/genres")]
+        [Produces(typeof(GenrePersonResponse))]
         public async Task<IActionResult> GetGenres(int personId)
         {
             var genres = await _genresService.GetAuthorGenres(personId);

@@ -34,8 +34,6 @@ namespace BookPortal.Web.Controllers
             _genresService = genresService;
         }
 
-
-
         [HttpGet("{workId}")]
         [Produces(typeof(WorkResponse))]
         [SwaggerResponse(404, "Work is not found")]
@@ -100,6 +98,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet("{workId}/genres")]
+        [Produces(typeof(IEnumerable<GenreWorkResponse>))]
         public async Task<IActionResult> GetGenres(int workId)
         {
             var ratings = await _genresService.GetWorkGenres(workId);

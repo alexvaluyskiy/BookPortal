@@ -1,120 +1,65 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using BookPortal.Core.Framework.Models;
 using Microsoft.Data.Entity;
 using BookPortal.Web.Domain;
-using BookPortal.Web.Domain.Models;
+using BookPortal.Web.Models.Responses;
+using Microsoft.Framework.OptionsModel;
 
 namespace BookPortal.Web.Services
 {
     public class GenresService
     {
         private readonly BookContext _bookContext;
+        private readonly IOptions<AppSettings> _options;
 
-        public GenresService(BookContext bookContext)
+        public GenresService(BookContext bookContext, IOptions<AppSettings> options)
         {
             _bookContext = bookContext;
+            _options = options;
         }
 
-        public async Task<ApiObject<object>> GetAuthorGenres(int personId)
+        public async Task<ApiObject<GenreWorkResponse>> GetAuthorGenres(int personId)
         {
-            var genre = await (from gpv in _bookContext.GenrePersonsView
-                              join gw in _bookContext.GenreWorks on gpv.GenreWorkId equals gw.Id
-                              where gpv.PersonId == personId
-                              select new
-                              {
-                                  GenreWorkId = gw.Id,
-                                  Name = gw.Name,
-                                  GenreCount = gpv.GenreCount,
-                                  GenreTotal = gpv.GenreTotal
-                              }).ToListAsync();
+            var query = from gpv in _bookContext.GenrePersonsView
+                        join gw in _bookContext.GenreWorks on gpv.GenreWorkId equals gw.Id
+                        where gpv.PersonId == personId
+                        select new GenreWorkResponse
+                        {
+                            GenreWorkId = gw.Id,
+                            Name = gw.Name,
+                            GenreCount = gpv.GenreCount,
+                            GenreTotal = gpv.GenreTotal
+                        };
 
-            return new ApiObject<object>(genre);
+            query = query.OrderByDescending(c => c.GenreCount);
+
+            if (_options.Options.PersonGenreLimit > 0)
+                query = query.Take(_options.Options.PersonGenreLimit);
+
+            var result = await query.ToListAsync();
+
+            return new ApiObject<GenreWorkResponse>(result);
         }
 
-        public async Task<ApiObject<object>> GetWorkGenres(int workId)
+        public async Task<ApiObject<GenrePersonResponse>> GetWorkGenres(int workId)
         {
-            await UpdateGenreViews(workId);
-
             var genre = await (from gwv in _bookContext.GenreWorksView
                               join gw in _bookContext.GenreWorks on gwv.GenreWorkId equals gw.Id
                               where gwv.WorkId == workId
-                              select new
+                              select new GenrePersonResponse
                               {
                                   GenreWorkId = gw.Id,
                                   GenreParentWorkId = gw.ParentGenreWorkId,
                                   Name = gw.Name,
                                   Level = gw.Level,
                                   GenreCount = gwv.GenreCount,
-                                  GroupId = gw.GenreWorkGroupId
+                                  GenreWorkGroupId = gw.GenreWorkGroupId
                               }).ToListAsync();
 
-            return new ApiObject<object>(genre);
+            return new ApiObject<GenrePersonResponse>(genre);
         }
 
-        private async Task UpdateGenreViews(int workId)
-        {
-            // calculate work genres
-            var genreWorkView = _bookContext.GenreWorksView
-                .Where(c => c.WorkId == workId)
-                .ToDictionary(c => c.GenreWorkId, c => c);
 
-            var genreWorkCount = (from gwu in _bookContext.GenreWorkUsers
-                                 where gwu.WorkId == workId
-                                 group gwu by gwu.GenreWorkId into g
-                                 select new
-                                 {
-                                     GenreWorkId = g.Key,
-                                     Count = g.Count()
-                                 }).ToList();
-
-            foreach (var genreWork in genreWorkCount)
-            {
-                GenreWorkView genreWorkViewOut;
-                genreWorkView.TryGetValue(genreWork.GenreWorkId, out genreWorkViewOut);
-               
-                // if number changed
-                if (genreWorkViewOut != null)
-                {
-                    if (genreWorkViewOut.GenreCount != genreWork.Count)
-                    {
-                        genreWorkViewOut.GenreCount = genreWork.Count;
-                        _bookContext.Update(genreWorkViewOut);
-                    }
-                }
-                // if no value in the view
-                else
-                {
-                    genreWorkViewOut = new GenreWorkView();
-                    genreWorkViewOut.WorkId = workId;
-                    genreWorkViewOut.GenreWorkId = genreWork.GenreWorkId;
-                    genreWorkViewOut.GenreCount = genreWork.Count;
-
-                    _bookContext.Add(genreWorkViewOut);
-                }
-            }
-
-            await _bookContext.SaveChangesAsync();
-
-            // calculate person genres
-            var genrePersonView = (from gpv in _bookContext.GenrePersonsView
-                                   join c in _bookContext.PersonWorks on gpv.PersonId equals c.PersonId
-                                   where c.WorkId == workId
-                                   select gpv).ToDictionary(c => c.GenreWorkId, c => c);
-
-            var personId =_bookContext.PersonWorks.Where(c => c.WorkId == workId).Select(c => c.PersonId).FirstOrDefault();
-            var workIds = _bookContext.PersonWorks.Where(c => c.PersonId == personId).Select(c => c.WorkId).ToList();
-
-            var genrePersonCount = (from gwv in _bookContext.GenreWorksView
-                                    join gw in _bookContext.GenreWorks on gwv.GenreWorkId equals gw.Id
-                                    where workIds.Contains(gwv.WorkId) && gw.GenreWorkGroupId == 1 && gw.ParentGenreWorkId == null
-                                    group gwv by gwv.GenreWorkId into g
-                                    select new
-                                    {
-                                        GenreWorkId = g.Key,
-                                        Count = g.Sum(c => c.GenreCount)
-                                    }).ToList();
-        }
     }
 }
