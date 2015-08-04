@@ -20,8 +20,5 @@ namespace BookPortal.Web.Domain.Models
         [Column("genre_work_id")]
         public int GenreWorkId { get; set; }
         public GenreWork GenreWork { get; set; }
-
-        [Column("date_created")]
-        public DateTime DateCreated { get; set; }
     }
 }

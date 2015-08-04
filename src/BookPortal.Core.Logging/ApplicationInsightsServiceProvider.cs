@@ -3,12 +3,12 @@ using Microsoft.Framework.Logging;
 
 namespace BookPortal.Core.Logging
 {
-    public class LoggingServiceProvider : ILoggerProvider
+    public class ApplicationInsightsServiceProvider : ILoggerProvider
     {
         private readonly TelemetryClient _telemetryClient;
         private readonly LogLevel _minLevel;
 
-        public LoggingServiceProvider(TelemetryClient telemetryClient, LogLevel minLevel)
+        public ApplicationInsightsServiceProvider(TelemetryClient telemetryClient, LogLevel minLevel)
         {
             _telemetryClient = telemetryClient;
             _minLevel = minLevel;

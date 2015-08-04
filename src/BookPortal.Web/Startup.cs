@@ -27,12 +27,18 @@ namespace BookPortal.Web
         {
             string configServiceUrl = "http://aspnet5-bookportal-configuration.azurewebsites.net/";
 
-            var configuration = new ConfigurationBuilder(appEnv.ApplicationBasePath);
-            configuration.AddJsonFile("config.json");
-            configuration.AddConfigurationService(configServiceUrl, "Shared");
-            configuration.AddConfigurationService(configServiceUrl, "BookPortalWeb");
+            var builder = new ConfigurationBuilder(appEnv.ApplicationBasePath);
+            builder.AddJsonFile("config.json");
+            builder.AddConfigurationService(configServiceUrl, "Shared");
+            builder.AddConfigurationService(configServiceUrl, "BookPortalWeb");
 
-            Configuration = configuration.Build();
+            if (env.IsDevelopment())
+            {
+                // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
+                builder.AddApplicationInsightsSettings(developerMode: true);
+            }
+
+            Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; set; }
@@ -95,10 +101,7 @@ namespace BookPortal.Web
             builder.RegisterType<GenresService>();
             builder.RegisterType<RatingsService>();
 
-            builder.RegisterInstance(new RedisCache(new RedisCacheOptions
-            {
-                Configuration = "aspnet5-bookportal-cache.redis.cache.windows.net,ssl=true,password=+RoCREJvEK9gzZURHmFxNgMuF8tuhH2gKrr2omjrc7w="
-            }));
+            builder.RegisterInstance(new RedisCache(new RedisCacheOptions { Configuration = Configuration.Get("RedisCache") }));
 
             builder.Populate(services);
             var container = builder.Build();
@@ -109,17 +112,22 @@ namespace BookPortal.Web
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddDebug(LogLevel.Verbose);
+            // Add Application Insights tracing
+            loggerFactory.AddApplicationInsightsLoggingService(app, LogLevel.Information);
+
+            // Add Application Insights to the request pipeline to track HTTP request telemetry data.
+            app.UseApplicationInsightsRequestTelemetry();
 
             app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseErrorHandler(builder => builder.Run(ErrorRequestHandler.HandleErrorRequest));
 
-            app.UseApplicationInsightsTracingTelemetry(LogLevel.Information);
-            app.UseApplicationInsightsRequestTelemetry();
+            // Track data about exceptions from the application. Should be configured after all error handling middleware in the request pipeline.
             app.UseApplicationInsightsExceptionTelemetry();
 
             app.UseMvc();
 
+            // Add swagger to the pipeline
             app.UseSwagger();
             app.UseSwaggerUi();
         }

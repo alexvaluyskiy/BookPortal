@@ -1,9 +1,6 @@
 ﻿{
     "ApplicationInsights": {
-        "InstrumentationKey": "f7b8cd31-6851-42f6-80f7-85d2aef749d7",
-        "TelemetryChannel": {
-            "EndpointAddress": "http://dc.services.visualstudio.com/v2/track",
-            "DeveloperMode": true
-        }
-    }
+        "InstrumentationKey": "f7b8cd31-6851-42f6-80f7-85d2aef749d7"
+    },
+    "RedisCache": "aspnet5-bookportal-cache.redis.cache.windows.net,ssl=true,password=+RoCREJvEK9gzZURHmFxNgMuF8tuhH2gKrr2omjrc7w="
 }

@@ -71,7 +71,6 @@ namespace BookPortal.Web.Services
 
             foreach (var genreWork in genreWorkCount)
             {
-                break;
                 GenreWorkView genreWorkViewOut;
                 genreWorkView.TryGetValue(genreWork.GenreWorkId, out genreWorkViewOut);
                
@@ -96,42 +95,26 @@ namespace BookPortal.Web.Services
                 }
             }
 
+            await _bookContext.SaveChangesAsync();
+
             // calculate person genres
             var genrePersonView = (from gpv in _bookContext.GenrePersonsView
                                    join c in _bookContext.PersonWorks on gpv.PersonId equals c.PersonId
                                    where c.WorkId == workId
                                    select gpv).ToDictionary(c => c.GenreWorkId, c => c);
 
+            var personId =_bookContext.PersonWorks.Where(c => c.WorkId == workId).Select(c => c.PersonId).FirstOrDefault();
+            var workIds = _bookContext.PersonWorks.Where(c => c.PersonId == personId).Select(c => c.WorkId).ToList();
 
-            //SELECT
-            //    gw.genre_work_id,
-            // SUM(genre_count) as 'count'
-            //FROM
-            //    genre_works_view gwv
-            //    INNER JOIN genre_works gw ON gwv.genre_work_id = gw.genre_work_id
-            //WHERE
-            //    gwv.work_id IN (SELECT work_id FROM person_works WHERE person_id = 1)
-            // AND gw.genre_work_group_id = 1
-            //    AND gw.parent_genre_work_id is NULL
-            //GROUP BY
-            //    gw.genre_work_id
-            //ORDER BY
-            //    SUM(genre_count)DESC
-
-            //SELECT
-            //    gw.genre_work_id,
-	           // COUNT(*) as 'count'
-            //FROM
-            //    genre_work_users gwu
-            //    INNER JOIN genre_works gw ON gwu.genre_work_id = gw.genre_work_id
-            //WHERE
-            //    gwu.work_id IN (SELECT work_id FROM person_works WHERE person_id = 1)
-	           // AND gw.genre_work_group_id = 1
-            //    AND gw.parent_genre_work_id is NULL
-            //GROUP BY
-            //    gw.genre_work_id
-
-            await _bookContext.SaveChangesAsync();
+            var genrePersonCount = (from gwv in _bookContext.GenreWorksView
+                                    join gw in _bookContext.GenreWorks on gwv.GenreWorkId equals gw.Id
+                                    where workIds.Contains(gwv.WorkId) && gw.GenreWorkGroupId == 1 && gw.ParentGenreWorkId == null
+                                    group gwv by gwv.GenreWorkId into g
+                                    select new
+                                    {
+                                        GenreWorkId = g.Key,
+                                        Count = g.Sum(c => c.GenreCount)
+                                    }).ToList();
         }
     }
 }
