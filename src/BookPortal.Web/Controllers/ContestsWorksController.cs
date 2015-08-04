@@ -19,7 +19,8 @@ namespace BookPortal.Web.Controllers
 
         [HttpGet]
         [Produces(typeof(IEnumerable<ContestWorkResponse>))]
-        public async Task<IActionResult> Index(int contestId)
+        [SwaggerOperation("GetContestWorks", Tags = new[] { "Awards" })]
+        public async Task<IActionResult> Index(int awardId, int contestId)
         {
             var contestWorks = await _contestsWorksService.GetContestsWorksAsync(contestId);
 
@@ -29,7 +30,8 @@ namespace BookPortal.Web.Controllers
         [HttpGet("{contestWorkId}")]
         [Produces(typeof(ContestWorkResponse))]
         [SwaggerResponse(404, "Contest work is not found")]
-        public async Task<IActionResult> Get(int contestId, int contestWorkId)
+        [SwaggerOperation("GetContestWorkById", Tags = new[] { "Awards" })]
+        public async Task<IActionResult> Get(int awardId, int contestId, int contestWorkId)
         {
             var contestWork = await _contestsWorksService.GetContestWorkAsync(contestId, contestWorkId);
 

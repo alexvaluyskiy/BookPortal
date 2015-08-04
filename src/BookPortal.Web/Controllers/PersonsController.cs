@@ -15,6 +15,7 @@ namespace BookPortal.Web.Controllers
         private readonly PersonsService _personsService;
         private readonly EditionsService _editionsService;
         private readonly ReviewsService _reviewsService;
+        private readonly WorksService _worksService;
         private readonly GenresService _genresService;
 
         public PersonsController(
@@ -22,12 +23,14 @@ namespace BookPortal.Web.Controllers
             PersonsService personsService,
             EditionsService editionsService,
             ReviewsService reviewsService,
+            WorksService worksService,
             GenresService genresService)
         {
             _awardsService = awardsService;
             _personsService = personsService;
             _editionsService = editionsService;
             _reviewsService = reviewsService;
+            _worksService = worksService;
             _genresService = genresService;
         }
 
@@ -51,6 +54,18 @@ namespace BookPortal.Web.Controllers
                 return this.ErrorObject(404, $"Person (id: {personId}) is not found");
 
             return this.SingleObject(person);
+        }
+
+        [HttpGet("{personId}/works")]
+        [Produces(typeof(IEnumerable<WorkResponse>))]
+        public async Task<IActionResult> GetWorks(int personId, string sortMode)
+        {
+            var works = await _worksService.GetWorksAsync(personId, sortMode);
+
+            if (works == null)
+                return this.ErrorObject(404, $"Person (id: {personId}) doesn't contain works");
+
+            return this.PageObject(works);
         }
 
         [HttpGet("{personId}/editions")]

@@ -8,7 +8,7 @@ using Swashbuckle.Swagger.Annotations;
 
 namespace BookPortal.Web.Controllers
 {
-    [Route("api/persons/{personId}/[controller]")]
+    [Route("api/[controller]")]
     public class WorksController : Controller
     {
         private readonly AwardsService _awardsService;
@@ -34,25 +34,18 @@ namespace BookPortal.Web.Controllers
             _genresService = genresService;
         }
 
-        [HttpGet]
-        [Produces(typeof(IEnumerable<WorkResponse>))]
-        public async Task<IActionResult> Index(int personId, string sortMode)
-        {
-            var works = await _worksService.GetWorksAsync(personId, sortMode);
 
-            return this.PageObject(works);
-        }
 
-        [HttpGet("{id}")]
+        [HttpGet("{workId}")]
         [Produces(typeof(WorkResponse))]
         [SwaggerResponse(404, "Work is not found")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> Get(int workId)
         {
-            var work = await _worksService.GetWorkAsync(id);
+            var work = await _worksService.GetWorkAsync(workId);
 
             if (work == null)
             {
-                return this.ErrorObject(404, $"Work (id: {id}) is not found");
+                return this.ErrorObject(404, $"Work (id: {workId}) is not found");
             }
 
             return this.SingleObject(work);

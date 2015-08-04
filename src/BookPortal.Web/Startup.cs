@@ -67,6 +67,7 @@ namespace BookPortal.Web
                 {
                     Version = "v1",
                     Title = "BookPortal Main API",
+                    Description = "This is a basic BookPortal API. The Api still in active development."
                 });
 
                 c.SchemaGeneratorOptions.DescribeAllEnumsAsStrings = true;

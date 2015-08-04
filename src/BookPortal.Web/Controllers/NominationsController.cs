@@ -19,6 +19,7 @@ namespace BookPortal.Web.Controllers
 
         [HttpGet]
         [Produces(typeof(IEnumerable<NominationResponse>))]
+        [SwaggerOperation("GetNominations", Tags = new[] { "Awards" })]
         public async Task<IActionResult> Index(int awardId)
         {
             var nominations = await _nominationsService.GetNominationsAsync(awardId);
@@ -29,6 +30,7 @@ namespace BookPortal.Web.Controllers
         [HttpGet("{nominationId}")]
         [Produces(typeof(NominationResponse))]
         [SwaggerResponse(404, "Nomination is not found")]
+        [SwaggerOperation("GetNominationById", Tags = new[] { "Awards" })]
         public async Task<IActionResult> Get(int awardId, int nominationId)
         {
             var nomination = await _nominationsService.GetNominationAsync(awardId, nominationId);

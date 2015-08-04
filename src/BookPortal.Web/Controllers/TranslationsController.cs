@@ -29,7 +29,7 @@ namespace BookPortal.Web.Controllers
 
         [HttpGet("{translationWorkId}/editions")]
         [Produces(typeof(ApiObject<EditionResponse>))]
-        public async Task<IActionResult> GetEditions(int translationWorkId)
+        public async Task<IActionResult> GetEditions(int personId, int translationWorkId)
         {
             var translations = await _translationsService.GetTranslationEditionsAsync(translationWorkId);
 
