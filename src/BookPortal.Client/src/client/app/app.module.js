@@ -9,6 +9,7 @@
         'app.layout',
         'app.awards.list',
         'app.awards.view',
-        'app.series.view'
+        'app.series.view',
+        'app.works.view'
     ]);
 })();

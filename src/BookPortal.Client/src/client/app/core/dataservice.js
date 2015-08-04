@@ -13,11 +13,21 @@
         var service = {
             getPeople: getPeople,
             getMessageCount: getMessageCount,
+
             getAwards: getAwards,
+
             getAward: getAward,
+
             getSerie: getSerie,
             getSerieTree: getSerieTree,
-            getSerieEditions: getSerieEditions
+            getSerieEditions: getSerieEditions,
+
+            getWork: getWork,
+            getWorkTranslations: getWorkTranslations,
+            getWorkGenres: getWorkGenres,
+            getWorkAwards: getWorkAwards,
+            getWorkEditions: getWorkEditions,
+            getWorkReviews: getWorkReviews
         };
 
         return service;
@@ -38,6 +48,7 @@
             }
         }
 
+        // GET AWARD_LIST
         function getAwards(sortType) {
             var url = mainServiceUrl + '/api/awards?isopened=true';
 
@@ -54,6 +65,7 @@
                 });
         }
 
+        // GET AWARD_VIEW
         function getAward(awardId) {
             var url = mainServiceUrl + '/api/awards/' + awardId;
 
@@ -66,6 +78,7 @@
                 });
         }
 
+        // GET SERIE_VIEW
         function getSerie(serieId) {
             var url = mainServiceUrl + '/api/series/' + serieId;
 
@@ -101,6 +114,79 @@
                 })
                 .catch(function (e) {
                     return exception.catcher('XHR Failed for getSerieEditions')(e);
+                });
+        }
+
+        // GET WORK_VIEW
+        function getWork(workId) {
+            var url = mainServiceUrl + '/api/works/' + workId;
+
+            return $http.get(url)
+                .then(function (response) {
+                    return response.data.result;
+                })
+                .catch(function (e) {
+                    return exception.catcher('XHR Failed for getWork')(e);
+                });
+        }
+
+        function getWorkTranslations(workId) {
+            var url = mainServiceUrl + '/api/works/' + workId + '/translations';
+
+            return $http.get(url)
+                .then(function (response) {
+                    return _.map(response.data.result.rows, function (item) { return item });
+                })
+                .catch(function (e) {
+                    return exception.catcher('XHR Failed for getWorkTranslations')(e);
+                });
+        }
+
+        function getWorkGenres(workId) {
+            var url = mainServiceUrl + '/api/works/' + workId + '/genres';
+
+            return $http.get(url)
+                .then(function (response) {
+                    return _.map(response.data.result.rows, function (item) { return item });
+                })
+                .catch(function (e) {
+                    return exception.catcher('XHR Failed for getWorkGenres')(e);
+                });
+        }
+
+        function getWorkAwards(workId) {
+            var url = mainServiceUrl + '/api/works/' + workId + '/awards';
+
+            return $http.get(url)
+                .then(function (response) {
+                    return _.map(response.data.result.rows, function (item) { return item });
+                })
+                .catch(function (e) {
+                    return exception.catcher('XHR Failed for getWorkAwards')(e);
+                });
+        }
+
+        function getWorkEditions(workId) {
+            var url = mainServiceUrl + '/api/works/' + workId + '/editions';
+
+            return $http.get(url)
+                .then(function (response) {
+                    return _.map(response.data.result.rows, function (item) { return item });
+                })
+                .catch(function (e) {
+                    return exception.catcher('XHR Failed for getWorkEditions')(e);
+                });
+        }
+
+        function getWorkReviews(workId) {
+            var url = mainServiceUrl + '/api/works/' + workId + '/reviews';
+
+            return $http.get(url)
+                .then(function (response) {
+                    return _.map(response.data.result.rows, function (item) { return item });
+                })
+                .catch(function (e) {
+                    return exception.catcher('XHR Failed for getWorkReviews')(e);
                 });
         }
     }

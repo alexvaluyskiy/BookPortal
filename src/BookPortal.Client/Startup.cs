@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Builder;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.Framework.DependencyInjection;
 
@@ -8,18 +9,16 @@ namespace BookPortal.Client
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseFileServer();
+            app.UseStaticFiles();
 
-            app.UseMvc(routes =>
+            app.Run(async request =>
             {
-                routes.MapRoute("",
-                    "{controller}/{action}", 
-                    new { controller = "Home", action = "Index" });
+                await Task.Run(() => request.Response.Redirect("index.html"));
             });
         }
     }

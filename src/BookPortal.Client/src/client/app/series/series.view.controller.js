@@ -16,6 +16,7 @@
         var vm = this;
         vm.title = 'Серия';
         vm.changeSort = changeSort;
+        vm.serieId = $stateParams.serieId || 2;
 
         vm.sortTypes = [
           { sortName: "по умолчанию", sortValue: "order" },
@@ -30,9 +31,9 @@
 
         function activate() {
             var promises = [
-                getSerie($stateParams.serieId),
-                getSerieTree($stateParams.serieId),
-                getSerieEditions($stateParams.serieId, vm.selectedSortType.sortValue)];
+                getSerie(vm.serieId),
+                getSerieTree(vm.serieId),
+                getSerieEditions(vm.serieId, vm.selectedSortType.sortValue)];
             return $q.all(promises).then(function () {
                 logger.info('Activated Serie View');
             });

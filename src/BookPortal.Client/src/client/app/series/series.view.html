@@ -5,7 +5,7 @@
                 <div class="widget wviolet">
                     <div ht-widget-header title="{{vm.title}}"></div>
                     <div class="widget-content user">
-                        <table>
+                        <table class="serie-info">
                             <tr>
                                 <td>Id:</td>
                                 <td>{{vm.serie.serie_id}}</td>
@@ -22,14 +22,14 @@
                                 <td>Год открытия:</td>
                                 <td>{{vm.serie.year_open}}</td>
                             </tr>
-                            <tr>
+                            <tr ng-if="vm.serie.serie_closed">
                                 <td>Год закрытия</td>
                                 <td>{{vm.serie.year_close}}</td>
                             </tr>
                             <tr>
                                 <td>Издатели</td>
                                 <td>
-                                    <a href="/publishers/{{publisher.publisher_id}}" n ng-repeat="publisher in vm.serie.publishers">
+                                    <a href="/publishers/{{publisher.publisher_id}}" ng-repeat="publisher in vm.serie.publishers">
                                         {{publisher.name}}{{$last ? '' : ', '}}
                                     </a>
                                 </td>
