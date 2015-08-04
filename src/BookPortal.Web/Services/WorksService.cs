@@ -7,6 +7,7 @@ using BookPortal.Web.Domain;
 using BookPortal.Web.Domain.Models;
 using BookPortal.Web.Models;
 using BookPortal.Web.Models.Responses;
+using Remotion.Linq.Clauses;
 
 namespace BookPortal.Web.Services
 {
@@ -19,6 +20,7 @@ namespace BookPortal.Web.Services
             _bookContext = bookContext;
         }
 
+        // TODO: add IsPlan, NotPublished, Published fields
         public async Task<IReadOnlyList<WorkResponse>> GetWorksAsync(int personId, string sortMode)
         {
             var workLinks = await BuildWorksTree(personId);
@@ -78,6 +80,7 @@ namespace BookPortal.Web.Services
                 }
 
                 var childIds = workLinks.Where(c => c.Key == work.WorkId).Select(c => c.Value.WorkId).ToList();
+                work.ChildWorks = new List<int>();
                 work.ChildWorks.AddRange(childIds);
 
                 work.Persons = persons
@@ -120,6 +123,7 @@ namespace BookPortal.Web.Services
             return works;
         }
 
+        // TODO: replace WorkTypeName to WorkTypeNameSingle
         public async Task<WorkResponse> GetWorkAsync(int workId)
         {
             var query = from w in _bookContext.Works
@@ -138,7 +142,20 @@ namespace BookPortal.Web.Services
                             WorkTypeLevel = wt.Level
                         };
 
-            return await query.SingleOrDefaultAsync();
+            var result = await query.SingleOrDefaultAsync();
+
+            var persons =  (from p in _bookContext.Persons
+                            join pw in _bookContext.PersonWorks on p.Id equals pw.PersonId
+                            where pw.WorkId == workId
+                            select new PersonResponse
+                            {
+                                PersonId = p.Id,
+                                Name = p.Name
+                            }).ToList();
+
+            result.Persons = persons;
+
+            return result;
         }
 
         private async Task<Dictionary<int, WorkLink>> BuildWorksTree(int personId)

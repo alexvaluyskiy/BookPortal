@@ -24,7 +24,7 @@ namespace BookPortal.Web.Models.Responses
 
         public int WorkTypeLevel { get; set; }
 
-        public List<int> ChildWorks { get; set; } = new List<int>();
+        public List<int> ChildWorks { get; set; }
 
         public object GroupIndex { get; set; }
 
@@ -34,6 +34,6 @@ namespace BookPortal.Web.Models.Responses
 
         public bool Published { get; set; }
 
-        public int ParentWorkId { get; set; }
+        // public int? ParentWorkId { get; set; }
     }
 }

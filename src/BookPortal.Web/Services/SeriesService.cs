@@ -30,6 +30,8 @@ namespace BookPortal.Web.Services
             return await _bookContext.Series.Where(c => serieIds.Contains(c.Id)).ToListAsync();
         }
 
+        // TODO: add series images
+        // TODO: add aggregated title (with parent series) for serie
         public async Task<SerieResponse> GetSerieAsync(int serieId)
         {
             // get serie information

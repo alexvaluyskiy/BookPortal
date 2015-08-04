@@ -156,7 +156,8 @@ namespace BookPortal.Web.Services
                                           ContestWorkRusname = cw.RusName,
                                           ContestWorkName = cw.Name,
                                           ContestWorkPrefix = cw.Prefix,
-                                          ContestWorkPostfix = cw.Postfix
+                                          ContestWorkPostfix = cw.Postfix,
+                                          ContestWorkIsWinner = cw.IsWinner
                                       }).ToListAsync();
 
             // all person's works awards
@@ -182,7 +183,8 @@ namespace BookPortal.Web.Services
                                         ContestWorkRusname = cw.RusName,
                                         ContestWorkName = cw.Name,
                                         ContestWorkPrefix = cw.Prefix,
-                                        ContestWorkPostfix = cw.Postfix
+                                        ContestWorkPostfix = cw.Postfix,
+                                        ContestWorkIsWinner = cw.IsWinner
                                     }).ToListAsync();
 
             personAwards.AddRange(workAwards);
@@ -190,7 +192,6 @@ namespace BookPortal.Web.Services
             return personAwards;
         }
 
-        // TODO: move to awards service
         public async Task<IReadOnlyList<AwardItemResponse>> GetWorkAwardsAsync(int workId)
         {
             var query = from cw in _bookContext.ContestWorks
@@ -198,6 +199,7 @@ namespace BookPortal.Web.Services
                         join n in _bookContext.Nominations on cw.NominationId equals n.Id
                         join a in _bookContext.Awards on c.AwardId equals a.Id
                         where cw.LinkType == ContestWorkType.Work && cw.LinkId == workId
+                        orderby cw.IsWinner descending, c.NameYear
                         select new AwardItemResponse
                         {
                             AwardId = a.Id,
@@ -214,13 +216,13 @@ namespace BookPortal.Web.Services
                             ContestWorkRusname = cw.RusName,
                             ContestWorkName = cw.Name,
                             ContestWorkPrefix = cw.Prefix,
-                            ContestWorkPostfix = cw.Postfix
+                            ContestWorkPostfix = cw.Postfix,
+                            ContestWorkIsWinner = cw.IsWinner
                         };
 
             return await query.ToListAsync();
         }
 
-        // TODO: move to Awards Service
         public async Task<IReadOnlyList<AwardItemResponse>> GetPublisherAwardsAsync(int publisherId)
         {
             var query = from cw in _bookContext.ContestWorks
@@ -244,7 +246,8 @@ namespace BookPortal.Web.Services
                             ContestWorkRusname = cw.RusName,
                             ContestWorkName = cw.Name,
                             ContestWorkPrefix = cw.Prefix,
-                            ContestWorkPostfix = cw.Postfix
+                            ContestWorkPostfix = cw.Postfix,
+                            ContestWorkIsWinner = cw.IsWinner
                         };
 
             return await query.ToListAsync();

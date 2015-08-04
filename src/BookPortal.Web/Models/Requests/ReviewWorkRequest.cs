@@ -8,7 +8,7 @@ namespace BookPortal.Web.Models.Requests
         [Required]
         public int WorkId { get; set; }
 
-        public int Limit { get; set; } = 25;
+        public int Limit { get; set; } = 15;
 
         public int Offset { get; set; }
 

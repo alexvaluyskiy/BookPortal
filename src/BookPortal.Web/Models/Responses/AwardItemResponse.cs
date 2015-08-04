@@ -31,5 +31,7 @@
         public string ContestWorkPrefix { get; set; }
 
         public string ContestWorkPostfix { get; set; }
+
+        public bool ContestWorkIsWinner { get; set; }
     }
 }

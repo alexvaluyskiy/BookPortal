@@ -63,6 +63,8 @@ namespace BookPortal.Web.Services
             return new ApiObject<EditionResponse>(await editions.ToListAsync());
         }
 
+        // TODO: for works page create simplier versions of this API (last five translated)
+        // TODO: created extended versions with grouping and sorting
         public async Task<ApiObject<EditionResponse>> GetEditionsByWorkAsync(int workId)
         {
             var editions = from e in _bookContext.Editions
@@ -96,7 +98,8 @@ namespace BookPortal.Web.Services
             return new ApiObject<EditionResponse>(await editions.ToListAsync());
         }
 
-        // TODO: add Correct field
+        // TODO: add Correct field to editions
+        // TODO: fix authors sorting
         public async Task<ApiObject<EditionResponse>> GetEditionsBySerieAsync(SerieRequest request)
         {
             var query = from e in _bookContext.Editions
