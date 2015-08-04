@@ -7,7 +7,6 @@ using BookPortal.Web.Domain;
 using BookPortal.Web.Domain.Models;
 using BookPortal.Web.Models;
 using BookPortal.Web.Models.Responses;
-using Remotion.Linq.Clauses;
 
 namespace BookPortal.Web.Services
 {
@@ -138,7 +137,7 @@ namespace BookPortal.Web.Services
                             Year = w.Year,
                             Description = w.Description,
                             WorkTypeId = wt.Id,
-                            WorkTypeName = wt.Name,
+                            WorkTypeName = wt.NameSingle,
                             WorkTypeLevel = wt.Level
                         };
 

@@ -34,9 +34,6 @@
                 vm.work = data;
 
                 // TODO: temp
-                vm.work.persons = [
-                    { id: 1, name: "Дэн Симмонс" }
-                ];
                 vm.work.is_plan = true;
                 vm.work.published = false;
                 vm.work.not_finished = true;

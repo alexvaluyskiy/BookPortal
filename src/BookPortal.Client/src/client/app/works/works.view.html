@@ -61,7 +61,16 @@
                             <tr>
                                 <td>Премии:</td>
                                 <td>
-                                    <p ng-repeat="awarditem in vm.work.awards">
+                                    <b>Победы</b>
+                                    <p ng-repeat="awarditem in vm.work.awards | filter: {contest_work_is_winner: true}" class="award-item">
+                                        <img src="https://data.fantlab.ru/images/awards/icons/{{awarditem.award_id}}_icon"/>
+                                        <a ui-sref="awardsview({ awardId: awarditem.award_id })">{{awarditem.award_rusname}}</a>
+                                        (<span>{{awarditem.contest_name}}</span>)
+                                        // <span>{{awarditem.nomination_rusname}}</span>
+                                    </p>
+                                    <b>Номинации</b>
+                                    <p ng-repeat="awarditem in vm.work.awards | filter: {contest_work_is_winner: false}" class="award-item nominations">
+                                        <img src="https://data.fantlab.ru/images/awards/icons/{{awarditem.award_id}}_icon" />
                                         <a ui-sref="awardsview({ awardId: awarditem.award_id })">{{awarditem.award_rusname}}</a>
                                         (<span>{{awarditem.contest_name}}</span>)
                                         // <span>{{awarditem.nomination_rusname}}</span>
