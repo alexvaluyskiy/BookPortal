@@ -28,7 +28,7 @@
 
         "HtmlAgilityPack": "1.4.9",
         "Autofac.Framework.DependencyInjection": "4.0.0-*",
-        "Swashbuckle": "6.0.0-*"
+        "Swashbuckle": "6.0.0-beta6"
     },
 
     "commands": {
