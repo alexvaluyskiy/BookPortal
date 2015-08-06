@@ -25,6 +25,8 @@
 
         "EntityFramework.SqlServer": "7.0.0-beta6",
         "EntityFramework.Commands": "7.0.0-beta6",
+        "Dapper": "1.42.0",
+        "Dapper.SqlBuilder": "1.40.0",
 
         "HtmlAgilityPack": "1.4.9",
         "Autofac.Framework.DependencyInjection": "4.0.0-*",

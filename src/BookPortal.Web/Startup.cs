@@ -102,6 +102,10 @@ namespace BookPortal.Web
             builder.RegisterType<GenresService>();
             builder.RegisterType<RatingsService>();
 
+            builder.RegisterType<ConnectionFactory>()
+                .As<IConnectionFactory>()
+                .WithParameter("connectionString", Configuration.Get("Data:DefaultConnection:ConnectionString"));
+
             builder.RegisterInstance(new RedisCache(new RedisCacheOptions { Configuration = Configuration.Get("RedisCache") }));
 
             builder.Populate(services);
