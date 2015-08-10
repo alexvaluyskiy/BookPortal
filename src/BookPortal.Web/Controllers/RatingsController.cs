@@ -28,6 +28,7 @@ namespace BookPortal.Web.Controllers
 
         [HttpGet("works")]
         [Produces(typeof(IEnumerable<WorkRatingResponse>))]
+        [ResponseCache(Duration = 3600)]
         public async Task<IActionResult> GetWorksRating(string type = "novelall")
         {
             var ratings = await _ratingsService.GetWorkRating(type);

@@ -247,5 +247,22 @@ namespace BookPortal.Web.Services
 
             return await query.ToListAsync();
         }
+
+        // TODO: rework when EF7 will supports GroupBy
+        private async Task<int> FindTranslationId(int workId, params int[] personIds)
+        {
+            var query = await (from tw in _bookContext.TranslationWorks
+                        join twp in _bookContext.TranslationWorkPersons on tw.Id equals twp.TranslationWorkId
+                        where tw.WorkId == workId && personIds.Contains(twp.PersonId)
+                        select new { tw.Id, twp.PersonId}).ToListAsync();
+
+            int translationId = query
+                .GroupBy(c => c.Id)
+                .Where(g => g.Select(d => d.PersonId).Distinct().Count() == personIds.Length)
+                .Select(g => g.Key)
+                .SingleOrDefault();
+
+            return translationId;
+        }
     }
 }

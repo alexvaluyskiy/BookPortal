@@ -2,6 +2,7 @@
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using BookPortal.Core.Framework.Models;
 using Microsoft.Data.Entity;
 using BookPortal.Web.Domain;
 using BookPortal.Web.Domain.Models;
@@ -20,7 +21,7 @@ namespace BookPortal.Web.Services
         }
 
         // TODO: add IsPlan, NotPublished, Published fields
-        public async Task<IReadOnlyList<WorkResponse>> GetWorksAsync(int personId, string sortMode)
+        public async Task<ApiObject<WorkResponse>> GetWorksAsync(int personId, string sortMode)
         {
             var workLinks = await BuildWorksTree(personId);
 
@@ -119,7 +120,7 @@ namespace BookPortal.Web.Services
                     break;
             }
 
-            return works;
+            return new ApiObject<WorkResponse>(works);
         }
 
         // TODO: replace WorkTypeName to WorkTypeNameSingle

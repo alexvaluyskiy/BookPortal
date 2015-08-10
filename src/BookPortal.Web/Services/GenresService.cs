@@ -4,6 +4,7 @@ using BookPortal.Core.Framework.Models;
 using Microsoft.Data.Entity;
 using BookPortal.Web.Domain;
 using BookPortal.Web.Models.Responses;
+using Dapper;
 using Microsoft.Framework.OptionsModel;
 
 namespace BookPortal.Web.Services
@@ -19,12 +20,12 @@ namespace BookPortal.Web.Services
             _options = options;
         }
 
-        public async Task<ApiObject<GenreWorkResponse>> GetAuthorGenres(int personId)
+        public async Task<ApiObject<GenrePersonResponse>> GetAuthorGenres(int personId)
         {
             var query = from gpv in _bookContext.GenrePersonsView
                         join gw in _bookContext.GenreWorks on gpv.GenreWorkId equals gw.Id
                         where gpv.PersonId == personId
-                        select new GenreWorkResponse
+                        select new GenrePersonResponse
                         {
                             GenreWorkId = gw.Id,
                             Name = gw.Name,
@@ -39,15 +40,15 @@ namespace BookPortal.Web.Services
 
             var result = await query.ToListAsync();
 
-            return new ApiObject<GenreWorkResponse>(result);
+            return new ApiObject<GenrePersonResponse>(result);
         }
 
-        public async Task<ApiObject<GenrePersonResponse>> GetWorkGenres(int workId)
+        public async Task<ApiObject<GenreWorkResponse>> GetWorkGenres(int workId)
         {
             var genre = await (from gwv in _bookContext.GenreWorksView
                               join gw in _bookContext.GenreWorks on gwv.GenreWorkId equals gw.Id
                               where gwv.WorkId == workId
-                              select new GenrePersonResponse
+                              select new GenreWorkResponse
                               {
                                   GenreWorkId = gw.Id,
                                   GenreParentWorkId = gw.ParentGenreWorkId,
@@ -57,9 +58,7 @@ namespace BookPortal.Web.Services
                                   GenreWorkGroupId = gw.GenreWorkGroupId
                               }).ToListAsync();
 
-            return new ApiObject<GenrePersonResponse>(genre);
+            return new ApiObject<GenreWorkResponse>(genre);
         }
-
-
     }
 }

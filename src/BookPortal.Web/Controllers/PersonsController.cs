@@ -65,7 +65,7 @@ namespace BookPortal.Web.Controllers
             if (works == null)
                 return this.ErrorObject(404, $"Person (id: {personId}) doesn't contain works");
 
-            return this.PageObject(works);
+            return this.PageObject(works.Values, works.TotalRows);
         }
 
         [HttpGet("{personId}/editions")]
@@ -105,7 +105,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet("{personId}/genres")]
-        [Produces(typeof(GenrePersonResponse))]
+        [Produces(typeof(GenreWorkResponse))]
         public async Task<IActionResult> GetGenres(int personId)
         {
             var genres = await _genresService.GetAuthorGenres(personId);
