@@ -1,4 +1,8 @@
 ﻿using System.Collections.Generic;
+using BookPortal.Core.Framework.Models;
+using BookPortal.Web.Domain.Models.Types;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace BookPortal.Web.Models.Responses
 {
@@ -22,17 +26,28 @@ namespace BookPortal.Web.Models.Responses
 
         public string WorkTypeName { get; set; }
 
-        public int WorkTypeLevel { get; set; }
+        public int? WorkTypeLevel { get; set; }
 
         public List<int> ChildWorks { get; set; }
 
         public object GroupIndex { get; set; }
 
-        public bool IsPlan { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public PublishType? PublishType { get; set; }
 
-        public bool NotFinished { get; set; }
+        public bool? NotFinished { get; set; }
 
-        public bool Published { get; set; }
+        public bool? InPlans { get; set; }
+
+        public byte? ShowInBiblio { get; set; }
+
+        public byte? ShowSubworksInBiblio { get; set; }
+
+        public IReadOnlyList<AwardItemResponse> Awards { get; set; }
+        public IReadOnlyList<EditionResponse> Editions { get; set; }
+        public IReadOnlyList<ReviewResponse> Reviews { get; set; }
+        public IReadOnlyList<TranslationResponse> Translations { get; set; }
+        public IReadOnlyList<GenrePersonResponse> Genres { get; set; }
 
         // public int? ParentWorkId { get; set; }
     }

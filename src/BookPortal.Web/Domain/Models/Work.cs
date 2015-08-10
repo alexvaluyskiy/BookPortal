@@ -32,11 +32,17 @@ namespace BookPortal.Web.Domain.Models
         [Column("publish_type")]
         public PublishType PublishType { get; set; } = PublishType.NotPublished;
 
+        [Column("not_finished")]
+        public bool NotFinished { get; set; }
+
         [Column("in_plans")]
         public bool InPlans { get; set; }
 
+        [Column("show_in_biblio")]
+        public byte ShowInBiblio { get; set; }
+
         [Column("show_subworks_in_biblio")]
-        public bool ShowSubworksInBiblio { get; set; }
+        public byte ShowSubworksInBiblio { get; set; }
 
         [Column("work_type_id")]
         public int WorkTypeId { get; set; }
