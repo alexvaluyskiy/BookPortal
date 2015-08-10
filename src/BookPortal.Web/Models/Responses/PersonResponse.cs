@@ -1,4 +1,8 @@
-﻿namespace BookPortal.Web.Models.Responses
+﻿using BookPortal.Web.Domain.Models.Types;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
+namespace BookPortal.Web.Models.Responses
 {
     public class PersonResponse
     {
@@ -31,5 +35,9 @@
         public string BiographySource { get; set; }
 
         public string Notes { get; set; }
+
+        // used on work's requests
+        [JsonConverter(typeof(StringEnumConverter))]
+        public WorkPersonType? PersonType { get; set; }
     }
 }

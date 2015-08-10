@@ -8,16 +8,20 @@ using BookPortal.Web.Domain;
 using BookPortal.Web.Domain.Models;
 using BookPortal.Web.Models;
 using BookPortal.Web.Models.Responses;
+using Dapper;
+using Microsoft.AspNet.Mvc;
 
 namespace BookPortal.Web.Services
 {
     public class WorksService
     {
         private readonly BookContext _bookContext;
+        private readonly IConnectionFactory _connectionFactory;
 
-        public WorksService(BookContext bookContext)
+        public WorksService(BookContext bookContext, IConnectionFactory connectionFactory)
         {
             _bookContext = bookContext;
+            _connectionFactory = connectionFactory;
         }
 
         // TODO: add IsPlan, NotPublished, Published fields
@@ -62,12 +66,12 @@ namespace BookPortal.Web.Services
             foreach (var work in works)
             {
                 // authors plan
-                if (work.IsPlan)
+                if (work.InPlans.HasValue)
                 {
                     work.WorkTypeId = -2;
                     work.WorkTypeLevel = 0;
                 }
-                else if (work.NotFinished || work.Published)
+                else if (work.PublishType.HasValue)
                 {
                     work.WorkTypeId = -1;
                     work.WorkTypeLevel = 100;
@@ -123,39 +127,61 @@ namespace BookPortal.Web.Services
             return new ApiObject<WorkResponse>(works);
         }
 
-        // TODO: replace WorkTypeName to WorkTypeNameSingle
         public async Task<WorkResponse> GetWorkAsync(int workId)
         {
-            var query = from w in _bookContext.Works
-                        join wt in _bookContext.WorkTypes on w.WorkTypeId equals wt.Id
-                        where w.Id == workId
-                        select new WorkResponse
-                        {
-                            WorkId = w.Id,
-                            RusName = w.RusName,
-                            Name = w.Name,
-                            AltName = w.AltName,
-                            Year = w.Year,
-                            Description = w.Description,
-                            WorkTypeId = wt.Id,
-                            WorkTypeName = wt.NameSingle,
-                            WorkTypeLevel = wt.Level
-                        };
+            using (var connection = _connectionFactory.Create())
+            {
+                var workSql = @"
+                    SELECT
+                        w.work_id as 'WorkId', w.rusname, w.name, w.altname, w.year, w.description,
+                        wt.work_type_id as 'WorkTypeId', wt.name_single as 'WorkTypeName',
+                        w.not_finished as 'NotFinished', w.publish_type as 'PublishType', w.in_plans as 'InPlans'
+                    FROM works AS w
+                    INNER JOIN work_types AS wt ON w.work_type_id = wt.work_type_id
+                    WHERE w.work_id = @workId";
+                var query = await connection.QueryAsync<WorkResponse>(workSql, new { workId });
+                var work = query.SingleOrDefault();
 
-            var result = await query.SingleOrDefaultAsync();
+                if (work != null)
+                {
+                    var peopleSql = @"
+                        SELECT p.person_id as 'PersonId', p.name, pw.[type] as 'PersonType'
+                        FROM persons AS p
+                        INNER JOIN person_works AS pw ON p.person_id = pw.person_id
+                        WHERE pw.work_id = @workId
+                        ORDER BY pw.[order]";
+                    var people = await connection.QueryAsync<PersonResponse>(peopleSql, new {workId});
+                    work.Persons = people.ToList();
+                }
 
-            var persons =  (from p in _bookContext.Persons
-                            join pw in _bookContext.PersonWorks on p.Id equals pw.PersonId
-                            where pw.WorkId == workId
-                            select new PersonResponse
-                            {
-                                PersonId = p.Id,
-                                Name = p.Name
-                            }).ToList();
+                return work;
+            }
+        }
 
-            result.Persons = persons;
+        public async Task<MarkResponse> GetWorkMarkAsync(int workId, int userId)
+        {
+            using (var connection = _connectionFactory.Create())
+            {
+                var workSql = @"
+                    SELECT work_id as 'WorkId', COUNT(*) as 'MarksCount', ROUND(AVG(Cast(mark_value as Float)), 5) as 'Rating'
+                    FROM marks
+                    WHERE work_id = @workId
+                    GROUP BY work_id";
+                var query = await connection.QueryAsync<MarkResponse>(workSql, new { workId });
+                var workMark = query.SingleOrDefault();
 
-            return result;
+                if (workMark != null && userId > 0)
+                {
+                    var userMarkSql = @"
+                        SELECT mark_value
+                        FROM marks
+                        WHERE work_id = @workId and user_id = @userId";
+                    var userMark = await connection.QueryAsync<int>(userMarkSql, new { workId, userId });
+                    workMark.UserMark = userMark.SingleOrDefault();
+                }
+
+                return workMark;
+            }
         }
 
         private async Task<Dictionary<int, WorkLink>> BuildWorksTree(int personId)
