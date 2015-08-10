@@ -80,7 +80,7 @@ namespace BookPortal.Web.Controllers
         }
 
         [HttpGet("{workId}/mark")]
-        [Produces(typeof(WorkResponse))]
+        [Produces(typeof(MarkResponse))]
         [SwaggerResponse(404, "Work is not found")]
         public async Task<IActionResult> GetWorkMark(int workId, [FromQuery]int userId)
         {

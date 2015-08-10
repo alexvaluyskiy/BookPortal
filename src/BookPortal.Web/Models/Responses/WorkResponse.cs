@@ -22,6 +22,8 @@ namespace BookPortal.Web.Models.Responses
 
         public string Description { get; set; }
 
+        public string Notes { get; set; }
+
         public int WorkTypeId { get; set; }
 
         public string WorkTypeName { get; set; }
@@ -47,7 +49,7 @@ namespace BookPortal.Web.Models.Responses
         public IReadOnlyList<EditionResponse> Editions { get; set; }
         public IReadOnlyList<ReviewResponse> Reviews { get; set; }
         public IReadOnlyList<TranslationResponse> Translations { get; set; }
-        public IReadOnlyList<GenrePersonResponse> Genres { get; set; }
+        public IReadOnlyList<GenreWorkResponse> Genres { get; set; }
 
         // public int? ParentWorkId { get; set; }
     }

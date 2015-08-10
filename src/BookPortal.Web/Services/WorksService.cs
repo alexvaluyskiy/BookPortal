@@ -1,15 +1,14 @@
 ﻿using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using BookPortal.Core.Framework.Domain;
 using BookPortal.Core.Framework.Models;
 using Microsoft.Data.Entity;
 using BookPortal.Web.Domain;
 using BookPortal.Web.Domain.Models;
-using BookPortal.Web.Models;
+using BookPortal.Web.Domain.Models.Types;
 using BookPortal.Web.Models.Responses;
 using Dapper;
-using Microsoft.AspNet.Mvc;
 
 namespace BookPortal.Web.Services
 {
@@ -24,8 +23,107 @@ namespace BookPortal.Web.Services
             _connectionFactory = connectionFactory;
         }
 
+        public async Task<ApiObject<WorkResponse>> GetWorksAsync(int personId, string sortMode, bool includeTree)
+        {
+            using (var connection = _connectionFactory.Create())
+            {
+                // get all work's ids
+                var workIdsSql = @"SELECT work_id as 'WorkId' FROM person_works WHERE person_id = @personId";
+                var workIds = (await connection.QueryAsync<int>(workIdsSql, new { personId })).ToList();
+
+                // get all works
+                var workSql = @"
+					SELECT
+                        w.work_id as 'WorkId',
+                        w.rusname,
+                        w.name,
+                        w.altname,
+                        w.[year],
+                        w.[description],
+						w.show_in_biblio as 'ShowInBiblio',
+						w.show_subworks_in_biblio as 'ShowSubworksInBiblio',
+						w.publish_type as 'PublishType',
+						w.not_finished as 'NotFinished',
+						w.in_plans as 'InPlans',
+                        wt.work_type_id as 'WorkTypeId',
+                        wt.name as 'WorkTypeName',
+                        wt.[level] as 'WorkTypeLevel'
+                    FROM works AS w
+                    INNER JOIN work_types AS wt ON w.work_type_id = wt.work_type_id
+                    WHERE w.work_id IN @workIds";
+
+                var works = (await connection.QueryAsync<WorkResponse>(workSql, new { workIds })).ToList();
+
+                // get all work's people
+                var peopleSql = @"
+                    SELECT pw.work_id as 'WorkId', p.person_id as 'PersonId', p.name as 'Name', p.name_sort as 'NameSort', pw.type as 'PersonType'
+                    FROM persons AS p
+                    INNER JOIN person_works AS pw ON p.person_id = pw.person_id
+                    WHERE pw.work_id IN @workIds";
+
+                var people = await connection.QueryAsync(() => new
+                                {
+                                    WorkId = default(int),
+                                    PersonId = default(int),
+                                    Name = default(string),
+                                    NameSort = default(string),
+                                    PersonType = default(WorkPersonType)
+                                }, peopleSql, new {workIds});
+
+                var peopleDic = people.GroupBy(c => c.WorkId).ToDictionary(c => c.Key, c => c.Select(d => new PersonResponse
+                {
+                    PersonId = d.PersonId,
+                    Name = d.Name,
+                    NameSort = d.NameSort,
+                    PersonType = d.PersonType
+                }).ToList());
+
+
+
+                foreach (var work in works)
+                {
+                    work.Persons = peopleDic.GetValueOrDefault(work.WorkId);
+
+                    // combining poems into the one type
+                    if (work.WorkTypeId == 5 || work.WorkTypeId == 28 || work.WorkTypeId == 29)
+                    {
+                        work.WorkTypeId = 27;
+                    }
+                }
+
+                switch (sortMode)
+                {
+                    case "rusname":
+                        works = works
+                            .OrderBy(c => c.WorkTypeLevel)
+                            .ThenBy(c => c.RusName)
+                            .ThenBy(c => c.GroupIndex)
+                            .ToList();
+                        break;
+                    case "name":
+                        works = works
+                            .OrderBy(c => c.WorkTypeLevel)
+                            .ThenBy(c => c.Name)
+                            .ThenBy(c => c.GroupIndex)
+                            .ToList();
+                        break;
+                    default:
+                        works = works
+                            .OrderBy(c => c.WorkTypeLevel)
+                            .ThenBy(c => c.Year)
+                            .ThenBy(c => c.GroupIndex)
+                            .ThenBy(c => c.Name)
+                            .ThenBy(c => c.RusName)
+                            .ToList();
+                        break;
+                }
+
+                return new ApiObject<WorkResponse>(works);
+            }
+        }
+
         // TODO: add IsPlan, NotPublished, Published fields
-        public async Task<ApiObject<WorkResponse>> GetWorksAsync(int personId, string sortMode)
+        public async Task<ApiObject<WorkResponse>> GetWorksAsync2(int personId, string sortMode)
         {
             var workLinks = await BuildWorksTree(personId);
 
@@ -133,7 +231,7 @@ namespace BookPortal.Web.Services
             {
                 var workSql = @"
                     SELECT
-                        w.work_id as 'WorkId', w.rusname, w.name, w.altname, w.year, w.description,
+                        w.work_id as 'WorkId', w.rusname, w.name, w.altname, w.year, w.description, w.notes,
                         wt.work_type_id as 'WorkTypeId', wt.name_single as 'WorkTypeName',
                         w.not_finished as 'NotFinished', w.publish_type as 'PublishType', w.in_plans as 'InPlans'
                     FROM works AS w
@@ -186,55 +284,28 @@ namespace BookPortal.Web.Services
 
         private async Task<Dictionary<int, WorkLink>> BuildWorksTree(int personId)
         {
-            var workLinks = new Dictionary<int, WorkLink>();
-
-            var sql = @"
-                WITH tree AS
-                (
-                    SELECT wl.work_link_id, wl.work_id, wl.parent_work_id, wl.link_type, wl.is_addition, wl.group_index, wl.bonus_text
-	                FROM work_links wl JOIN person_works pw ON pw.work_id = wl.work_id
-	                WHERE pw.person_id = @person_id
-
-                    UNION ALL
-
-                    SELECT wl.work_link_id, wl.work_id, wl.parent_work_id, wl.link_type, wl.is_addition, wl.group_index, wl.bonus_text
-	                FROM work_links wl JOIN tree t ON wl.work_id = t.parent_work_id
-                )
-                SELECT DISTINCT * FROM tree";
-
-            var connection = _bookContext.Database.GetDbConnection() as SqlConnection;
-            if (connection != null)
+            using (var connection = _connectionFactory.Create())
             {
-                connection.Open();
-                using (var command = new SqlCommand(sql, connection))
-                {
-                    command.Parameters.AddWithValue("@person_id", personId);
-                    using (var reader = await command.ExecuteReaderAsync())
-                    {
-                        while (await reader.ReadAsync())
-                        {
-                            int workId = reader.GetValue<int>("work_id");
-                            int? parentWorkId = reader.GetValue<int?>("parent_work_id");
+                var sql = @"
+                    WITH tree AS
+                    (
+                        SELECT wl.work_link_id, wl.work_id, wl.parent_work_id, wl.link_type, wl.is_addition, wl.group_index, wl.bonus_text
+	                    FROM work_links wl JOIN person_works pw ON pw.work_id = wl.work_id
+	                    WHERE pw.person_id = @personId
+                        UNION ALL
+                        SELECT wl.work_link_id, wl.work_id, wl.parent_work_id, wl.link_type, wl.is_addition, wl.group_index, wl.bonus_text
+	                    FROM work_links wl JOIN tree t ON wl.work_id = t.parent_work_id
+                    )
+                    SELECT
+					    DISTINCT work_id as 'WorkId', parent_work_id as 'ParentWorkId', link_type as 'LinkType', is_addition as 'IsAddition',
+					    group_index as 'GroupIndex', bonus_text as 'BonusText'
+				    FROM tree";
 
-                            if (parentWorkId.HasValue && !workLinks.ContainsKey(parentWorkId.Value))
-                            {
-                                var workLink = new WorkLink();
-                                workLink.WorkId = workId;
-                                workLink.ParentWorkId = parentWorkId;
-                                workLink.LinkType = reader.GetValue<int>("link_type");
-                                workLink.IsAddition = reader.GetValue<bool>("work_id");
-                                workLink.BonusText = (string)reader["bonus_text"];
-                                workLink.GroupIndex = reader.GetValue<int?>("group_index");
+                var query = await connection.QueryAsync<WorkLink>(sql, new { personId });
+                var workLinks = query.Where(c => c.ParentWorkId.HasValue).ToDictionary(c => c.ParentWorkId.Value, c => c);
 
-                                workLinks.Add(parentWorkId.Value, workLink);
-                            }
-                        }
-                    }
-                }
-                connection.Close();
+                return workLinks;
             }
-
-            return workLinks;
         }
     }
 }

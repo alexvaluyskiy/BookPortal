@@ -14,6 +14,8 @@
             getPeople: getPeople,
             getMessageCount: getMessageCount,
 
+            getCountries: getCountries,
+
             getAwards: getAwards,
 
             getAward: getAward,
@@ -27,7 +29,10 @@
             getWorkGenres: getWorkGenres,
             getWorkAwards: getWorkAwards,
             getWorkEditions: getWorkEditions,
-            getWorkReviews: getWorkReviews
+            getWorkReviews: getWorkReviews,
+
+            getPerson: getPerson,
+            getPersonWorks: getPersonWorks
         };
 
         return service;
@@ -46,6 +51,18 @@
             function fail(e) {
                 return exception.catcher('XHR Failed for getPeople')(e);
             }
+        }
+
+        function getCountries() {
+            var url = mainServiceUrl + '/api/countries';
+
+            return $http.get(url)
+                .then(function (response) {
+                    return _.reduce(response.data.result.rows, function(m, x) {m[x.country_id] = x.name; return m;}, {});
+                })
+                .catch(function (e) {
+                    return exception.catcher('XHR Failed for getCountries')(e);
+                });
         }
 
         // GET AWARD_LIST
@@ -189,5 +206,33 @@
                     return exception.catcher('XHR Failed for getWorkReviews')(e);
                 });
         }
+
+        // GET PERSON_VIEW
+        function getPerson(personId) {
+            var url = mainServiceUrl + '/api/persons/' + personId;
+
+            return $http.get(url)
+                .then(function (response) {
+                    return response.data.result;
+                })
+                .catch(function (e) {
+                    return exception.catcher('XHR Failed for getPerson')(e);
+                });
+        }
+
+        function getPersonWorks(personId) {
+            var url = mainServiceUrl + '/api/persons/' + personId + '/works';
+
+            return $http.get(url)
+                .then(function (response) {
+                    return _.map(response.data.result.rows, function (item) { return item });
+                })
+                .catch(function (e) {
+                    return exception.catcher('XHR Failed for getPersonWorks')(e);
+                });
+        }
+
+
+
     }
 })();

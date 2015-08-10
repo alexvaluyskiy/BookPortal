@@ -10,71 +10,46 @@
     function PersonsViewController($http, $q, dataservice, logger, $stateParams) {
         var vm = this;
         vm.title = 'Персона';
-        vm.workId = $stateParams.workId || 1;
+        vm.personId = $stateParams.personId || 1;
 
         activate();
 
         function activate() {
-            getWork(vm.workId).then(function() {
+            getPerson(vm.personId).then(function() {
                 var promises = [
-                    getWorkTranslations(vm.workId),
-                    getWorkGenres(vm.workId),
-                    getWorkAwards(vm.workId),
-                    getWorkEditions(vm.workId),
-                    getWorkReviews(vm.workId)
+                    getPersonWorks(vm.personId),
+                    getCountries()
                 ];
                 return $q.all(promises).then(function () {
-                    logger.info('Activated Works View');
+                    logger.info('Activated Persons View');
                 });
             });
         }
 
-        function getWork(workId) {
-            return dataservice.getWork(workId).then(function (data) {
-                vm.work = data;
+        function getPerson(personId) {
+            return dataservice.getPerson(personId).then(function (data) {
+                vm.person = data;
 
-                // TODO: temp
-                vm.work.is_plan = true;
-                vm.work.published = false;
-                vm.work.not_finished = true;
-
-                vm.title = 'Персона: ' + vm.work.rus_name;
-                return vm.work;
+                vm.title = 'Персона: ' + vm.person.name;
+                return vm.person;
             });
         }
 
-        function getWorkTranslations(workId) {
-            return dataservice.getWorkTranslations(workId).then(function (data) {
-                vm.work.translations = data;
-                return vm.work.translations;
+        function getPersonWorks(personId) {
+            return dataservice.getPersonWorks(personId).then(function (data) {
+                vm.person.works = _.groupBy(data, function(item) {
+                     return item.work_type_id;
+                });
+
+                return vm.person.works;
             });
         }
 
-        function getWorkGenres(workId) {
-            return dataservice.getWorkGenres(workId).then(function (data) {
-                vm.work.genres = data;
-                return vm.work.genres;
-            });
-        }
+        function getCountries() {
+            return dataservice.getCountries().then(function (data) {
+                vm.countries = data;
 
-        function getWorkAwards(workId) {
-            return dataservice.getWorkAwards(workId).then(function (data) {
-                vm.work.awards = data;
-                return vm.work.awards;
-            });
-        }
-
-        function getWorkEditions(workId) {
-            return dataservice.getWorkEditions(workId).then(function (data) {
-                vm.work.editions = data;
-                return vm.work.editions;
-            });
-        }
-
-        function getWorkReviews(workId) {
-            return dataservice.getWorkReviews(workId).then(function (data) {
-                vm.work.reviews = data;
-                return vm.work.reviews;
+                return vm.countries;
             });
         }
     }

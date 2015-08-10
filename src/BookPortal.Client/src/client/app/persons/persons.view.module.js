@@ -3,7 +3,8 @@
 
     angular.module('app.persons.view', [
         'app.core',
-        'app.widgets'
+        'app.widgets',
+        'angular.filter'
       ]);
 
 })();

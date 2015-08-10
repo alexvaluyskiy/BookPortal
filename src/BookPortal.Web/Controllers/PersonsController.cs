@@ -60,7 +60,7 @@ namespace BookPortal.Web.Controllers
         [Produces(typeof(IEnumerable<WorkResponse>))]
         public async Task<IActionResult> GetWorks(int personId, string sortMode)
         {
-            var works = await _worksService.GetWorksAsync(personId, sortMode);
+            var works = await _worksService.GetWorksAsync(personId, sortMode, false);
 
             if (works == null)
                 return this.ErrorObject(404, $"Person (id: {personId}) doesn't contain works");
