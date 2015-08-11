@@ -1,47 +1,583 @@
-﻿.work-info {
-  td:nth-child(1) {
-    width: 100px;
-    font-weight: bold;
-  }
+﻿@header-default-color: #3178A8;
+@header-innactive-color: #949494;
 
-  .altnames {
-    color: gray;
-  }
+.user-select() {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
 
-  .work-not-published {
-    span:after {
-      content: ", "
+/* person info */
+.person-show {
+    .paragraph-block p {
+      text-align: justify;
+      text-indent: 0.3in;
+      margin: 0px;
+      margin-top: 6px;
+      word-wrap: break-word;
     }
 
-    span:last-child:after {
-      content: ""
-    }
-  }
-
-  .translators {
-    a:after {
-      content: ", "
+    div.main-info-block {
+      min-width: 210px;
     }
 
-    a:last-of-type:after {
-      content: ""
+    h2.main-info-header {
+      background: #3178a8;
+      color: #ffffff;
+      -webkit-border-radius: 10px 10px 0px 0px;
+      border-radius: 10px 10px 0px 0px;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      cursor: inherit;
+      padding: 4px 0 4px 18px;
+      position: relative;
+      min-height: 14px;
     }
 
-    span:after {
-      content: ", "
+    h2.main-info-header.innactive {
+      background-color: #C4C4C4;
     }
 
-    span:last-of-type:after {
-      content: ""
+    h2.main-info-header span {
+      font-weight: bold;
     }
-  }
 
-  .award-item img {
-    width: 30px;
-    height: 30px;
-  }
+    h2.main-info-header.allow-toggle {
+      cursor: pointer;
+    }
 
-  .award-item.nominations {
-    opacity: 0.5;
-  }
+    h2.allow-toggle:before {
+      background: url('/img/arrow_state_grey_right.png');
+      height: 16px;
+      width: 16px;
+      content: ' ';
+      position: absolute;
+      top: 3px;
+      left: 2px;
+    }
+
+    div.main-info-block.collapsed .main-info-header:before {
+      background: url('/img/arrow_state_grey_expanded.png');
+    }
+
+    div.main-info-block.collapsed .main-info-detail {
+      display: none !important;
+    }
+
+    div.main-info-detail {
+      margin-top: 3px;
+      border:1px solid #D8E1E6;
+      background-color: #F9FAFB;
+      min-height: 60px;
+      padding: 8px 8px 16px 8px;
+    }
+
+    .main-info-detail {
+        img {
+            &.imgright {
+                margin-bottom: 4px;
+                margin-left: 8px;
+                float: right;
+            }
+
+            &.imgleft {
+                margin-bottom: 4px;
+                margin-right: 8px;
+                float: left;
+            }
+        }
+    }
+
+    .person-info-top-info {
+        border-spacing: 2px;
+        border-collapse: separate;
+
+        td {
+            padding: 2px;
+
+            &.autor-genres img {
+                height: 5px;
+                border: 1px solid #3178A8;
+            }
+        }
+    }
+
+    .person-info-bio-notes {
+        & > h3 {
+            font-weight: bold;
+        }
+
+        & > div {
+            margin-left: 0.3in;
+        }
+    }
+
+    .person-registered {
+        margin-top: 15px;
+
+        b {
+            font-weight: bold;
+        }
+    }
+
+    .person-blogs {
+        margin-top: 15px;
+
+        & > h3 {
+            font-weight: bold;
+        }
+
+        & > ul {
+            margin: 2px 0 5px 40px;
+            list-style-type: disc;
+
+            & > li.noread {
+                color: #FF7E00;
+            }
+
+            span {
+                font-size: x-small;
+                color: gray;
+            }
+        }
+
+        & > div {
+            border-top: 1px dotted gray;
+            padding: 4px;
+            padding-left: 12px;
+
+            .add-article img {
+                vertical-align: middle;
+            }
+        }
+    }
+
+    .person-info-sites {
+        margin-top: 15px;
+
+        & > h3 {
+            font-weight: bold;
+        }
+
+        & > ul {
+            margin-left: 0.3in;
+
+            li {
+                position: relative;
+                padding-left: 20px;
+                margin-top: 5px;
+
+                a {
+                    font-weight: bold;
+                }
+
+                &:before {
+                    height: 12px;
+                    width: 12px;
+                    top: 0px;
+                    left: 0px;
+                    position: absolute;
+                    content: ' ';
+                }
+
+                &.icon-none:before {
+                    list-style-image: none;
+                }
+
+                &.icon-home:before {
+                    background: url('/img/pl_home.png');
+                }
+
+                &.icon-forum:before {
+                    background: url('/img/spacer.gif');
+                }
+
+                &.icon-facebook:before {
+                    background: url('/img/pl_facebook.png');
+                }
+
+                &.icon-vkontakte:before {
+                    background: url('/img/pl_vk.png');
+                }
+
+                &.icon-twitter:before {
+                    background: url('/img/pl_twitter.png');
+                }
+
+                &.icon-livejournal:before {
+                    background: url('/img/pl_livejournal.gif');
+                }
+            }
+        }
+    }
+
+    .person-info-bio p {
+        text-indent: 0.3in;
+        text-align: justify;
+        margin-top: 5px;
+    }
+
+    .person-info-bio-copyright {
+        margin-top: 5px;
+        text-align: right;
+    }
+
+    .person-info-articles {
+        margin-top: 15px;
+
+        & > h3 {
+            font-weight: bold;
+        }
+
+        & > ul {
+            margin-left: 0.3in;
+
+            li {
+                margin-top: 5px;
+            }
+        }
+    }
+
+    .person-info-personal {
+        margin-top: 15px;
+    }
+
+    /* person-award override */
+    .person-info-awards {
+        margin-top: 15px;
+
+        & > div {
+            margin-left: 0.3in;
+
+            table {
+                tr td {
+                    border: 0;
+                    vertical-align: middle;
+
+                    & + td {
+                        text-align: left;
+                        width: auto;
+                        border-bottom: inherit;
+                    }
+                }
+            }
+        }
+
+        .person-info-award-advanced {
+            margin-left: 72px;
+            font-weight: bold;
+            border-top: 1px solid #D8E1E6;
+        }
+    }
+
+    .person-notes {
+        & > h3 {
+            font-weight: bold;
+            text-indent: 1.5em;
+        }
+
+        & > hr {
+            border-bottom: 1px solid black;
+            color: black;
+            margin: 3px 0;
+        }
+
+        & > ul {
+            margin-left: 40px;
+
+            li {
+                list-style-type: disc;
+            }
+        }
+    }
+
+    .biblio {
+        .sort-control {
+            margin-top: 15px;
+        }
+
+        .biblio-links {
+            margin-top: 30px;
+            margin-bottom: 10px;
+            text-align: right;
+        }
+
+        .lingvo-analyse {
+            margin-top: 15px;
+        }
+    }
+
+    .person-admin-links {
+        margin-top: 15px;
+    }
+}
+
+/* Author works */
+div.autor-works {
+    margin-top: 15px;
+    font: 8pt Verdana, Arial, sans-serif;
+
+    .loop(4);
+    .loop(@counter) when (@counter > 0) {
+        .loop((@counter - 1));
+        &[data-evaluation-size="@{counter}"] .evaluation {
+            width: 47px + @counter * 7;
+            display: inline-block;
+        }
+        &[data-comments-size="@{counter}"] .comments {
+            width: 33px + @counter * 7;
+            display: inline-block;
+        }
+    }
+
+    .work-type-section {
+        position: relative;
+        margin-bottom: 40px;
+
+        &:last-child {
+            margin-bottom: 0px;
+        }
+
+        &.collapsed {
+            margin-bottom: 10px;
+
+            > h2:before {
+                background: url('/img/arrow_state_grey_expanded.png');
+            }
+
+            .works-list {
+                display: none !important;
+            }
+
+            .rating-title {
+                display: none !important;
+            }
+        }
+
+        > h2 {
+            background: @header-default-color;
+            color: #ffffff;
+            cursor: pointer;
+            padding: 4px 0 4px 18px;
+            font-weight: bold;
+            border-radius: 10px 10px 0 0;
+            .user-select;
+
+            .rating-title {
+                float: right;
+                padding-right: 20px;
+                font-weight: normal;
+            }
+
+            &:before {
+                background: url('/img/arrow_state_grey_right.png');
+                height: 16px;
+                width: 16px;
+                content: ' ';
+                position: absolute;
+                top: 3px;
+                left: 2px;
+            }
+        }
+
+        &.plans-author > h2 {
+            background: @header-innactive-color;
+        }
+
+        .works-list {
+            padding-left: 8px;
+
+            .dots {
+                border-bottom: 1px dotted #949494;
+            }
+
+            li.with-parts {
+                > ul {
+                    margin-bottom: 10px;
+
+                    &.works-list {
+                        margin-left: 52px;
+
+                    }
+
+                    > li {
+                        .work-title:before {
+                            margin-left: 5px;
+                            content: '•';
+                            position: absolute;
+                            left: -14px;
+                        }
+
+                        > ul > li {
+                            margin-left: 5px;
+                            .work-title:before {
+                                content: 'º';
+                                position: absolute;
+                                left: -14px;
+                                top: 2px;
+                            }
+
+                            > ul > li {
+                                .work-title:before {
+                                    margin-left: 5px;
+                                    content: '¤';
+                                    position: absolute;
+                                    left: -14px;
+                                    top: 0;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            .left-toolbar {
+                float: left;
+                width: 50px;
+                margin-top: 9px;
+
+                + .dots {
+                    margin-left: 50px;
+                }
+            }
+
+            .work-title {
+                min-height: 22px;
+                display: block;
+                position: relative;
+                top: 11px;
+                margin: 2px 300px 3px 0;
+                line-height: 20px;
+
+                .white-bg {
+                    background: #ffffff;
+
+                    .ru {
+                        color: blue;
+                    }
+
+                    .en {
+                        color: #204090;
+                    }
+
+                    span.plus {
+                        background: #FFFFFF;
+                    }
+
+                    .about-work {
+                        color: #808080;
+                    }
+
+                    .cross-autor-cycle {
+                        color: #808080;
+                        font-style: italic;
+                    }
+                }
+            }
+
+            li[data-cycle="0"] .in-cycle {
+                display: none;
+            }
+
+            li[data-cycle="0"] .left-toolbar {
+                margin-top: 13px;
+            }
+
+            li[data-cycle="1"] .in-cycle {
+                width: 14px;
+                height: 14px;
+                margin-left: 4px;
+                background: url('/img/incycle.gif');
+                display: inline-block;
+                overflow: hidden;
+                text-indent: -500px;
+            }
+
+            li[data-analysis="0"] > .rating .analysis {
+                display: none;
+
+                & + * {
+                    margin-left: 19px;
+                }
+            }
+            li[data-analysis="0"][data-work-description="0"] > .rating {
+                a.analysis,
+                a.work-description {
+                    display: none;
+                    & + * {
+                        margin-left: 39px;
+                    }
+                }
+            }
+
+            li[data-analysis="1"] > .rating a.analysis {
+                background-image: url('/img/lp.gif');
+                display: inline-block;
+                width: 9px;
+                height: 11px;
+
+                &.off {
+                    background-image: url('/img/lp_off.gif');
+                }
+            }
+
+            .li[data-work-description="0"] > .rating a.work-description {
+                display: none;
+
+                & + * {
+                    margin-left: 20px;
+                }
+            }
+
+            .li[data-work-description="1"] > .rating a.work-description {
+                background-image: url('/img/hasdescr.gif');
+                display: inline-block;
+                width: 10px;
+                height: 11px;
+            }
+
+            .rating {
+                float: right;
+                margin-top: -11px;
+                height: 20px;
+                position: relative;
+                background: #ffffff;
+
+                > * {
+                    margin-right: 5px;
+
+                    &:last-child {
+                        margin-right: 0;
+                    }
+                }
+
+                .comments {
+                    color: #00A000;
+                    text-align: right;
+
+                    &.mycomments {
+                        color: #804000;
+                    }
+                }
+
+                .autor-mark {
+                    height: 14px;
+                    width: 26px;
+                    border: 1px solid #D8E1E6;
+                    font-family: Verdana;
+                    text-align: center;
+                    cursor: pointer;
+                    vertical-align: middle;
+                    z-index: 1;
+                    background-color: white;
+                    display: inline-block;
+                }
+            }
+        }
+
+        .works-part {
+            padding-left: 20px;
+        }
+    }
 }

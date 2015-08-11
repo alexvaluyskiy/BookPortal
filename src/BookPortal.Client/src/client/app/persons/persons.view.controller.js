@@ -38,10 +38,7 @@
 
         function getPersonWorks(personId) {
             return dataservice.getPersonWorks(personId).then(function (data) {
-                vm.person.works = _.groupBy(data, function(item) {
-                     return item.worktypeid;
-                });
-
+                vm.person.works = _.groupBy(data, function (item) { return item.worktypelevel; });
                 return vm.person.works;
             });
         }
@@ -55,7 +52,7 @@
 
         function getWorkTypes() {
             return dataservice.getWorkTypes().then(function (data) {
-                vm.worktypes = data;
+                vm.worktypes = _.reduce(data, function (m, x) { m[x.level] = x; return m; }, {});
                 return vm.worktypes;
             });
         }

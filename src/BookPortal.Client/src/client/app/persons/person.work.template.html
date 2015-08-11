@@ -1,0 +1,29 @@
+<li data-work-id="{{work.workid}}" data-cycle="0">
+    <div class="left-toolbar">
+        <span ng-bind="work.year" class="year"></span>
+        <a href="#" class="in-cycle">входит в цикл</a>
+    </div>
+    <div class="dots">
+        <h3 class="work-title">
+            <span class="white-bg">
+                <a ng-if="work.rusname.length > 0" ui-sref="worksview({ workId: work.workid })" ng-bind="work.rusname" class="ru"></a>
+                <span ng-if="work.rusname.length > 0 && work.name.length > 0"> / </span>
+                <a ng-if="work.name.length > 0" ui-sref="worksview({ workId: work.workid })" ng-bind="work.name" class="en"></a>
+                <span ng-if="work.altname" class="about-work">[= {{work.altname}}]</span>
+
+                <span ng-if="work.persons.length > 0">
+                    <span>Соавторы:</span>
+                    <span ng-repeat="person in work.persons">
+                        {{person.name}}{{$last ? '' : ', '}}
+                    </span>
+                </span>
+            </span>
+        </h3>
+    </div>
+    <div class="rating">
+        <span ng-if="work.midmark > 0" class="evaluation">{{work.midmark}} ({{work.votescount}})</span>
+        <span ng-if="work.midmark === undefined" class="evaluation">&nbsp;</span>
+        <div class="autor-mark" data-enabled="2"></div>
+        <span class="comments"></span>
+    </div>
+</li>

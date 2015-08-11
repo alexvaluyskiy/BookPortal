@@ -3,62 +3,48 @@
         <div class="container">
             <div class="row">
                 <div class="widget wviolet">
-                    <div ht-widget-header title="{{vm.title}}"></div>
-                    <div class="widget-content user">
-                        <table class="work-info">
-                            <tr>
-                                <td>Id:</td>
-                                <td>{{vm.person.personid}}</td>
-                            </tr>
-                            <tr>
-                                <td>Имя:</td>
-                                <td>{{vm.person.name}}</td>
-                            </tr>
-                            <tr>
-                                <td>Пол:</td>
-                                <td>{{vm.person.gender}}</td>
-                            </tr>
-                            <tr>
-                                <td>Дата рождения:</td>
-                                <td>{{vm.person.birthdate}}</td>
-                            </tr>
-                            <tr>
-                                <td>Страна:</td>
-                                <td>{{vm.countries[vm.person.countryid]}}</td>
-                            </tr>
-                            <tr>
-                                <td>Биография:</td>
-                                <td>{{vm.person.biography}}</td>
-                            </tr>
-                            <tr>
-                                <td>Примечания:</td>
-                                <td>{{vm.person.notes}}</td>
-                            </tr>
-                        </table>
-                        <hr />
-                        <ul ng-repeat="worktype in vm.person.works">
-                            Work Type: 
-                            <li ng-repeat="work in worktype">
-                                <span ng-if="work.year > 0" ng-bind="work.year"></span>
-                                <span ng-if="!work.year">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                                <a ng-if="work.rusname.length > 0" ui-sref="worksview({ workId: work.workid })" ng-bind="work.rusname"></a>
-                                <span ng-if="work.rusname.length > 0 && work.name.length > 0"> / </span>
-                                <a ng-if="work.name.length > 0" ui-sref="worksview({ workId: work.workid })" ng-bind="work.name"></a>
-                                <span ng-if="work.altname">[= <span ng-bind="work.altname"></span>]</span>
-                                <span ng-if="work.persons.length > 0">
-                                    <span>Соавторы:</span>
-                                    <span ng-repeat="person in work.persons">
-                                        {{person.name}}{{$last ? '' : ', '}}
-                                    </span>
-                                </span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="widget-foot">
-                        <div class="clearfix"></div>
+                    <div class="person-show reset">
+                        <div class="main-info-block">
+                            <h2 class="main-info-header allow-toggle">
+                                <span>{{vm.person.name}}</span>
+                            </h2>
+                            <div class="main-info-detail">
+                                <img class="imgright" src="http://data.fantlab.org/images/autors/{{vm.person.personid}}" alt="{{vm.person.name}}">
+                                <table class="person-info-top-info">
+                                    <tr>
+                                        <td>Страна:</td>
+                                        <td><img src="http://data.fantlab.org/images/flags/{{vm.person.countryid}}.png" />&nbsp;{{vm.countries[vm.person.countryid]}}</td>
+                                    </tr>
+                                    <tr ng-if="vm.person.birthdate">
+                                        <td>Дата рождения:</td>
+                                        <td ng-bind="vm.person.birthdate"></td>
+                                    </tr>
+                                    <tr ng-if="vm.person.deathdate">
+                                        <td>Дата смерти:</td>
+                                        <td ng-bind="vm.person.deathdate"></td>
+                                    </tr>
+                                </table>
+
+                                <div class="person-info-bio paragraph-block clearfix">
+                                    <p>{{vm.person.biography}}</p>
+                                </div>
+                                <p ng-if="vm.person.biographysource" class="person-info-bio-copyright">© {{vm.person.biographysource}}</p>
+                                <div ng-if="vm.person.notes" class="person-info-bio-notes">
+                                    <h3>Примечание к биографии:</h3>
+                                    <div ng-bind="vm.person.notes"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="autor-works" data-evaluation-size="3" data-comments-size="0">
+                            <div ng-repeat="(key, works) in vm.person.works" class="work-type-section">
+                                <h2><span>{{vm.person.name}}.</span> <span>{{ vm.worktypes[key].name }}</span><span class='rating-title'>Рейтинг</span></h2>
+                                <ul class="works-list">
+                                    <personwork ng-repeat="work in works" data-work="work"></personwork>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
     </section>
 </section>
