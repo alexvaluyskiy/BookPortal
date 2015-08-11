@@ -18,7 +18,8 @@
             getPerson(vm.personId).then(function() {
                 var promises = [
                     getPersonWorks(vm.personId),
-                    getCountries()
+                    getCountries(),
+                    getWorkTypes()
                 ];
                 return $q.all(promises).then(function () {
                     logger.info('Activated Persons View');
@@ -38,7 +39,7 @@
         function getPersonWorks(personId) {
             return dataservice.getPersonWorks(personId).then(function (data) {
                 vm.person.works = _.groupBy(data, function(item) {
-                     return item.work_type_id;
+                     return item.worktypeid;
                 });
 
                 return vm.person.works;
@@ -48,8 +49,14 @@
         function getCountries() {
             return dataservice.getCountries().then(function (data) {
                 vm.countries = data;
-
                 return vm.countries;
+            });
+        }
+
+        function getWorkTypes() {
+            return dataservice.getWorkTypes().then(function (data) {
+                vm.worktypes = data;
+                return vm.worktypes;
             });
         }
     }

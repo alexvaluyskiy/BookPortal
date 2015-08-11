@@ -97,6 +97,7 @@ namespace BookPortal.Web
 
             builder.RegisterType<CountriesService>();
             builder.RegisterType<LanguagesService>();
+            builder.RegisterType<WorkTypesService>();
 
             builder.RegisterType<ReviewsService>();
             builder.RegisterType<GenresService>();

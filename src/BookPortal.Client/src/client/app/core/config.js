@@ -21,14 +21,19 @@
 
     core.config(configure);
 
-    configure.$inject = ['$logProvider', 'routerHelperProvider', 'exceptionHandlerProvider'];
+    configure.$inject = ['$logProvider', 'routerHelperProvider', 'exceptionHandlerProvider', 'localStorageServiceProvider', 'applicationInsightsServiceProvider'];
     /* @ngInject */
-    function configure($logProvider, routerHelperProvider, exceptionHandlerProvider) {
+    function configure($logProvider, routerHelperProvider, exceptionHandlerProvider, localStorageServiceProvider, applicationInsightsServiceProvider) {
         if ($logProvider.debugEnabled) {
             $logProvider.debugEnabled(true);
         }
         exceptionHandlerProvider.configure(config.appErrorPrefix);
-        routerHelperProvider.configure({docTitle: config.appTitle + ': '});
+        routerHelperProvider.configure({ docTitle: config.appTitle + ': ' });
+        localStorageServiceProvider.setPrefix('BookPortal');
+        applicationInsightsServiceProvider.configure('f7b8cd31-6851-42f6-80f7-85d2aef749d7',  {
+            autoPageViewTracking: true,
+            autoLogTracking: true,
+            autoExceptionTracking: true
+        });
     }
-
 })();

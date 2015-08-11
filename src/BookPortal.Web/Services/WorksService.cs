@@ -59,7 +59,7 @@ namespace BookPortal.Web.Services
                     SELECT pw.work_id as 'WorkId', p.person_id as 'PersonId', p.name as 'Name', p.name_sort as 'NameSort', pw.type as 'PersonType'
                     FROM persons AS p
                     INNER JOIN person_works AS pw ON p.person_id = pw.person_id
-                    WHERE pw.work_id IN @workIds";
+                    WHERE pw.work_id IN @workIds AND pw.person_id != @personId";
 
                 var people = await connection.QueryAsync(() => new
                                 {
@@ -68,7 +68,7 @@ namespace BookPortal.Web.Services
                                     Name = default(string),
                                     NameSort = default(string),
                                     PersonType = default(WorkPersonType)
-                                }, peopleSql, new {workIds});
+                                }, peopleSql, new {workIds, personId});
 
                 var peopleDic = people.GroupBy(c => c.WorkId).ToDictionary(c => c.Key, c => c.Select(d => new PersonResponse
                 {
@@ -77,8 +77,6 @@ namespace BookPortal.Web.Services
                     NameSort = d.NameSort,
                     PersonType = d.PersonType
                 }).ToList());
-
-
 
                 foreach (var work in works)
                 {

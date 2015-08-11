@@ -26,17 +26,17 @@
             }
         }
 
-        this.id = data.award_id;
+        this.id = data.awardid;
         this.awardUrl = "/award/" + this.id;
         this.awardIconUrl = imagesCdnUrl + "awards/icons/" + this.id + "_icon";
-        this.fullName = getFullName(data.rus_name, data.name);
-        this.countryUrl = imagesCdnUrl + "flags/" + data.country_id + ".png";
-        this.countryName = data.country_name;
+        this.fullName = getFullName(data.rusname, data.name);
+        this.countryUrl = imagesCdnUrl + "flags/" + data.countryid + ".png";
+        this.countryName = data.countryname;
         this.nominationsCount = 4;
         this.contestsCount = 5;
-        this.awardClosedUrl = data.award_closed === true ? imagesCdnUrl + "sclosed.gif" : imagesCdnUrl + "/sclosedna.gif";
-        this.firstAwardYear = formatDate(data.first_contest_date);
-        this.lastAwardYear = formatDate(data.last_contest_date);
+        this.awardClosedUrl = data.awardclosed === true ? imagesCdnUrl + "sclosed.gif" : imagesCdnUrl + "/sclosedna.gif";
+        this.firstAwardYear = formatDate(data.firstcontestdate);
+        this.lastAwardYear = formatDate(data.lastcontestdate);
     }
 
     AwardsListController.$inject = ['$http', '$q', 'dataservice', 'logger'];

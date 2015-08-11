@@ -10,8 +10,7 @@ namespace BookPortal.Core.Framework
         {
             var jsonOutputFormatter = new JsonOutputFormatter();
             jsonOutputFormatter.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            //jsonOutputFormatter.SerializerSettings.Formatting = Formatting.Indented;
-            jsonOutputFormatter.SerializerSettings.ContractResolver = new LowerCaseUnderscorePropertyNamesContractResolver();
+            jsonOutputFormatter.SerializerSettings.ContractResolver = new LowerCasePropertyNamesContractResolver();
             jsonOutputFormatter.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
             jsonOutputFormatter.SupportedMediaTypes.Clear();
             jsonOutputFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/json"));

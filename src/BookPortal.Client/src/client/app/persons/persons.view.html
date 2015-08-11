@@ -8,7 +8,7 @@
                         <table class="work-info">
                             <tr>
                                 <td>Id:</td>
-                                <td>{{vm.person.person_id}}</td>
+                                <td>{{vm.person.personid}}</td>
                             </tr>
                             <tr>
                                 <td>Имя:</td>
@@ -24,7 +24,7 @@
                             </tr>
                             <tr>
                                 <td>Страна:</td>
-                                <td>{{vm.countries[vm.person.country_id]}}</td>
+                                <td>{{vm.countries[vm.person.countryid]}}</td>
                             </tr>
                             <tr>
                                 <td>Биография:</td>
@@ -39,12 +39,12 @@
                         <ul ng-repeat="worktype in vm.person.works">
                             Work Type: 
                             <li ng-repeat="work in worktype">
-                                <span ng-if="work.year > 0">{{ work.year }}</span>
+                                <span ng-if="work.year > 0" ng-bind="work.year"></span>
                                 <span ng-if="!work.year">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                                <a ng-if="work.rus_name.length > 0" ui-sref="worksview({ workId: work.work_id })">{{ work.rus_name }}</a>
-                                <span ng-if="work.rus_name.length > 0 && work.name.length > 0"> / </span>
-                                <a ng-if="work.name.length > 0">{{ work.name }}</a>
-                                <span ng-if="work.alt_name">[= {{ work.alt_name }}]</span>
+                                <a ng-if="work.rusname.length > 0" ui-sref="worksview({ workId: work.workid })" ng-bind="work.rusname"></a>
+                                <span ng-if="work.rusname.length > 0 && work.name.length > 0"> / </span>
+                                <a ng-if="work.name.length > 0" ui-sref="worksview({ workId: work.workid })" ng-bind="work.name"></a>
+                                <span ng-if="work.altname">[= <span ng-bind="work.altname"></span>]</span>
                                 <span ng-if="work.persons.length > 0">
                                     <span>Соавторы:</span>
                                     <span ng-repeat="person in work.persons">

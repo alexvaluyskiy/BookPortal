@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace BookPortal.Core.Framework.Models
 {
@@ -7,6 +8,11 @@ namespace BookPortal.Core.Framework.Models
         public ApiObject()
         {
             Values = new List<T>();
+        }
+
+        public ApiObject(IEnumerable<T> values) : this(values.ToList())
+        {
+
         }
 
         public ApiObject(IReadOnlyList<T> values)

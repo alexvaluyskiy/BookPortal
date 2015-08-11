@@ -8,20 +8,20 @@
                         <table class="work-info">
                             <tr>
                                 <td>Id:</td>
-                                <td>{{vm.work.work_id}}</td>
+                                <td>{{vm.work.workid}}</td>
                             </tr>
                             <tr>
                                 <td>Название:</td>
                                 <td>
-                                    {{vm.work.rus_name}}
+                                    {{vm.work.rusname}}
                                     <span ng-if="vm.work.name.length > 0">/ {{vm.work.name}}</span>
-                                    <span ng-if="vm.work.alt_name.length > 0" class="altnames">({{vm.work.alt_name}})</span>
+                                    <span ng-if="vm.work.altname.length > 0" class="altnames">({{vm.work.altname}})</span>
                                 </td>
                             </tr>
                             <tr>
                                 <td>Авторы</td>
                                 <td>
-                                    <a ng-repeat="person in vm.work.persons" class="author" ui-sref="personsview({ personId: person.person_id })">
+                                    <a ng-repeat="person in vm.work.persons" class="author" ui-sref="personsview({ personId: person.personid })">
                                         {{person.name}}
                                     </a>
                                 </td>
@@ -29,11 +29,11 @@
                             <tr>
                                 <td>Жанр:</td>
                                 <td>
-                                    {{vm.work.work_type_name}}
-                                    <span ng-if="vm.work.not_finished || !vm.work.published || vm.work.is_plan" class="work-not-published">
-                                        (<span ng-if="vm.work.not_finished">не закончен</span>
-                                        <span ng-if="!vm.work.published">не опубликован</span>
-                                        <span ng-if="vm.work.is_plan">в планах автора</span>)
+                                    {{vm.work.worktypename}}
+                                    <span ng-if="vm.work.notfinished || !vm.work.publishtype || vm.work.inplans" class="work-not-published">
+                                        (<span ng-if="vm.work.notfinished">не закончен</span>
+                                        <span ng-if="!vm.work.publishtype">не опубликован</span>
+                                        <span ng-if="vm.work.inplans">в планах автора</span>)
                                     </span>
                                 </td>
                             </tr>
@@ -62,18 +62,18 @@
                                 <td>Премии:</td>
                                 <td>
                                     <b>Победы</b>
-                                    <p ng-repeat="awarditem in vm.work.awards | filter: {contest_work_is_winner: true}" class="award-item">
-                                        <img src="https://data.fantlab.ru/images/awards/icons/{{awarditem.award_id}}_icon"/>
-                                        <a ui-sref="awardsview({ awardId: awarditem.award_id })">{{awarditem.award_rusname}}</a>
-                                        (<span>{{awarditem.contest_name}}</span>)
-                                        // <span>{{awarditem.nomination_rusname}}</span>
+                                    <p ng-repeat="awarditem in vm.work.awards | filter: {contestworkiswinner: true}" class="award-item">
+                                        <img src="https://data.fantlab.ru/images/awards/icons/{{awarditem.awardid}}_icon"/>
+                                        <a ui-sref="awardsview({ awardId: awarditem.awardid })">{{awarditem.awardrusname}}</a>
+                                        (<span>{{awarditem.contestname}}</span>)
+                                        // <span>{{awarditem.nominationrusname}}</span>
                                     </p>
                                     <b>Номинации</b>
-                                    <p ng-repeat="awarditem in vm.work.awards | filter: {contest_work_is_winner: false}" class="award-item nominations">
-                                        <img src="https://data.fantlab.ru/images/awards/icons/{{awarditem.award_id}}_icon" />
-                                        <a ui-sref="awardsview({ awardId: awarditem.award_id })">{{awarditem.award_rusname}}</a>
-                                        (<span>{{awarditem.contest_name}}</span>)
-                                        // <span>{{awarditem.nomination_rusname}}</span>
+                                    <p ng-repeat="awarditem in vm.work.awards | filter: {contestworkiswinner: false}" class="award-item nominations">
+                                        <img src="https://data.fantlab.ru/images/awards/icons/{{awarditem.awardid}}_icon" />
+                                        <a ui-sref="awardsview({ awardId: awarditem.awardid })">{{awarditem.awardrusname}}</a>
+                                        (<span>{{awarditem.contestname}}</span>)
+                                        // <span>{{awarditem.nominationrusname}}</span>
                                     </p>
                                 </td>
                             </tr>
@@ -82,10 +82,10 @@
                         <hr />
                         <table style="width: 50%">
                             <tr ng-repeat="edition in vm.work.editions">
-                                <td><img ng-src="http://data.fantlab.org/images/editions/big/{{edition.edition_id}}"></td>
-                                <td><a href="/editions/{{edition.edition_id}}">{{edition.name}}</a></td>
+                                <td><img ng-src="http://data.fantlab.org/images/editions/big/{{edition.editionid}}"></td>
+                                <td><a href="/editions/{{edition.editionid}}">{{edition.name}}</a></td>
                                 <td>{{edition.year}}</td>
-                                <td>{{edition.serie_sort}}</td>
+                                <td>{{edition.seriesort}}</td>
                                 <td>{{edition.correct}}</td>
                             </tr>
                         </table>
@@ -94,8 +94,8 @@
                         <table style="width: 50%">
                             <tr ng-repeat="review in vm.work.reviews">
                                 <td>{{review.text}}</td>
-                                <td>{{review.review_rating}}</td>
-                                <td>{{review.date_created}}</td>
+                                <td>{{review.reviewrating}}</td>
+                                <td>{{review.datecreated}}</td>
                             </tr>
                         </table>
                     </div>

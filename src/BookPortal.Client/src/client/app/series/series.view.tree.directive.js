@@ -14,7 +14,7 @@
             template:
             '<p>' +
               '<b ng-if="family.serie_id == serieid">{{ family.name }}</b>' +
-              '<a ng-if="family.serie_id != serieid" ui-sref="seriesview({ serieId: family.serie_id })">{{ family.name }}</a>' +
+              '<a ng-if="family.serie_id != serieid" ui-sref="seriesview({ serieId: family.serieid })">{{ family.name }}</a>' +
             '</p>' +
                 '<ul>' +
                     '<li ng-repeat="child in family.series">' +

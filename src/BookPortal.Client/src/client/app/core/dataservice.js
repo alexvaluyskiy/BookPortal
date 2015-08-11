@@ -5,9 +5,9 @@
         .module('app.core')
         .factory('dataservice', dataservice);
 
-    dataservice.$inject = ['$http', '$q', 'exception', 'logger'];
+    dataservice.$inject = ['$http', '$q', 'exception', 'logger', 'localStorageService'];
     /* @ngInject */
-    function dataservice($http, $q, exception, logger) {
+    function dataservice($http, $q, exception, logger, localStorageService) {
         var mainServiceUrl = 'http://aspnet5-bookportal-web.azurewebsites.net';
 
         var service = {
@@ -15,6 +15,8 @@
             getMessageCount: getMessageCount,
 
             getCountries: getCountries,
+            getLanguages: getLanguages,
+            getWorkTypes: getWorkTypes,
 
             getAwards: getAwards,
 
@@ -54,15 +56,63 @@
         }
 
         function getCountries() {
-            var url = mainServiceUrl + '/api/countries';
+            var countries = localStorageService.get("countries");
 
-            return $http.get(url)
-                .then(function (response) {
-                    return _.reduce(response.data.result.rows, function(m, x) {m[x.country_id] = x.name; return m;}, {});
-                })
-                .catch(function (e) {
-                    return exception.catcher('XHR Failed for getCountries')(e);
-                });
+            if (countries === null) {
+                var url = mainServiceUrl + '/api/countries';
+
+                return $http.get(url)
+                    .then(function(response) {
+                        countries = _.reduce(response.data.result.rows, function(m, x) { m[x.countryid] = x.name; return m; }, {});
+                        localStorageService.set("countries", countries);
+                        return countries;
+                    })
+                    .catch(function(e) {
+                        return exception.catcher('XHR Failed for getCountries')(e);
+                    });
+            }
+
+            return $q.when(countries);
+        }
+
+        function getLanguages() {
+            var languages = localStorageService.get("languages");
+
+            if (languages === null) {
+                var url = mainServiceUrl + '/api/languages';
+
+                return $http.get(url)
+                    .then(function (response) {
+                        languages = _.reduce(response.data.result.rows, function (m, x) { m[x.languageid] = x.name; return m; }, {});
+                        localStorageService.set("languages", languages);
+                        return languages;
+                    })
+                    .catch(function (e) {
+                        return exception.catcher('XHR Failed for getLanguages')(e);
+                    });
+            }
+
+            return $q.when(languages);
+        }
+
+        function getWorkTypes() {
+            var worktypes = localStorageService.get("worktypes");
+
+            if (worktypes === null) {
+                var url = mainServiceUrl + '/api/worktypes';
+
+                return $http.get(url)
+                    .then(function (response) {
+                        worktypes = _.reduce(response.data.result.rows, function (m, x) { m[x.worktypeid] = x; return m; }, {});
+                        localStorageService.set("worktypes", worktypes);
+                        return worktypes;
+                    })
+                    .catch(function (e) {
+                        return exception.catcher('XHR Failed for getWorkTypes')(e);
+                    });
+            }
+
+            return $q.when(worktypes);
         }
 
         // GET AWARD_LIST
