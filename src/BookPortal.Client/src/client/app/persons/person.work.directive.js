@@ -10,7 +10,7 @@
     function personwork(recursionhelper) {
         var directive = {
             restrict: 'E',
-            scope: { work: '=' },
+            scope: { work: '=', level: '=', worktype: '=' },
             templateUrl: 'app/persons/person.work.template.html',
             compile: function (element) {
                 return recursionhelper.compile(element);

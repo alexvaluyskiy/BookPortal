@@ -1,18 +1,20 @@
 <li data-work-id="{{work.workid}}" data-cycle="{{work.root_cycle_work_id > 0 ? 1 : 0}}">
-    <div class="left-toolbar">
-        <span ng-bind="work.year" class="year"></span>
+    <div ng-if="level == 1" class="left-toolbar">
+        <span ng-bind="::work.year" class="year"></span>
         <a ng-if="work.root_cycle_work_id > 0" ui-sref="worksview({ workId: work.root_cycle_work_id })"
-           class="in-cycle" title="Входит в роман «{{work.root_cycle_work_name}}»"></a>
+           class="in-cycle" title="Входит в роман «{{::work.root_cycle_work_name}}»"></a>
         <a ng-if="work.root_cycle_work_id === undefined" href="#" class="in-cycle">входит в цикл</a>
     </div>
     <div class="dots">
         <h3 class="work-title">
             <span class="white-bg">
-                <a ng-if="work.rusname.length > 0" ui-sref="worksview({ workId: work.workid })" ng-bind="work.rusname" class="ru"></a>
+                <a ng-if="work.rusname.length > 0" ui-sref="worksview({ workId: work.workid })" ng-bind="::work.rusname" class="ru"></a>
                 <span ng-if="work.rusname.length > 0 && work.name.length > 0"> / </span>
-                <a ng-if="work.name.length > 0" ui-sref="worksview({ workId: work.workid })" ng-bind="work.name" class="en"></a>
-                <span ng-if="work.altname" class="about-work">[= {{work.altname}}]</span>
-                <span ng-if="work.persons.length > 0">//
+                <a ng-if="work.name.length > 0" ui-sref="worksview({ workId: work.workid })" ng-bind="::work.name" class="en"></a>
+                <span ng-if="work.altname" class="about-work">[= {{::work.altname}}]</span>
+                <span ng-if="work.year > 0 && level > 1">({{::work.year}})</span>
+                <span ng-if="work.persons.length > 0">
+                    //
                     <span ng-if="work.coauthortype == 'macycle'" class="cross-autor-cycle">межавторский цикл</span>
                     <span class="coautor">
                         <ng-pluralize ng-if="work.coauthortype === 'coauthor'" count="work.persons.length" when="{1: 'Соавтор:','other': 'Соавторы:'}"></ng-pluralize>
@@ -20,9 +22,11 @@
                         <ng-pluralize ng-if="work.coauthortype === 'author'" count="work.persons.length" when="{1: 'Автор:','other': 'Авторы:'}"></ng-pluralize>
                     </span>
                     <span ng-repeat="person in work.persons">
-                        {{person.name}}{{$last ? '' : ', '}}
+                        {{::person.name}}{{$last ? '' : ', '}}
                     </span>
                 </span>
+                <span ng-if="work.additionalinfo" class="about-work">, {{::work.additionalinfo}}</span>
+                <span ng-if="work.bonustext" class="about-work">[{{::work.bonustext}}]</span>
             </span>
         </h3>
     </div>
@@ -32,4 +36,7 @@
         <div class="autor-mark" data-enabled="2">{{work.usermark}}</div>
         <span class="comments"></span>
     </div>
+    <ul class="works-part">
+        <personwork ng-repeat="work in work.childworks" data-work="work" data-level="2"></personwork>
+    </ul>
 </li>

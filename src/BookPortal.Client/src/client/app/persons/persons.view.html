@@ -6,40 +6,46 @@
                     <div class="person-show reset">
                         <div class="main-info-block">
                             <h2 class="main-info-header allow-toggle">
-                                <span>{{vm.person.name}}</span>
+                                <span>{{::vm.person.name}}</span>
                             </h2>
                             <div class="main-info-detail">
-                                <img class="imgright" src="http://data.fantlab.org/images/autors/{{vm.person.personid}}" alt="{{vm.person.name}}">
+                                <img class="imgright" src="http://data.fantlab.org/images/autors/{{vm.person.personid}}" alt="{{::vm.person.name}}">
                                 <table class="person-info-top-info">
                                     <tr>
                                         <td>Страна:</td>
-                                        <td><img src="http://data.fantlab.org/images/flags/{{vm.person.countryid}}.png" />&nbsp;{{vm.countries[vm.person.countryid]}}</td>
+                                        <td><img src="http://data.fantlab.org/images/flags/{{vm.person.countryid}}.png" />&nbsp;{{::vm.countries[vm.person.countryid]}}</td>
                                     </tr>
                                     <tr ng-if="vm.person.birthdate">
                                         <td>Дата рождения:</td>
-                                        <td ng-bind="vm.person.birthdate"></td>
+                                        <td ng-bind="::vm.person.birthdate"></td>
                                     </tr>
                                     <tr ng-if="vm.person.deathdate">
                                         <td>Дата смерти:</td>
-                                        <td ng-bind="vm.person.deathdate"></td>
+                                        <td ng-bind="::vm.person.deathdate"></td>
                                     </tr>
                                 </table>
 
                                 <div class="person-info-bio paragraph-block clearfix">
-                                    <p>{{vm.person.biography}}</p>
+                                    <p>{{::vm.person.biography}}</p>
                                 </div>
-                                <p ng-if="vm.person.biographysource" class="person-info-bio-copyright">© {{vm.person.biographysource}}</p>
+                                <p ng-if="vm.person.biographysource" class="person-info-bio-copyright">© {{::vm.person.biographysource}}</p>
                                 <div ng-if="vm.person.notes" class="person-info-bio-notes">
                                     <h3>Примечание к биографии:</h3>
-                                    <div ng-bind="vm.person.notes"></div>
+                                    <div ng-bind="::vm.person.notes"></div>
                                 </div>
                             </div>
                         </div>
                         <div class="autor-works" data-evaluation-size="3" data-comments-size="0">
-                            <div ng-repeat="(key, works) in vm.person.works" class="work-type-section">
-                                <h2><span>{{vm.person.name}}.</span> <span>{{ vm.worktypes[key].name }}</span><span class='rating-title'>Рейтинг</span></h2>
+                            <div class="work-type-section plans-author">
+                                <h2><span>{{::vm.person.name}}.</span> <span>Планы автора</span><span class='rating-title'>Рейтинг</span></h2>
                                 <ul class="works-list">
-                                    <personwork ng-repeat="work in works" data-work="work"></personwork>
+                                    <personwork ng-repeat="work in vm.person.worksinplans" data-work="work" data-worktype="vm.worktypes[work.worktypelevel]" data-level="1"></personwork>
+                                </ul>
+                            </div>
+                            <div ng-repeat="(key, works) in vm.person.works" class="work-type-section">
+                                <h2><span>{{::vm.person.name}}.</span> <span>{{ ::vm.worktypes[key].name }}</span><span class='rating-title'>Рейтинг</span></h2>
+                                <ul class="works-list {{vm.worktypes[key].isnode ? 'with-parts' : ''}}">
+                                    <personwork ng-repeat="work in works" data-work="work" data-worktype="vm.worktypes[work.worktypelevel]" data-level="1"></personwork>
                                 </ul>
                             </div>
                         </div>
