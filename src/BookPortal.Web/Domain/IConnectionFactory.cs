@@ -8,6 +8,6 @@ namespace BookPortal.Web.Domain
 {
     public interface IConnectionFactory
     {
-        IDbConnection DbConnection { get; }
+        IDbConnection Create();
     }
 }

@@ -19,8 +19,5 @@ namespace BookPortal.Web.Domain.Models
 
         [Column("level")]
         public int Level { get; set; }
-
-        [Column("is_node")]
-        public bool IsNode { get; set; }
     }
 }
