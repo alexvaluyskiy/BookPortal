@@ -1,7 +1,9 @@
-<li data-work-id="{{work.workid}}" data-cycle="0">
+<li data-work-id="{{work.workid}}" data-cycle="{{work.root_cycle_work_id > 0 ? 1 : 0}}">
     <div class="left-toolbar">
         <span ng-bind="work.year" class="year"></span>
-        <a href="#" class="in-cycle">входит в цикл</a>
+        <a ng-if="work.root_cycle_work_id > 0" ui-sref="worksview({ workId: work.root_cycle_work_id })"
+           class="in-cycle" title="Входит в роман «{{work.root_cycle_work_name}}»"></a>
+        <a ng-if="work.root_cycle_work_id === undefined" href="#" class="in-cycle">входит в цикл</a>
     </div>
     <div class="dots">
         <h3 class="work-title">
@@ -10,9 +12,13 @@
                 <span ng-if="work.rusname.length > 0 && work.name.length > 0"> / </span>
                 <a ng-if="work.name.length > 0" ui-sref="worksview({ workId: work.workid })" ng-bind="work.name" class="en"></a>
                 <span ng-if="work.altname" class="about-work">[= {{work.altname}}]</span>
-
-                <span ng-if="work.persons.length > 0">
-                    <span>Соавторы:</span>
+                <span ng-if="work.persons.length > 0">//
+                    <span ng-if="work.coauthortype == 'macycle'" class="cross-autor-cycle">межавторский цикл</span>
+                    <span class="coautor">
+                        <ng-pluralize ng-if="work.coauthortype === 'coauthor'" count="work.persons.length" when="{1: 'Соавтор:','other': 'Соавторы:'}"></ng-pluralize>
+                        <ng-pluralize ng-if="work.coauthortype === 'editor'" count="work.persons.length" when="{1: 'Редактор-составитель:','other': 'Редакторы-составители:'}"></ng-pluralize>
+                        <ng-pluralize ng-if="work.coauthortype === 'author'" count="work.persons.length" when="{1: 'Автор:','other': 'Авторы:'}"></ng-pluralize>
+                    </span>
                     <span ng-repeat="person in work.persons">
                         {{person.name}}{{$last ? '' : ', '}}
                     </span>
@@ -21,9 +27,9 @@
         </h3>
     </div>
     <div class="rating">
-        <span ng-if="work.midmark > 0" class="evaluation">{{work.midmark}} ({{work.votescount}})</span>
-        <span ng-if="work.midmark === undefined" class="evaluation">&nbsp;</span>
-        <div class="autor-mark" data-enabled="2"></div>
+        <span ng-if="work.rating > 0" class="evaluation">{{work.rating}} ({{work.votescount}})</span>
+        <span ng-if="work.rating === undefined" class="evaluation">&nbsp;</span>
+        <div class="autor-mark" data-enabled="2">{{work.usermark}}</div>
         <span class="comments"></span>
     </div>
 </li>
