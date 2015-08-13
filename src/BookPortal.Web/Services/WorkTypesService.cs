@@ -21,7 +21,7 @@ namespace BookPortal.Web.Services
             using (var connection = _connectionFactory.Create())
             {
                 var sql = @"
-                    SELECT work_type_id as 'WorkTypeId', name, name_single as 'NameSingle', level
+                    SELECT work_type_id as 'WorkTypeId', name, name_single as 'NameSingle', level, is_node as 'IsNode'
                     FROM work_types";
 
                 var workTypes = await connection.QueryAsync<WorkTypeResponse>(sql);
@@ -35,7 +35,7 @@ namespace BookPortal.Web.Services
             using (var connection = _connectionFactory.Create())
             {
                 var sql = @"
-                    SELECT work_type_id as 'WorkTypeId', name, name_single as 'NameSingle', level
+                    SELECT work_type_id as 'WorkTypeId', name, name_single as 'NameSingle', level, is_node as 'IsNode'
                     FROM work_types
                     WHERE work_type_id = @workTypeId";
 
