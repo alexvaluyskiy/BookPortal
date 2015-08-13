@@ -105,7 +105,8 @@ namespace BookPortal.Web
 
             builder.RegisterType<ConnectionFactory>()
                 .As<IConnectionFactory>()
-                .WithParameter("connectionString", Configuration.Get("Data:DefaultConnection:ConnectionString"));
+                .WithParameter("connectionString", Configuration.Get("Data:DefaultConnection:ConnectionString"))
+                .InstancePerLifetimeScope();
 
             builder.RegisterInstance(new RedisCache(new RedisCacheOptions { Configuration = Configuration.Get("RedisCache") }));
 

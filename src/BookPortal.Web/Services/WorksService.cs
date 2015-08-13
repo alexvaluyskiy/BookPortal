@@ -25,7 +25,7 @@ namespace BookPortal.Web.Services
 
         public async Task<ApiObject<WorkResponse>> GetWorksAsync(int personId, string sortMode, bool includeTree)
         {
-            using (var connection = _connectionFactory.Create())
+            using (var connection = _connectionFactory.DbConnection)
             {
                 // get all work's ids
                 var workIdsSql = @"SELECT work_id as 'WorkId' FROM person_works WHERE person_id = @personId";
@@ -225,7 +225,7 @@ namespace BookPortal.Web.Services
 
         public async Task<WorkResponse> GetWorkAsync(int workId)
         {
-            using (var connection = _connectionFactory.Create())
+            using (var connection = _connectionFactory.DbConnection)
             {
                 var workSql = @"
                     SELECT
@@ -256,7 +256,7 @@ namespace BookPortal.Web.Services
 
         public async Task<MarkResponse> GetWorkMarkAsync(int workId, int userId)
         {
-            using (var connection = _connectionFactory.Create())
+            using (var connection = _connectionFactory.DbConnection)
             {
                 var workSql = @"
                     SELECT work_id as 'WorkId', COUNT(*) as 'MarksCount', ROUND(AVG(Cast(mark_value as Float)), 5) as 'Rating'
@@ -282,7 +282,7 @@ namespace BookPortal.Web.Services
 
         private async Task<Dictionary<int, WorkLink>> BuildWorksTree(int personId)
         {
-            using (var connection = _connectionFactory.Create())
+            using (var connection = _connectionFactory.DbConnection)
             {
                 var sql = @"
                     WITH tree AS
