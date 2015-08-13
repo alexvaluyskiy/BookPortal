@@ -311,6 +311,11 @@
     .person-admin-links {
         margin-top: 15px;
     }
+
+    
+    .sorting-panel {
+        margin: 10px 0;
+    }
 }
 
 /* Author works */
@@ -392,16 +397,14 @@ div.autor-works {
                 border-bottom: 1px dotted #949494;
             }
 
-            li.with-parts {
-                > ul {
-                    margin-bottom: 10px;
-
+            &.worktypenode {
+                ul {
                     &.works-list {
                         margin-left: 52px;
 
                     }
 
-                    > li {
+                    li {
                         .work-title:before {
                             margin-left: 5px;
                             content: '•';
@@ -409,7 +412,7 @@ div.autor-works {
                             left: -14px;
                         }
 
-                        > ul > li {
+                        ul li {
                             margin-left: 5px;
                             .work-title:before {
                                 content: 'º';
@@ -418,7 +421,7 @@ div.autor-works {
                                 top: 2px;
                             }
 
-                            > ul > li {
+                            ul li {
                                 .work-title:before {
                                     margin-left: 5px;
                                     content: '¤';
@@ -429,6 +432,16 @@ div.autor-works {
                             }
                         }
                     }
+                }
+
+                .works-part {
+                    padding-left: 20px;
+                }
+            }
+
+            &.worktypeplain {
+              .works-part {
+                    padding-left: 70px;
                 }
             }
 
@@ -574,10 +587,6 @@ div.autor-works {
                     display: inline-block;
                 }
             }
-        }
-
-        .works-part {
-            padding-left: 20px;
         }
     }
 }

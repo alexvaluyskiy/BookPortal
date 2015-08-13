@@ -11,6 +11,21 @@
         var vm = this;
         vm.title = 'Персона';
         vm.personId = $stateParams.personId || 1;
+        vm.changeSort = changeSort;
+
+        vm.sortTypes = [
+          { sortName: "по году публикации", sortValue: "year" },
+          { sortName: "по рейтингу", sortValue: "rating" },
+          { sortName: "по количеству оценок", sortValue: "markscount" },
+          { sortName: "по русскому названию", sortValue: "rusname" },
+          { sortName: "по оригинальному названию", sortValue: "name" }
+        ];
+
+        vm.selectedSortType = vm.sortTypes[0];
+
+        function changeSort() {
+            console.log(vm.selectedSortType);
+        }
 
         activate();
 
@@ -29,7 +44,11 @@
 
         function getPerson(personId) {
             return dataservice.getPerson(personId).then(function (data) {
+                var imagesCdnUrl = "http://data.fantlab.org/images/";
+
                 vm.person = data;
+                vm.person.personimageurl = imagesCdnUrl + 'autors/' + vm.person.personid;
+                vm.person.countryimageurl = imagesCdnUrl + 'flags/' + vm.person.countryid + '.png';
 
                 vm.title = 'Персона: ' + vm.person.name;
                 return vm.person;
@@ -48,7 +67,7 @@
                         "rating": 8.81, // TODO
                         "usermark": 8, // TODO
                         "worktypelevel": 6,
-                        "root_cycle_work_id": 92, // TODO
+                        "root_cycle_work_id": 92, // TODO: find root cycle
                         "root_cycle_work_name": "Песни Гипериона", // TODO
                         "root_cycle_work_type_id": 13 // TODO
                     },
@@ -109,6 +128,17 @@
                                 "votescount": 4615,
                                 "rating": 8.81,
                                 "usermark": 8
+                            },
+                            {
+                                "workid": 645,
+                                "rusname": "Девятое аба",
+                                "name": "The Ninth of Av",
+                                "year": 2000,
+                                "votescount": 104,
+                                "rating": 7.67,
+                                "worktypelevel": 8,
+                                "isaddition": true,
+                                "bonustext": "рассказ"
                             }
                         ]
                     },
@@ -130,6 +160,25 @@
                         "rating": 8.69,
                         "worktypelevel": 8,
                         "bonustext": "вошел в состав романа «Гиперион»"
+                    },
+                    {
+                        "workid": 37120,
+                        "rusname": "Молитвы разбитому камню",
+                        "name": "Prayers to Broken Stones",
+                        "year": 1990,
+                        "votescount": 81,
+                        "rating": 7.33,
+                        "worktypelevel": 45,
+                        "childworks": [
+                            {
+                                "rusname": "Стикс течет вспять",
+                                "name": "The River Styx Runs Upstream"
+                            },
+                            {
+                                "rusname": "Утеха падали",
+                                "name": "Carrion Comfort"
+                            }
+                        ]
                     }
                 ];
 

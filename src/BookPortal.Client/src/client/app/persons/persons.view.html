@@ -9,11 +9,11 @@
                                 <span>{{::vm.person.name}}</span>
                             </h2>
                             <div class="main-info-detail">
-                                <img class="imgright" src="http://data.fantlab.org/images/autors/{{vm.person.personid}}" alt="{{::vm.person.name}}">
+                                <img class="imgright" ng-src="{{::vm.person.personimageurl}}" alt="{{::vm.person.name}}">
                                 <table class="person-info-top-info">
                                     <tr>
                                         <td>Страна:</td>
-                                        <td><img src="http://data.fantlab.org/images/flags/{{vm.person.countryid}}.png" />&nbsp;{{::vm.countries[vm.person.countryid]}}</td>
+                                        <td><img ng-src="{{::vm.person.countryimageurl}}"/>&nbsp;{{::vm.countries[vm.person.countryid]}}</td>
                                     </tr>
                                     <tr ng-if="vm.person.birthdate">
                                         <td>Дата рождения:</td>
@@ -35,6 +35,10 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="sorting-panel">
+                            Сортировка:
+                            <select ng-options="i.sortName for i in vm.sortTypes" ng-model="vm.selectedSortType" ng-change='vm.changeSort()'></select>
+                        </div>
                         <div class="autor-works" data-evaluation-size="3" data-comments-size="0">
                             <div class="work-type-section plans-author">
                                 <h2><span>{{::vm.person.name}}.</span> <span>Планы автора</span><span class='rating-title'>Рейтинг</span></h2>
@@ -44,7 +48,7 @@
                             </div>
                             <div ng-repeat="(key, works) in vm.person.works" class="work-type-section">
                                 <h2><span>{{::vm.person.name}}.</span> <span>{{ ::vm.worktypes[key].name }}</span><span class='rating-title'>Рейтинг</span></h2>
-                                <ul class="works-list {{vm.worktypes[key].isnode ? 'with-parts' : ''}}">
+                                <ul class="works-list {{vm.worktypes[key].isnode ? 'worktypenode' : 'worktypeplain'}}">
                                     <personwork ng-repeat="work in works" data-work="work" data-worktype="vm.worktypes[work.worktypelevel]" data-level="1"></personwork>
                                 </ul>
                             </div>
