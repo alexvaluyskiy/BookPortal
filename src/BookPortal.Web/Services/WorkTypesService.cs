@@ -1,48 +1,27 @@
-using System.Linq;
 using System.Threading.Tasks;
 using BookPortal.Core.Framework.Models;
-using BookPortal.Web.Domain;
 using BookPortal.Web.Models.Responses;
-using Dapper;
+using BookPortal.Web.Repositories;
 
 namespace BookPortal.Web.Services
 {
     public class WorkTypesService
     {
-        private readonly IConnectionFactory _connectionFactory;
+        private readonly WorkTypesRepository _workTypesRepository;
 
-        public WorkTypesService(IConnectionFactory connectionFactory)
+        public WorkTypesService(WorkTypesRepository workTypesRepository)
         {
-            _connectionFactory = connectionFactory;
+            _workTypesRepository = workTypesRepository;
         }
 
-        public async Task<ApiObject<WorkTypeResponse>> GetWorkTypesListAsync()
+        public Task<ApiObject<WorkTypeResponse>> GetWorkTypesListAsync()
         {
-            using (var connection = _connectionFactory.Create())
-            {
-                var sql = @"
-                    SELECT work_type_id as 'WorkTypeId', name, name_single as 'NameSingle', level, is_node as 'IsNode'
-                    FROM work_types";
-
-                var workTypes = await connection.QueryAsync<WorkTypeResponse>(sql);
-
-                return new ApiObject<WorkTypeResponse>(workTypes);
-            }
+            return _workTypesRepository.GetWorkTypesListAsync();
         }
 
-        public async Task<WorkTypeResponse> GetWorkTypeAsync(int workTypeId)
+        public Task<WorkTypeResponse> GetWorkTypeAsync(int workTypeId)
         {
-            using (var connection = _connectionFactory.Create())
-            {
-                var sql = @"
-                    SELECT work_type_id as 'WorkTypeId', name, name_single as 'NameSingle', level, is_node as 'IsNode'
-                    FROM work_types
-                    WHERE work_type_id = @workTypeId";
-
-                var workTypes = await connection.QueryAsync<WorkTypeResponse>(sql, new { workTypeId });
-
-                return workTypes.SingleOrDefault();
-            }
+            return _workTypesRepository.GetWorkTypeAsync(workTypeId);
         }
     }
 }

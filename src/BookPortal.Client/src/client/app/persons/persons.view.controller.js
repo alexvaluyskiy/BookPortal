@@ -11,7 +11,6 @@
         var vm = this;
         vm.title = 'Персона';
         vm.personId = $stateParams.personId || 1;
-        vm.changeSort = changeSort;
 
         vm.sortTypes = [
           { sortName: "по году публикации", sortValue: "year" },
@@ -21,16 +20,40 @@
           { sortName: "по оригинальному названию", sortValue: "name" }
         ];
 
-        vm.selectedSortType = vm.sortTypes[0];
+        var sortColumns = [
+          ['year', 'groupindex', 'name', 'rusname'],
+          ['-rating', 'groupindex'],
+          ['-votescount', 'groupindex'],
+          ['rusname', 'groupindex'],
+          ['name', 'groupindex']
+        ];
 
-        function changeSort() {
-            console.log(vm.selectedSortType);
-        }
+        vm.selectedSortType = vm.sortTypes[0];
+        vm.orderByDefinition = sortColumns[0];
+
+        vm.changeSort = function () {
+            switch (vm.selectedSortType.sortValue) {
+                case "rating":
+                    vm.orderByDefinition = sortColumns[1];
+                    break;
+                case "markscount":
+                    vm.orderByDefinition = sortColumns[2];
+                    break;
+                case "rusname":
+                    vm.orderByDefinition = sortColumns[3];
+                    break;
+                case "name":
+                    vm.orderByDefinition = sortColumns[4];
+                    break;
+                default:
+                    vm.orderByDefinition = sortColumns[0];
+            }
+        };
 
         activate();
 
         function activate() {
-            getPerson(vm.personId).then(function() {
+            getPerson(vm.personId).then(function () {
                 var promises = [
                     getPersonWorks(vm.personId),
                     getCountries(),
@@ -57,131 +80,6 @@
 
         function getPersonWorks(personId) {
             return dataservice.getPersonWorks(personId).then(function (data) {
-                data = [
-                    {
-                        "workid": 1,
-                        "rusname": "Гиперион",
-                        "name": "Hyperion",
-                        "year": 1989,
-                        "votescount": 4615, // TODO
-                        "rating": 8.81, // TODO
-                        "usermark": 8, // TODO
-                        "worktypelevel": 6,
-                        "root_cycle_work_id": 92, // TODO: find root cycle
-                        "root_cycle_work_name": "Песни Гипериона", // TODO
-                        "root_cycle_work_type_id": 13 // TODO
-                    },
-                    {
-                        "workid": 603,
-                        "rusname": "Горящий Эдем",
-                        "name": "Fires of Eden",
-                        "altname": "Костры Эдема",
-                        "year": 1994,
-                        "votescount": 225,
-                        "rating": 6.89,
-                        "worktypelevel": 6
-                    },
-                    {
-                        "workid": 596601,
-                        "rusname": "4-й роман о Джо Курце",
-                        "worktypelevel": 6,
-                        "worktypename": "Роман",
-                        "inplans": true,
-                        "notfinished": "не окончен",
-                        "publishtype": "не опубликован"
-                    },
-                    {
-                        "workid": 33891,
-                        "name": "Presents of Mind",
-                        "year": 1985,
-                        "worktypelevel": 8,
-                        "persons": [
-                            {
-                                "personid": 396,
-                                "name": "Эдвард Брайант",
-                                "persontype": "author"
-                            },
-                            {
-                                "personid": 788,
-                                "name": "Конни Уиллис",
-                                "persontype": "author"
-                            }
-                        ],
-                        "coauthortype": "coauthor", // TODO: coauthor | author | editor | macycle
-                        "votescount": 1,
-                        "rating": 7
-                    },
-                    {
-                        "workid": 92,
-                        "rusname": "Песни Гипериона",
-                        "name": "Hyperion Cantos",
-                        "year": 1989,
-                        "votescount": 2026,
-                        "rating": 9.04,
-                        "worktypelevel": 1,
-                        "childworks": [
-                            {
-                                "workid": 1,
-                                "rusname": "Гиперион",
-                                "name": "Hyperion",
-                                "year": 1989, // TODO: если это циклы, то в API не проставлять год
-                                "votescount": 4615,
-                                "rating": 8.81,
-                                "usermark": 8
-                            },
-                            {
-                                "workid": 645,
-                                "rusname": "Девятое аба",
-                                "name": "The Ninth of Av",
-                                "year": 2000,
-                                "votescount": 104,
-                                "rating": 7.67,
-                                "worktypelevel": 8,
-                                "isaddition": true,
-                                "bonustext": "рассказ"
-                            }
-                        ]
-                    },
-                    {
-                        "workid": 131904,
-                        "rusname": "Жертвоприношение",
-                        "name": "The Offering",
-                        "year": 1990,
-                        "votescount": 80,
-                        "rating": 6.00,
-                        "worktypelevel": 24
-                    },
-                    {
-                        "workid": 622,
-                        "rusname": "Вспоминая Сири",
-                        "name": "Remembering Siri",
-                        "year": 1983,
-                        "votescount": 657,
-                        "rating": 8.69,
-                        "worktypelevel": 8,
-                        "bonustext": "вошел в состав романа «Гиперион»"
-                    },
-                    {
-                        "workid": 37120,
-                        "rusname": "Молитвы разбитому камню",
-                        "name": "Prayers to Broken Stones",
-                        "year": 1990,
-                        "votescount": 81,
-                        "rating": 7.33,
-                        "worktypelevel": 45,
-                        "childworks": [
-                            {
-                                "rusname": "Стикс течет вспять",
-                                "name": "The River Styx Runs Upstream"
-                            },
-                            {
-                                "rusname": "Утеха падали",
-                                "name": "Carrion Comfort"
-                            }
-                        ]
-                    }
-                ];
-
                 // processing element before rendering
                 data = _.map(data, function (item) {
                     var array = [];
@@ -205,6 +103,10 @@
                 // processing another works
                 data = _.filter(data, function (item) { return item.inplans !== true; });
                 data = _.groupBy(data, function (item) { return item.worktypelevel; });
+                data = Object
+                      .keys(data)
+                      .sort(function (a, b) { return (+a) > (+b); })
+                      .map(function (key) { return data[key]; });
 
                 vm.person.works = data;
                 return vm.person.works;

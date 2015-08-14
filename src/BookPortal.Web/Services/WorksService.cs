@@ -8,33 +8,43 @@ using BookPortal.Web.Domain;
 using BookPortal.Web.Domain.Models;
 using BookPortal.Web.Domain.Models.Types;
 using BookPortal.Web.Models.Responses;
+using BookPortal.Web.Repositories;
 using Dapper;
 
 namespace BookPortal.Web.Services
 {
     public class WorksService
     {
+        private readonly WorksRepository _worksRepository;
+        private readonly WorkTypesRepository _workTypesRepository;
         private readonly BookContext _bookContext;
         private readonly IConnectionFactory _connectionFactory;
 
-        public WorksService(BookContext bookContext, IConnectionFactory connectionFactory)
+        public WorksService(
+            WorksRepository worksRepository,
+            WorkTypesRepository workTypesRepository,
+            BookContext bookContext,
+            IConnectionFactory connectionFactory)
         {
+            _worksRepository = worksRepository;
+            _workTypesRepository = workTypesRepository;
             _bookContext = bookContext;
             _connectionFactory = connectionFactory;
         }
 
-        public async Task<ApiObject<WorkResponse>> GetWorksAsync(int personId, string sortMode, bool includeTree)
+        public async Task<ApiObject<WorkResponse>> GetWorksAsync(int personId)
         {
+            var worktypes = await _workTypesRepository.GetWorkTypesDictionaryAsync();
+
+            var workLinks = await BuildWorksTree(personId);
+            var workIds = workLinks.Select(c => c.WorkId).Distinct().ToList();
+
             using (var connection = _connectionFactory.Create())
             {
-                // get all work's ids
-                var workIdsSql = @"SELECT work_id as 'WorkId' FROM person_works WHERE person_id = @personId";
-                var workIds = (await connection.QueryAsync<int>(workIdsSql, new { personId })).ToList();
-
                 // get all works
                 var workSql = @"
 					SELECT
-                        w.work_id as 'WorkId',
+                        w.work_id as 'Id',
                         w.rusname,
                         w.name,
                         w.altname,
@@ -45,18 +55,15 @@ namespace BookPortal.Web.Services
 						w.publish_type as 'PublishType',
 						w.not_finished as 'NotFinished',
 						w.in_plans as 'InPlans',
-                        wt.work_type_id as 'WorkTypeId',
-                        wt.name as 'WorkTypeName',
-                        wt.[level] as 'WorkTypeLevel'
+                        w.work_type_id as 'WorkTypeId'
                     FROM works AS w
-                    INNER JOIN work_types AS wt ON w.work_type_id = wt.work_type_id
                     WHERE w.work_id IN @workIds";
 
-                var works = (await connection.QueryAsync<WorkResponse>(workSql, new { workIds })).ToList();
+                var worksRaw = (await connection.QueryAsync<Work>(workSql, new { workIds })).ToList();
 
                 // get all work's people
                 var peopleSql = @"
-                    SELECT pw.work_id as 'WorkId', p.person_id as 'PersonId', p.name as 'Name', p.name_sort as 'NameSort', pw.type as 'PersonType'
+                    SELECT pw.work_id as 'WorkId', p.person_id as 'PersonId', p.name as 'Name', pw.type as 'PersonType'
                     FROM persons AS p
                     INNER JOIN person_works AS pw ON p.person_id = pw.person_id
                     WHERE pw.work_id IN @workIds AND pw.person_id != @personId";
@@ -66,7 +73,6 @@ namespace BookPortal.Web.Services
                                     WorkId = default(int),
                                     PersonId = default(int),
                                     Name = default(string),
-                                    NameSort = default(string),
                                     PersonType = default(WorkPersonType)
                                 }, peopleSql, new {workIds, personId});
 
@@ -74,153 +80,100 @@ namespace BookPortal.Web.Services
                 {
                     PersonId = d.PersonId,
                     Name = d.Name,
-                    NameSort = d.NameSort,
                     PersonType = d.PersonType
                 }).ToList());
 
-                foreach (var work in works)
+                List<WorkResponse> works = new List<WorkResponse>();
+                foreach (var work in worksRaw)
                 {
-                    work.Persons = peopleDic.GetValueOrDefault(work.WorkId);
+                    var workType = worktypes[work.WorkTypeId];
+                    // manual restriction to show the work in biblio
+                    if (work.ShowInBiblio == 2) continue;
+                    // restrict to show magazines
+                    if (work.WorkTypeId == 26) continue;
 
-                    // combining poems into the one type
-                    if (work.WorkTypeId == 5 || work.WorkTypeId == 28 || work.WorkTypeId == 29)
+                    var workLink = workLinks.SingleOrDefault(c => c.WorkId == work.Id && c.LinkType == 2);
+
+                    var workResponse = CreateWorkResponse(work, workType, peopleDic, workLink);
+
+                    var childWorks = workLinks.Where(c => c.ParentWorkId == work.Id).ToList();
+                    if ((work.ShowSubworksInBiblio == 1 || (work.ShowSubworksInBiblio != 2 && workType.IsNode) || work.WorkTypeId == 50)
+                        && childWorks.Count > 0)
                     {
-                        work.WorkTypeId = 27;
-                    }
-                }
+                        workResponse.ChildWorks = new List<WorkResponse>();
+                        foreach (var child in childWorks)
+                        {
+                            var childWork = worksRaw.SingleOrDefault(c => c.Id == child.WorkId);
+                            var childWorkType = worktypes[childWork.WorkTypeId];
 
-                switch (sortMode)
-                {
-                    case "rusname":
-                        works = works
-                            .OrderBy(c => c.WorkTypeLevel)
-                            .ThenBy(c => c.RusName)
-                            .ThenBy(c => c.GroupIndex)
-                            .ToList();
-                        break;
-                    case "name":
-                        works = works
-                            .OrderBy(c => c.WorkTypeLevel)
-                            .ThenBy(c => c.Name)
-                            .ThenBy(c => c.GroupIndex)
-                            .ToList();
-                        break;
-                    default:
-                        works = works
-                            .OrderBy(c => c.WorkTypeLevel)
-                            .ThenBy(c => c.Year)
-                            .ThenBy(c => c.GroupIndex)
-                            .ThenBy(c => c.Name)
-                            .ThenBy(c => c.RusName)
-                            .ToList();
-                        break;
+                            var childWorkResponse = CreateWorkResponse(childWork, childWorkType, peopleDic, null);
+
+                            workResponse.ChildWorks.Add(childWorkResponse);
+                        }
+                    }
+
+                    works.Add(workResponse);
                 }
 
                 return new ApiObject<WorkResponse>(works);
             }
         }
 
-        // TODO: add IsPlan, NotPublished, Published fields
-        public async Task<ApiObject<WorkResponse>> GetWorksAsync2(int personId, string sortMode)
+        private WorkResponse CreateWorkResponse(Work work, WorkTypeResponse workType, Dictionary<int, List<PersonResponse>> peopleDic, WorkLink workLink)
         {
-            var workLinks = await BuildWorksTree(personId);
+            var workResponse = new WorkResponse();
+            workResponse.WorkId = work.Id;
+            workResponse.RusName = work.RusName;
+            workResponse.Name = work.Name;
+            workResponse.AltName = work.AltName;
+            workResponse.Year = work.Year;
+            workResponse.WorkTypeLevel = workType.Level;
+            workResponse.WorkTypeName = workType.NameSingle;
+            workResponse.InPlans = work.InPlans;
+            workResponse.Persons = peopleDic.GetValueOrDefault(work.Id);
 
-            var workIds = (from pw in _bookContext.PersonWorks
-                           where pw.PersonId == personId
-                           select pw.WorkId).ToList();
-
-            var workQuery = from w in _bookContext.Works
-                            join wt in _bookContext.WorkTypes on w.WorkTypeId equals wt.Id
-                            where workIds.Contains(w.Id)
-                            select new WorkResponse
-                            {
-                                WorkId = w.Id,
-                                RusName = w.RusName,
-                                Name = w.Name,
-                                AltName = w.AltName,
-                                Year = w.Year,
-                                Description = w.Description,
-                                WorkTypeId = wt.Id,
-                                WorkTypeName = wt.Name,
-                                WorkTypeLevel = wt.Level
-                            };
-
-            var works = await workQuery.ToListAsync();
-
-            var persons = (from p in _bookContext.Persons
-                           join pw in _bookContext.PersonWorks on p.Id equals pw.PersonId
-                           where workIds.Contains(pw.WorkId)
-                           select new
-                           {
-                               WorkId = pw.WorkId,
-                               PersonId = p.Id,
-                               Name = p.Name,
-                               NameSort = p.NameSort,
-                               LinkType = pw.Type
-                           }).ToList();
-
-            foreach (var work in works)
+            // TODO: coauthors type
+            if (workResponse.Persons != null && workResponse.Persons.Count > 0)
             {
-                // authors plan
-                if (work.InPlans.HasValue)
-                {
-                    work.WorkTypeId = -2;
-                    work.WorkTypeLevel = 0;
-                }
-                else if (work.PublishType.HasValue)
-                {
-                    work.WorkTypeId = -1;
-                    work.WorkTypeLevel = 100;
-                }
-
-                // combining poems into the one type
-                if (work.WorkTypeId == 5 || work.WorkTypeId == 28 || work.WorkTypeId == 29)
-                {
-                    work.WorkTypeId = 27;
-                }
-
-                var childIds = workLinks.Where(c => c.Key == work.WorkId).Select(c => c.Value.WorkId).ToList();
-                work.ChildWorks = new List<int>();
-                work.ChildWorks.AddRange(childIds);
-
-                work.Persons = persons
-                    .Where(c => c.WorkId == work.WorkId && c.PersonId != personId)
-                    .Select(c => new PersonResponse
-                    {
-                        PersonId = c.PersonId,
-                        Name = c.Name,
-                        NameSort = c.NameSort
-                    }).ToList();
+                workResponse.CoAuthorType = "coauthor";
             }
 
-            switch (sortMode)
+            // TODO: check for feminine or masculine form
+            if (work.NotFinished)
             {
-                case "rusname":
-                    works = works
-                        .OrderBy(c => c.WorkTypeLevel)
-                        .ThenBy(c => c.RusName)
-                        .ThenBy(c => c.GroupIndex)
-                        .ToList();
+                workResponse.NotFinished = "не окончен";
+            }
+
+            switch (work.PublishType)
+            {
+                case PublishType.NotPublished:
+                    workResponse.PublishType = "не опубликован";
                     break;
-                case "name":
-                    works = works
-                        .OrderBy(c => c.WorkTypeLevel)
-                        .ThenBy(c => c.Name)
-                        .ThenBy(c => c.GroupIndex)
-                        .ToList();
+                case PublishType.Network:
+                    workResponse.PublishType = "сетевая публикация";
                     break;
-                default:
-                    works = works
-                        .OrderBy(c => c.WorkTypeLevel)
-                        .ThenBy(c => c.Year)
-                        .ThenBy(c => c.GroupIndex)
-                        .ThenBy(c => c.Name)
-                        .ThenBy(c => c.RusName)
-                        .ToList();
+                case PublishType.Other:
+                    workResponse.PublishType = "доступен в сети";
                     break;
             }
 
-            return new ApiObject<WorkResponse>(works);
+            if (workLink != null)
+            {
+                workResponse.GroupIndex = workLink.GroupIndex;
+                workResponse.IsAddition = workLink.IsAddition;
+                workResponse.BonusText = workLink.BonusText;
+            }
+
+            workResponse.VotesCount = 1000;
+            workResponse.Rating = 5.78;
+            workResponse.UserMark = 6;
+
+
+            workResponse.RootCycleWorkId = null;
+            workResponse.RootCycleWorkName = null;
+            workResponse.RootCycleWorkTypeId = null;
+
+            return workResponse;
         }
 
         public async Task<WorkResponse> GetWorkAsync(int workId)
@@ -280,7 +233,7 @@ namespace BookPortal.Web.Services
             }
         }
 
-        private async Task<Dictionary<int, WorkLink>> BuildWorksTree(int personId)
+        private async Task<List<WorkLink>> BuildWorksTree(int personId)
         {
             using (var connection = _connectionFactory.Create())
             {
@@ -300,9 +253,9 @@ namespace BookPortal.Web.Services
 				    FROM tree";
 
                 var query = await connection.QueryAsync<WorkLink>(sql, new { personId });
-                var workLinks = query.Where(c => c.ParentWorkId.HasValue).ToDictionary(c => c.ParentWorkId.Value, c => c);
+                // var workLinks = query.Where(c => c.ParentWorkId.HasValue).ToDictionary(c => c.ParentWorkId.Value, c => c);
 
-                return workLinks;
+                return query.ToList();
             }
         }
     }

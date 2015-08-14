@@ -58,9 +58,9 @@ namespace BookPortal.Web.Controllers
 
         [HttpGet("{personId}/works")]
         [Produces(typeof(IEnumerable<WorkResponse>))]
-        public async Task<IActionResult> GetWorks(int personId, string sortMode)
+        public async Task<IActionResult> GetWorks(int personId)
         {
-            var works = await _worksService.GetWorksAsync(personId, sortMode, false);
+            var works = await _worksService.GetWorksAsync(personId);
 
             if (works == null)
                 return this.ErrorObject(404, $"Person (id: {personId}) doesn't contain works");

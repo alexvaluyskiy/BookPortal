@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using Autofac;
 using Autofac.Framework.DependencyInjection;
 using BookPortal.Core.Configuration;
@@ -82,26 +83,15 @@ namespace BookPortal.Web
 
             ContainerBuilder builder = new ContainerBuilder();
 
-            builder.RegisterType<AwardsService>();
-            builder.RegisterType<NominationsService>();
-            builder.RegisterType<ContestsService>();
-            builder.RegisterType<ContestsWorksService>();
+            var dataAccess = Assembly.GetExecutingAssembly();
 
-            builder.RegisterType<PersonsService>();
-            builder.RegisterType<WorksService>();
-            builder.RegisterType<TranslationsService>();
-            builder.RegisterType<EditionsService>();
+            // register services
+            builder.RegisterAssemblyTypes(dataAccess)
+               .Where(t => t.Name.EndsWith("Service"));
 
-            builder.RegisterType<PublishersService>();
-            builder.RegisterType<SeriesService>();
-
-            builder.RegisterType<CountriesService>();
-            builder.RegisterType<LanguagesService>();
-            builder.RegisterType<WorkTypesService>();
-
-            builder.RegisterType<ReviewsService>();
-            builder.RegisterType<GenresService>();
-            builder.RegisterType<RatingsService>();
+            // register repositories
+            builder.RegisterAssemblyTypes(dataAccess)
+               .Where(t => t.Name.EndsWith("Repository"));
 
             builder.RegisterType<ConnectionFactory>()
                 .As<IConnectionFactory>()
