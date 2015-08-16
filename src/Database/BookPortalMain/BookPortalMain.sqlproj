@@ -91,6 +91,7 @@
     <Build Include="Tables\work_links.sql" />
     <Build Include="Tables\work_types.sql" />
     <Build Include="Tables\works.sql" />
+    <Build Include="Tables\work_stats.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="BookPortalMain.refactorlog" />

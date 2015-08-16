@@ -32,7 +32,7 @@ namespace BookPortal.Web.Services
             _connectionFactory = connectionFactory;
         }
 
-        public async Task<ApiObject<WorkResponse>> GetWorksAsync(int personId)
+        public async Task<ApiObject<WorkResponse>> GetWorksAsync(int personId, int? userId)
         {
             var worktypes = await _workTypesRepository.GetWorkTypesDictionaryAsync();
 
@@ -66,7 +66,7 @@ namespace BookPortal.Web.Services
                     SELECT pw.work_id as 'WorkId', p.person_id as 'PersonId', p.name as 'Name', pw.type as 'PersonType'
                     FROM persons AS p
                     INNER JOIN person_works AS pw ON p.person_id = pw.person_id
-                    WHERE pw.work_id IN @workIds AND pw.person_id != @personId";
+                    WHERE pw.work_id IN @workIds";
 
                 var people = await connection.QueryAsync(() => new
                                 {
@@ -87,29 +87,34 @@ namespace BookPortal.Web.Services
                 foreach (var work in worksRaw)
                 {
                     var workType = worktypes[work.WorkTypeId];
+
                     // manual restriction to show the work in biblio
                     if (work.ShowInBiblio == 2) continue;
                     // restrict to show magazines
                     if (work.WorkTypeId == 26) continue;
 
+                    if (work.Id == 3)
+                    {
+                        var a = workLinks.Where(c => c.WorkId == work.Id).ToList();
+                    }
+
                     var workLink = workLinks.SingleOrDefault(c => c.WorkId == work.Id && c.LinkType == 2);
 
-                    var workResponse = CreateWorkResponse(work, workType, peopleDic, workLink);
-
-                    var childWorks = workLinks.Where(c => c.ParentWorkId == work.Id).ToList();
-                    if ((work.ShowSubworksInBiblio == 1 || (work.ShowSubworksInBiblio != 2 && workType.IsNode) || work.WorkTypeId == 50)
-                        && childWorks.Count > 0)
+                    if (workType.IsNode)
                     {
-                        workResponse.ChildWorks = new List<WorkResponse>();
-                        foreach (var child in childWorks)
-                        {
-                            var childWork = worksRaw.SingleOrDefault(c => c.Id == child.WorkId);
-                            var childWorkType = worktypes[childWork.WorkTypeId];
+                        var workLink2 = workLinks.Where(c => c.WorkId == work.Id).ToList();
+                    }
 
-                            var childWorkResponse = CreateWorkResponse(childWork, childWorkType, peopleDic, null);
+                    if (workType.IsNode && workLink?.ParentWorkId != null)
+                    {
+                        continue;
+                    }
 
-                            workResponse.ChildWorks.Add(childWorkResponse);
-                        }
+                    var workResponse = CreateWorkResponse(work, workType, peopleDic, workLink, personId);
+
+                    if (work.ShowSubworksInBiblio == 1 || (work.ShowSubworksInBiblio != 2 && workType.IsNode) || work.WorkTypeId == 50)
+                    {
+                        GetSubworks(workLinks, work, workResponse, worksRaw, worktypes, peopleDic, personId);
                     }
 
                     works.Add(workResponse);
@@ -119,7 +124,28 @@ namespace BookPortal.Web.Services
             }
         }
 
-        private WorkResponse CreateWorkResponse(Work work, WorkTypeResponse workType, Dictionary<int, List<PersonResponse>> peopleDic, WorkLink workLink)
+        private void GetSubworks(List<WorkLink> workLinks, Work work, WorkResponse workResponse, List<Work> worksRaw, Dictionary<int, WorkTypeResponse> worktypes,
+            Dictionary<int, List<PersonResponse>> peopleDic, int personId)
+        {
+            var childWorks = workLinks.Where(c => c.ParentWorkId == work.Id).ToList();
+            if (childWorks.Count > 0)
+            {
+                workResponse.ChildWorks = new List<WorkResponse>();
+                foreach (var child in childWorks)
+                {
+                    var childWork = worksRaw.SingleOrDefault(c => c.Id == child.WorkId);
+                    var childWorkType = worktypes[childWork.WorkTypeId];
+
+                    var childWorkResponse = CreateWorkResponse(childWork, childWorkType, peopleDic, null, personId);
+
+                    GetSubworks(workLinks, childWork, childWorkResponse, worksRaw, worktypes, peopleDic, personId);
+
+                    workResponse.ChildWorks.Add(childWorkResponse);
+                }
+            }
+        }
+
+        private WorkResponse CreateWorkResponse(Work work, WorkTypeResponse workType, Dictionary<int, List<PersonResponse>> peopleDic, WorkLink workLink, int personId)
         {
             var workResponse = new WorkResponse();
             workResponse.WorkId = work.Id;
@@ -130,10 +156,12 @@ namespace BookPortal.Web.Services
             workResponse.WorkTypeLevel = workType.Level;
             workResponse.WorkTypeName = workType.NameSingle;
             workResponse.InPlans = work.InPlans;
-            workResponse.Persons = peopleDic.GetValueOrDefault(work.Id);
+
+            var people = peopleDic.GetValueOrDefault(work.Id);
+            workResponse.Persons = people?.Where(c => c.PersonId != personId).ToList();
 
             // TODO: coauthors type
-            if (workResponse.Persons != null && workResponse.Persons.Count > 0)
+            if (workResponse.Persons?.Count > 0)
             {
                 workResponse.CoAuthorType = "coauthor";
             }
@@ -167,7 +195,6 @@ namespace BookPortal.Web.Services
             workResponse.VotesCount = 1000;
             workResponse.Rating = 5.78;
             workResponse.UserMark = 6;
-
 
             workResponse.RootCycleWorkId = null;
             workResponse.RootCycleWorkName = null;

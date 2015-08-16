@@ -11,6 +11,6 @@
 	[homepage] [nvarchar](255) NULL,
 	[is_opened] [bit] NOT NULL, 
 	CONSTRAINT [PK_awards] PRIMARY KEY ([award_id]),
-    CONSTRAINT [FK_awards_countries_countryid] FOREIGN KEY ([country_id]) REFERENCES [dbo].[countries] ([country_id]),
+	CONSTRAINT [FK_awards_countries_countryid] FOREIGN KEY ([country_id]) REFERENCES [dbo].[countries] ([country_id]),
 	CONSTRAINT [FK_awards_languages_languageid] FOREIGN KEY ([language_id]) REFERENCES [dbo].[languages] ([language_id])    
 )
