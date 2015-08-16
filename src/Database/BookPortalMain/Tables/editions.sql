@@ -1,0 +1,21 @@
+﻿CREATE TABLE [dbo].[editions](
+	[edition_id] [int] IDENTITY(1,1) NOT NULL,
+	[authors] [nvarchar](max) NULL,
+	[compilers] [nvarchar](max) NULL,
+	[content] [nvarchar](max) NULL,
+	[count] [int] NULL,
+	[cover_type] [int] NOT NULL,
+	[description] [nvarchar](max) NULL,
+	[format] [nvarchar](max) NULL,
+	[isbn] [nvarchar](max) NULL,
+	[language_id] [int] NULL,
+	[name] [nvarchar](max) NULL,
+	[notes] [nvarchar](max) NULL,
+	[pages] [int] NULL,
+	[release_date] [nvarchar](50) NULL,
+	[supercover] [bit] NOT NULL,
+	[type] [int] NOT NULL,
+	[year] [int] NULL,
+	[correct] [int] NOT NULL,
+	CONSTRAINT [PK_Edition] PRIMARY KEY CLUSTERED ([edition_id])
+)
