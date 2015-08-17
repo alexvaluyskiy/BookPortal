@@ -4,5 +4,8 @@
 	[marks_count] [int] NOT NULL,
 	[rating] [float] NOT NULL,
 	CONSTRAINT [PK_workstats] PRIMARY KEY CLUSTERED ([work_stat_id]),
-	CONSTRAINT [FK_workstats_works_workid] FOREIGN KEY([work_id]) REFERENCES [dbo].[works] ([work_id])
+	CONSTRAINT [FK_workstats_works_workid] FOREIGN KEY ([work_id]) REFERENCES [dbo].[works] ([work_id]),
 )
+GO
+
+CREATE UNIQUE INDEX [IX_workstats_workid] ON [dbo].[work_stats] ([work_id])

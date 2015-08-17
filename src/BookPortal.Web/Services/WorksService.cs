@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BookPortal.Core.Framework.Domain;
@@ -16,17 +17,20 @@ namespace BookPortal.Web.Services
     public class WorksService
     {
         private readonly WorksRepository _worksRepository;
+        private readonly MarksRepository _marksRepository;
         private readonly WorkTypesRepository _workTypesRepository;
         private readonly BookContext _bookContext;
         private readonly IConnectionFactory _connectionFactory;
 
         public WorksService(
             WorksRepository worksRepository,
+            MarksRepository marksRepository,
             WorkTypesRepository workTypesRepository,
             BookContext bookContext,
             IConnectionFactory connectionFactory)
         {
             _worksRepository = worksRepository;
+            _marksRepository = marksRepository;
             _workTypesRepository = workTypesRepository;
             _bookContext = bookContext;
             _connectionFactory = connectionFactory;
@@ -38,6 +42,9 @@ namespace BookPortal.Web.Services
 
             var workLinks = await BuildWorksTree(personId);
             var workIds = workLinks.Select(c => c.WorkId).Distinct().ToList();
+
+            // marks
+            var marks = await _marksRepository.GetPersonMarksAsync(workIds, userId);
 
             using (var connection = _connectionFactory.Create())
             {
@@ -90,31 +97,35 @@ namespace BookPortal.Web.Services
 
                     // manual restriction to show the work in biblio
                     if (work.ShowInBiblio == 2) continue;
+
                     // restrict to show magazines
                     if (work.WorkTypeId == 26) continue;
 
-                    if (work.Id == 3)
-                    {
-                        var a = workLinks.Where(c => c.WorkId == work.Id).ToList();
-                    }
-
+                    // restrict children works (non-active)
                     var workLink = workLinks.SingleOrDefault(c => c.WorkId == work.Id && c.LinkType == 2);
+                    if (workLink?.ParentWorkId != null) continue;
 
-                    if (workType.IsNode)
+                    // multiauthors cycles
+                    var workPeople = peopleDic.GetValueOrDefault(work.Id);
+                    if (workType.IsNode && !workLinks.Any(c => c.WorkId == work.Id && c.LinkType == 2 && c.ParentWorkId != null))
                     {
-                        var workLink2 = workLinks.Where(c => c.WorkId == work.Id).ToList();
+                        if (workPeople == null || workPeople.Count(c => c.PersonId != personId) == workPeople.Count)
+                        {
+                            workType = worktypes[50];
+                        }
                     }
 
-                    if (workType.IsNode && workLink?.ParentWorkId != null)
+                    // remove all non-author's works
+                    if (workType.WorkTypeId != 50 && workPeople?.Count(c => c.PersonId != personId) == workPeople?.Count)
                     {
                         continue;
                     }
 
-                    var workResponse = CreateWorkResponse(work, workType, peopleDic, workLink, personId);
+                    var workResponse = CreateWorkResponse(work, workType, peopleDic, workLink, personId, marks);
 
                     if (work.ShowSubworksInBiblio == 1 || (work.ShowSubworksInBiblio != 2 && workType.IsNode) || work.WorkTypeId == 50)
                     {
-                        GetSubworks(workLinks, work, workResponse, worksRaw, worktypes, peopleDic, personId);
+                        GetSubworks(workLinks, work, workResponse, worksRaw, worktypes, peopleDic, personId, marks);
                     }
 
                     works.Add(workResponse);
@@ -125,9 +136,10 @@ namespace BookPortal.Web.Services
         }
 
         private void GetSubworks(List<WorkLink> workLinks, Work work, WorkResponse workResponse, List<Work> worksRaw, Dictionary<int, WorkTypeResponse> worktypes,
-            Dictionary<int, List<PersonResponse>> peopleDic, int personId)
+            Dictionary<int, List<PersonResponse>> peopleDic, int personId, Dictionary<int, MarkResponse> marks)
         {
             var childWorks = workLinks.Where(c => c.ParentWorkId == work.Id).ToList();
+
             if (childWorks.Count > 0)
             {
                 workResponse.ChildWorks = new List<WorkResponse>();
@@ -136,19 +148,27 @@ namespace BookPortal.Web.Services
                     var childWork = worksRaw.SingleOrDefault(c => c.Id == child.WorkId);
                     var childWorkType = worktypes[childWork.WorkTypeId];
 
-                    var childWorkResponse = CreateWorkResponse(childWork, childWorkType, peopleDic, null, personId);
+                    var childWorkResponse = CreateWorkResponse(childWork, childWorkType, peopleDic, child, personId, marks);
 
-                    GetSubworks(workLinks, childWork, childWorkResponse, worksRaw, worktypes, peopleDic, personId);
+                    GetSubworks(workLinks, childWork, childWorkResponse, worksRaw, worktypes, peopleDic, personId, marks);
 
                     workResponse.ChildWorks.Add(childWorkResponse);
                 }
             }
         }
 
-        private WorkResponse CreateWorkResponse(Work work, WorkTypeResponse workType, Dictionary<int, List<PersonResponse>> peopleDic, WorkLink workLink, int personId)
+        private WorkResponse CreateWorkResponse(Work work, WorkTypeResponse workType, Dictionary<int, List<PersonResponse>> peopleDic, WorkLink workLink, int personId, Dictionary<int, MarkResponse> marks)
         {
             var workResponse = new WorkResponse();
-            workResponse.WorkId = work.Id;
+
+            bool isInnactive = workLink.LinkType == 2 && workLink.ParentWorkId != null;
+
+            // don't show work_id on innactive works
+            if (!isInnactive)
+            {
+                workResponse.WorkId = work.Id;
+            }
+
             workResponse.RusName = work.RusName;
             workResponse.Name = work.Name;
             workResponse.AltName = work.AltName;
@@ -158,8 +178,11 @@ namespace BookPortal.Web.Services
             workResponse.InPlans = work.InPlans;
 
             var people = peopleDic.GetValueOrDefault(work.Id);
-            workResponse.Persons = people?.Where(c => c.PersonId != personId).ToList();
-
+            if (people != null)
+            {
+                workResponse.Persons = people.Where(c => c.PersonId != personId).ToList();
+            }
+            
             // TODO: coauthors type
             if (workResponse.Persons?.Count > 0)
             {
@@ -192,9 +215,13 @@ namespace BookPortal.Web.Services
                 workResponse.BonusText = workLink.BonusText;
             }
 
-            workResponse.VotesCount = 1000;
-            workResponse.Rating = 5.78;
-            workResponse.UserMark = 6;
+            var workMark = marks.GetValueOrDefault(work.Id);
+            if (workMark != null)
+            {
+                workResponse.UserMark = workMark.UserMark;
+                workResponse.Rating = Math.Round(workMark.Rating, 2);
+                workResponse.VotesCount = workMark.MarksCount;
+            }
 
             workResponse.RootCycleWorkId = null;
             workResponse.RootCycleWorkName = null;

@@ -73,6 +73,11 @@
                 vm.person.personimageurl = imagesCdnUrl + 'autors/' + vm.person.personid;
                 vm.person.countryimageurl = imagesCdnUrl + 'flags/' + vm.person.countryid + '.png';
 
+                if (vm.person.birthdate)
+                    vm.person.birthdate = moment(vm.person.birthdate).locale('ru').format('LL');
+                if (vm.person.deathdate)
+                    vm.person.deathdate = moment(vm.person.deathdate).locale('ru').format('LL');
+
                 vm.title = 'Персона: ' + vm.person.name;
                 return vm.person;
             });
@@ -82,18 +87,6 @@
             return dataservice.getPersonWorks(personId).then(function (data) {
                 // processing element before rendering
                 data = _.map(data, function (item) {
-                    var array = [];
-                    if (item.inplans) {
-                        array.push(item.worktypename.toLowerCase());
-                    }
-                    if (item.notfinished) {
-                        array.push(item.notfinished);
-                    }
-                    if (item.publishtype) {
-                        array.push(item.publishtype);
-                    }
-                    item.additionalinfo = array.join(', ');
-
                     return item;
                 });
 
@@ -105,7 +98,11 @@
                 data = _.groupBy(data, function (item) { return item.worktypelevel; });
                 data = Object
                       .keys(data)
-                      .sort(function (a, b) { return (+a) > (+b); })
+                      .sort(function(a, b) {
+                          if (+a < +b) return -1;
+                          if (+a > +b) return 1;
+                          return 0;
+                      })
                       .map(function (key) { return data[key]; });
 
                 vm.person.works = data;

@@ -56,7 +56,7 @@ namespace BookPortal.Web.Models.Responses
         public bool IsAddition { get; set; }
         public string BonusText { get; set; }
         public string CoAuthorType { get; set; }
-        public int UserMark { get; set; }
+        public int? UserMark { get; set; }
         public int? RootCycleWorkId { get; set; }
         public string RootCycleWorkName { get; set; }
         public int? RootCycleWorkTypeId { get; set; }
