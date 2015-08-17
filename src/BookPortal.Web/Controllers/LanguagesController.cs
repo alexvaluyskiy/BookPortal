@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using BookPortal.Web.Models.Responses;
-using BookPortal.Web.Services;
+using BookPortal.Web.Repositories;
 using Microsoft.AspNet.Mvc;
 using Swashbuckle.Swagger.Annotations;
 
@@ -10,18 +10,18 @@ namespace BookPortal.Web.Controllers
     [Route("api/[controller]")]
     public class LanguagesController : Controller
     {
-        private readonly LanguagesService _languagesService;
+        private readonly LanguagesRepository _languagesRepository;
 
-        public LanguagesController(LanguagesService languagesService)
+        public LanguagesController(LanguagesRepository languagesRepository)
         {
-            _languagesService = languagesService;
+            _languagesRepository = languagesRepository;
         }
 
         [HttpGet]
         [Produces(typeof(IEnumerable<LanguageResponse>))]
         public async Task<IActionResult> Index()
         {
-            var languages = await _languagesService.GetLanguagesAsync();
+            var languages = await _languagesRepository.GetLanguagesAsync();
 
             return this.PageObject(languages.Values, languages.TotalRows);
         }
@@ -31,7 +31,7 @@ namespace BookPortal.Web.Controllers
         [SwaggerResponse(404, "Language is not found")]
         public async Task<IActionResult> Get(int id)
         {
-            var language = await _languagesService.GetLanguageAsync(id);
+            var language = await _languagesRepository.GetLanguageAsync(id);
 
             if (language == null)
                 return this.ErrorObject(404, $"Language (id: {id}) is not found");

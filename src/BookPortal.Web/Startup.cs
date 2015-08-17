@@ -13,6 +13,7 @@ using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Data.Entity;
+using Microsoft.Framework.Caching.Memory;
 using Microsoft.Framework.Caching.Redis;
 using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
@@ -98,6 +99,7 @@ namespace BookPortal.Web
                 .WithParameter("connectionString", Configuration.Get("Data:DefaultConnection:ConnectionString"));
 
             builder.RegisterInstance(new RedisCache(new RedisCacheOptions { Configuration = Configuration.Get("RedisCache") }));
+            builder.RegisterType<MemoryCache>().As<IMemoryCache>();
 
             builder.Populate(services);
             var container = builder.Build();
