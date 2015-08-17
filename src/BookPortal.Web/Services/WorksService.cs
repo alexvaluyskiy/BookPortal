@@ -4,13 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using BookPortal.Core.Framework.Domain;
 using BookPortal.Core.Framework.Models;
-using Microsoft.Data.Entity;
-using BookPortal.Web.Domain;
 using BookPortal.Web.Domain.Models;
 using BookPortal.Web.Domain.Models.Types;
 using BookPortal.Web.Models.Responses;
 using BookPortal.Web.Repositories;
-using Dapper;
 
 namespace BookPortal.Web.Services
 {
@@ -19,120 +16,80 @@ namespace BookPortal.Web.Services
         private readonly WorksRepository _worksRepository;
         private readonly MarksRepository _marksRepository;
         private readonly WorkTypesRepository _workTypesRepository;
-        private readonly BookContext _bookContext;
-        private readonly IConnectionFactory _connectionFactory;
+        private readonly PersonsRepository _personsRepository;
 
         public WorksService(
             WorksRepository worksRepository,
             MarksRepository marksRepository,
             WorkTypesRepository workTypesRepository,
-            BookContext bookContext,
-            IConnectionFactory connectionFactory)
+            PersonsRepository personsRepository)
         {
             _worksRepository = worksRepository;
             _marksRepository = marksRepository;
             _workTypesRepository = workTypesRepository;
-            _bookContext = bookContext;
-            _connectionFactory = connectionFactory;
+            _personsRepository = personsRepository;
         }
 
         public async Task<ApiObject<WorkResponse>> GetWorksAsync(int personId, int? userId)
         {
+            // get work types
             var worktypes = await _workTypesRepository.GetWorkTypesDictionaryAsync();
 
-            var workLinks = await BuildWorksTree(personId);
+            // get all work links and workIds
+            var workLinks = await _worksRepository.BuildWorksTreeAsync(personId);
             var workIds = workLinks.Select(c => c.WorkId).Distinct().ToList();
 
             // marks
             var marks = await _marksRepository.GetPersonMarksAsync(workIds, userId);
 
-            using (var connection = _connectionFactory.Create())
+            // get all works
+            var worksRaw = await _worksRepository.GetWorksByIdsAsync(workIds);
+
+            // get all work's people
+            var peopleDic = await _personsRepository.GetPersonsByIdsAsync(workIds);
+
+            List<WorkResponse> works = new List<WorkResponse>();
+            foreach (var work in worksRaw)
             {
-                // get all works
-                var workSql = @"
-					SELECT
-                        w.work_id as 'Id',
-                        w.rusname,
-                        w.name,
-                        w.altname,
-                        w.[year],
-                        w.[description],
-						w.show_in_biblio as 'ShowInBiblio',
-						w.show_subworks_in_biblio as 'ShowSubworksInBiblio',
-						w.publish_type as 'PublishType',
-						w.not_finished as 'NotFinished',
-						w.in_plans as 'InPlans',
-                        w.work_type_id as 'WorkTypeId'
-                    FROM works AS w
-                    WHERE w.work_id IN @workIds";
+                var workType = worktypes[work.WorkTypeId];
 
-                var worksRaw = (await connection.QueryAsync<Work>(workSql, new { workIds })).ToList();
+                // manual restriction to show the work in biblio
+                if (work.ShowInBiblio == 2) continue;
 
-                // get all work's people
-                var peopleSql = @"
-                    SELECT pw.work_id as 'WorkId', p.person_id as 'PersonId', p.name as 'Name', pw.type as 'PersonType'
-                    FROM persons AS p
-                    INNER JOIN person_works AS pw ON p.person_id = pw.person_id
-                    WHERE pw.work_id IN @workIds";
+                // restrict to show magazines
+                if (work.WorkTypeId == 26) continue;
 
-                var people = await connection.QueryAsync(() => new
-                                {
-                                    WorkId = default(int),
-                                    PersonId = default(int),
-                                    Name = default(string),
-                                    PersonType = default(WorkPersonType)
-                                }, peopleSql, new {workIds, personId});
+                // restrict children works (non-active)
+                var workLink = workLinks.SingleOrDefault(c => c.WorkId == work.Id && c.LinkType == 2);
+                if (workLink?.ParentWorkId != null) continue;
 
-                var peopleDic = people.GroupBy(c => c.WorkId).ToDictionary(c => c.Key, c => c.Select(d => new PersonResponse
+                // multiauthors cycles
+                var workPeople = peopleDic.GetValueOrDefault(work.Id);
+                if (workType.IsNode && !workLinks.Any(c => c.WorkId == work.Id && c.LinkType == 2 && c.ParentWorkId != null))
                 {
-                    PersonId = d.PersonId,
-                    Name = d.Name,
-                    PersonType = d.PersonType
-                }).ToList());
-
-                List<WorkResponse> works = new List<WorkResponse>();
-                foreach (var work in worksRaw)
-                {
-                    var workType = worktypes[work.WorkTypeId];
-
-                    // manual restriction to show the work in biblio
-                    if (work.ShowInBiblio == 2) continue;
-
-                    // restrict to show magazines
-                    if (work.WorkTypeId == 26) continue;
-
-                    // restrict children works (non-active)
-                    var workLink = workLinks.SingleOrDefault(c => c.WorkId == work.Id && c.LinkType == 2);
-                    if (workLink?.ParentWorkId != null) continue;
-
-                    // multiauthors cycles
-                    var workPeople = peopleDic.GetValueOrDefault(work.Id);
-                    if (workType.IsNode && !workLinks.Any(c => c.WorkId == work.Id && c.LinkType == 2 && c.ParentWorkId != null))
+                    if (workPeople == null || workPeople.Count(c => c.PersonId != personId) == workPeople.Count)
                     {
-                        if (workPeople == null || workPeople.Count(c => c.PersonId != personId) == workPeople.Count)
-                        {
-                            workType = worktypes[50];
-                        }
+                        workType = worktypes[50];
                     }
-
-                    // remove all non-author's works
-                    if (workType.WorkTypeId != 50 && workPeople?.Count(c => c.PersonId != personId) == workPeople?.Count)
-                    {
-                        continue;
-                    }
-
-                    var workResponse = CreateWorkResponse(work, workType, peopleDic, workLink, personId, marks);
-
-                    if (work.ShowSubworksInBiblio == 1 || (work.ShowSubworksInBiblio != 2 && workType.IsNode) || work.WorkTypeId == 50)
-                    {
-                        GetSubworks(workLinks, work, workResponse, worksRaw, worktypes, peopleDic, personId, marks);
-                    }
-
-                    works.Add(workResponse);
                 }
 
-                return new ApiObject<WorkResponse>(works);
+                // remove all non-author's works
+                if (workType.WorkTypeId != 50 && workPeople?.Count(c => c.PersonId != personId) == workPeople?.Count)
+                {
+                    continue;
+                }
+
+                var workResponse = CreateWorkResponse(work, workType, peopleDic, workLink, personId, marks);
+
+                if (work.ShowSubworksInBiblio == 1 || (work.ShowSubworksInBiblio != 2 && workType.IsNode) || work.WorkTypeId == 50)
+                {
+                    GetSubworks(workLinks, work, workResponse, worksRaw, worktypes, peopleDic, personId, marks);
+                }
+
+                works.Add(workResponse);
             }
+
+            return new ApiObject<WorkResponse>(works);
         }
 
         private void GetSubworks(List<WorkLink> workLinks, Work work, WorkResponse workResponse, List<Work> worksRaw, Dictionary<int, WorkTypeResponse> worktypes,
@@ -182,7 +139,7 @@ namespace BookPortal.Web.Services
             {
                 workResponse.Persons = people.Where(c => c.PersonId != personId).ToList();
             }
-            
+
             // TODO: coauthors type
             if (workResponse.Persons?.Count > 0)
             {
@@ -230,87 +187,14 @@ namespace BookPortal.Web.Services
             return workResponse;
         }
 
-        public async Task<WorkResponse> GetWorkAsync(int workId)
+        public Task<WorkResponse> GetWorkAsync(int workId)
         {
-            using (var connection = _connectionFactory.Create())
-            {
-                var workSql = @"
-                    SELECT
-                        w.work_id as 'WorkId', w.rusname, w.name, w.altname, w.year, w.description, w.notes,
-                        wt.work_type_id as 'WorkTypeId', wt.name_single as 'WorkTypeName',
-                        w.not_finished as 'NotFinished', w.publish_type as 'PublishType', w.in_plans as 'InPlans'
-                    FROM works AS w
-                    INNER JOIN work_types AS wt ON w.work_type_id = wt.work_type_id
-                    WHERE w.work_id = @workId";
-                var query = await connection.QueryAsync<WorkResponse>(workSql, new { workId });
-                var work = query.SingleOrDefault();
-
-                if (work != null)
-                {
-                    var peopleSql = @"
-                        SELECT p.person_id as 'PersonId', p.name, pw.[type] as 'PersonType'
-                        FROM persons AS p
-                        INNER JOIN person_works AS pw ON p.person_id = pw.person_id
-                        WHERE pw.work_id = @workId
-                        ORDER BY pw.[order]";
-                    var people = await connection.QueryAsync<PersonResponse>(peopleSql, new {workId});
-                    work.Persons = people.ToList();
-                }
-
-                return work;
-            }
+            return _worksRepository.GetWorkAsync(workId);
         }
 
-        public async Task<MarkResponse> GetWorkMarkAsync(int workId, int userId)
+        public Task<MarkResponse> GetWorkMarkAsync(int workId, int userId)
         {
-            using (var connection = _connectionFactory.Create())
-            {
-                var workSql = @"
-                    SELECT work_id as 'WorkId', COUNT(*) as 'MarksCount', ROUND(AVG(Cast(mark_value as Float)), 5) as 'Rating'
-                    FROM marks
-                    WHERE work_id = @workId
-                    GROUP BY work_id";
-                var query = await connection.QueryAsync<MarkResponse>(workSql, new { workId });
-                var workMark = query.SingleOrDefault();
-
-                if (workMark != null && userId > 0)
-                {
-                    var userMarkSql = @"
-                        SELECT mark_value
-                        FROM marks
-                        WHERE work_id = @workId and user_id = @userId";
-                    var userMark = await connection.QueryAsync<int>(userMarkSql, new { workId, userId });
-                    workMark.UserMark = userMark.SingleOrDefault();
-                }
-
-                return workMark;
-            }
-        }
-
-        private async Task<List<WorkLink>> BuildWorksTree(int personId)
-        {
-            using (var connection = _connectionFactory.Create())
-            {
-                var sql = @"
-                    WITH tree AS
-                    (
-                        SELECT wl.work_link_id, wl.work_id, wl.parent_work_id, wl.link_type, wl.is_addition, wl.group_index, wl.bonus_text
-	                    FROM work_links wl JOIN person_works pw ON pw.work_id = wl.work_id
-	                    WHERE pw.person_id = @personId
-                        UNION ALL
-                        SELECT wl.work_link_id, wl.work_id, wl.parent_work_id, wl.link_type, wl.is_addition, wl.group_index, wl.bonus_text
-	                    FROM work_links wl JOIN tree t ON wl.work_id = t.parent_work_id
-                    )
-                    SELECT
-					    DISTINCT work_id as 'WorkId', parent_work_id as 'ParentWorkId', link_type as 'LinkType', is_addition as 'IsAddition',
-					    group_index as 'GroupIndex', bonus_text as 'BonusText'
-				    FROM tree";
-
-                var query = await connection.QueryAsync<WorkLink>(sql, new { personId });
-                // var workLinks = query.Where(c => c.ParentWorkId.HasValue).ToDictionary(c => c.ParentWorkId.Value, c => c);
-
-                return query.ToList();
-            }
+            return _marksRepository.GetWorkMarkAsync(workId, userId);
         }
     }
 }

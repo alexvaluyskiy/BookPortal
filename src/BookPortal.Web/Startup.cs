@@ -88,15 +88,18 @@ namespace BookPortal.Web
 
             // register services
             builder.RegisterAssemblyTypes(dataAccess)
-               .Where(t => t.Name.EndsWith("Service"));
+               .Where(t => t.Name.EndsWith("Service"))
+               .InstancePerLifetimeScope();
 
             // register repositories
             builder.RegisterAssemblyTypes(dataAccess)
-               .Where(t => t.Name.EndsWith("Repository"));
+               .Where(t => t.Name.EndsWith("Repository"))
+               .InstancePerLifetimeScope();
 
             builder.RegisterType<ConnectionFactory>()
                 .As<IConnectionFactory>()
-                .WithParameter("connectionString", Configuration.Get("Data:DefaultConnection:ConnectionString"));
+                .WithParameter("connectionString", Configuration.Get("Data:DefaultConnection:ConnectionString"))
+                .InstancePerLifetimeScope();
 
             builder.RegisterInstance(new RedisCache(new RedisCacheOptions { Configuration = Configuration.Get("RedisCache") }));
             builder.RegisterType<MemoryCache>().As<IMemoryCache>();

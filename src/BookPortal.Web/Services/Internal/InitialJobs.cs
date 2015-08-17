@@ -15,17 +15,15 @@ namespace BookPortal.Web.Services.Internal
 
         public async Task InitWorkStats()
         {
-            using (var connection = _connectionFactory.Create())
-            {
-                var sql = @"
+            var connection = _connectionFactory.GetDbConnection;
+            var sql = @"
                     INSERT INTO work_stats (work_id, marks_count, rating)
                     SELECT work_id, COUNT(*) as 'marks_count', ROUND(AVG(Cast(mark_value as Float)), 5) as 'rating'
                     FROM marks
                     GROUP BY work_id
                     ORDER BY work_id";
 
-                await connection.ExecuteAsync(sql);
-            }
+            await connection.ExecuteAsync(sql);
         }
     }
 }

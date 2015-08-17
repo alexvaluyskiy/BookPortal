@@ -28,14 +28,12 @@ namespace BookPortal.Web.Repositories
 
             if (!_memoryCache.TryGetValue(cacheKey, out value))
             {
-                using (var connection = _connectionFactory.Create())
-                {
-                    var sql = "SELECT language_id as 'LanguageId', name FROM languages ORDER BY name";
-                    var countries = await connection.QueryAsync<LanguageResponse>(sql);
+                var connection = _connectionFactory.GetDbConnection;
+                var sql = "SELECT language_id as 'LanguageId', name FROM languages ORDER BY name";
+                var countries = await connection.QueryAsync<LanguageResponse>(sql);
 
-                    value = new ApiObject<LanguageResponse>(countries);
-                    _memoryCache.Set(cacheKey, value, new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1) });
-                }
+                value = new ApiObject<LanguageResponse>(countries);
+                _memoryCache.Set(cacheKey, value, new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1) });
             }
 
             return value;
@@ -48,14 +46,12 @@ namespace BookPortal.Web.Repositories
 
             if (!_memoryCache.TryGetValue(cacheKey, out value))
             {
-                using (var connection = _connectionFactory.Create())
-                {
-                    var sql = "SELECT language_id as 'LanguageId', name FROM languages WHERE language_id = @languageId";
-                    var countries = await connection.QueryAsync<LanguageResponse>(sql, new { languageId });
+                var connection = _connectionFactory.GetDbConnection;
+                var sql = "SELECT language_id as 'LanguageId', name FROM languages WHERE language_id = @languageId";
+                var countries = await connection.QueryAsync<LanguageResponse>(sql, new { languageId });
 
-                    value = countries.SingleOrDefault();
-                    _memoryCache.Set(cacheKey, value, new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1) });
-                }
+                value = countries.SingleOrDefault();
+                _memoryCache.Set(cacheKey, value, new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1) });
             }
 
             return value;

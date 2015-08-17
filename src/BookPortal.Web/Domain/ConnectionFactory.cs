@@ -1,9 +1,11 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 
 namespace BookPortal.Web.Domain
 {
-    public class ConnectionFactory : IConnectionFactory
+    public class ConnectionFactory : IConnectionFactory, IDisposable
     {
         private readonly string _connectionString;
 
@@ -12,12 +14,25 @@ namespace BookPortal.Web.Domain
             _connectionString = connectionString;
         }
 
-        public IDbConnection Create()
+        private IDbConnection _connection;
+
+        private IDbConnection Create()
         {
-            var connection = new SqlConnection();
-            connection.ConnectionString = _connectionString;
-            connection.Open();
-            return connection;
+            if (_connection == null || _connection.State != ConnectionState.Open)
+            {
+                _connection = new SqlConnection();
+                _connection.ConnectionString = _connectionString;
+                _connection.Open();
+            }
+
+            return _connection;
+        }
+
+        public IDbConnection GetDbConnection => Create();
+
+        public void Dispose()
+        {
+            _connection?.Close();
         }
     }
 }

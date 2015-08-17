@@ -28,17 +28,15 @@ namespace BookPortal.Web.Repositories
 
             if (!_memoryCache.TryGetValue(cacheKey, out value))
             {
-                using (var connection = _connectionFactory.Create())
-                {
-                    var sql = @"
+                var connection = _connectionFactory.GetDbConnection;
+                var sql = @"
                     SELECT work_type_id as 'WorkTypeId', name, name_single as 'NameSingle', level, is_node as 'IsNode'
                     FROM work_types";
 
-                    var workTypes = await connection.QueryAsync<WorkTypeResponse>(sql);
+                var workTypes = await connection.QueryAsync<WorkTypeResponse>(sql);
 
-                    value = new ApiObject<WorkTypeResponse>(workTypes);
-                    _memoryCache.Set(cacheKey, value, new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1)});
-                }
+                value = new ApiObject<WorkTypeResponse>(workTypes);
+                _memoryCache.Set(cacheKey, value, new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1) });
             }
 
             return value;
@@ -57,18 +55,17 @@ namespace BookPortal.Web.Repositories
 
             if (!_memoryCache.TryGetValue(cacheKey, out value))
             {
-                using (var connection = _connectionFactory.Create())
-                {
-                    var sql = @"
-                    SELECT work_type_id as 'WorkTypeId', name, name_single as 'NameSingle', level, is_node as 'IsNode'
-                    FROM work_types
-                    WHERE work_type_id = @workTypeId";
+                var connection = _connectionFactory.GetDbConnection;
 
-                    var workTypes = await connection.QueryAsync<WorkTypeResponse>(sql, new { workTypeId });
+                var sql = @"
+                SELECT work_type_id as 'WorkTypeId', name, name_single as 'NameSingle', level, is_node as 'IsNode'
+                FROM work_types
+                WHERE work_type_id = @workTypeId";
 
-                    value = workTypes.SingleOrDefault();
-                    _memoryCache.Set(cacheKey, value, new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1) });
-                }
+                var workTypes = await connection.QueryAsync<WorkTypeResponse>(sql, new { workTypeId });
+
+                value = workTypes.SingleOrDefault();
+                _memoryCache.Set(cacheKey, value, new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1) });
             }
 
             return value;
