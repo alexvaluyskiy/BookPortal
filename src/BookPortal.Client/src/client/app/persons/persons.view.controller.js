@@ -56,6 +56,7 @@
             getPerson(vm.personId).then(function () {
                 var promises = [
                     getPersonWorks(vm.personId),
+                    getPersonGenres(vm.personId),
                     getCountries(),
                     getWorkTypes()
                 ];
@@ -85,15 +86,10 @@
 
         function getPersonWorks(personId) {
             return dataservice.getPersonWorks(personId).then(function (data) {
-                // processing element before rendering
-                data = _.map(data, function (item) {
-                    return item;
-                });
-
                 // filtering in plans works
                 vm.person.worksinplans = _.filter(data, function (item) { return item.inplans === true; });
 
-                // processing another works
+                // processing and grouping another works
                 data = _.filter(data, function (item) { return item.inplans !== true; });
                 data = _.groupBy(data, function (item) { return item.worktypelevel; });
                 data = Object
@@ -107,6 +103,13 @@
 
                 vm.person.works = data;
                 return vm.person.works;
+            });
+        }
+
+        function getPersonGenres(personId) {
+            return dataservice.getPersonGenres(personId).then(function (data) {
+                vm.person.genres = data;
+                return vm.person.genres;
             });
         }
 

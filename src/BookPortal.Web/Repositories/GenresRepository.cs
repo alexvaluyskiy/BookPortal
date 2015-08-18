@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BookPortal.Core.Framework.Models;
 using BookPortal.Web.Domain;
 using BookPortal.Web.Models.Responses;
 using Dapper;

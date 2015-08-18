@@ -15,6 +15,12 @@
                                         <td>Страна:</td>
                                         <td><img ng-src="{{::vm.person.countryimageurl}}"/>&nbsp;{{::vm.countries[vm.person.countryid]}}</td>
                                     </tr>
+                                    <tr>
+                                        <td>Жанры:</td>
+                                        <td>
+                                            <span ng-repeat="genre in ::vm.person.genres">{{genre.name}} ({{genre.genrecount}} из {{genre.genretotal}}){{$last ? '' : ', '}}</span>
+                                        </td>
+                                    </tr>
                                     <tr ng-if="vm.person.birthdate">
                                         <td>Дата рождения:</td>
                                         <td ng-bind="::vm.person.birthdate"></td>

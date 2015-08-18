@@ -34,6 +34,7 @@
             getWorkReviews: getWorkReviews,
 
             getPerson: getPerson,
+            getPersonGenres: getPersonGenres,
             getPersonWorks: getPersonWorks
         };
 
@@ -267,6 +268,18 @@
                 })
                 .catch(function (e) {
                     return exception.catcher('XHR Failed for getPerson')(e);
+                });
+        }
+
+        function getPersonGenres(personId) {
+            var url = mainServiceUrl + '/api/persons/' + personId + '/genres';
+
+            return $http.get(url)
+                .then(function (response) {
+                    return _.map(response.data.result.rows, function (item) { return item });
+                })
+                .catch(function (e) {
+                    return exception.catcher('XHR Failed for getPersonGenres')(e);
                 });
         }
 
