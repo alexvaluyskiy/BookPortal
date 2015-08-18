@@ -15,27 +15,28 @@
         "Microsoft.AspNet.Mvc.Core": "6.0.0-beta6",
         "Microsoft.AspNet.Mvc.DataAnnotations": "6.0.0-beta6",
         "Microsoft.AspNet.Mvc.Formatters.Json": "6.0.0-beta6",
-        "Microsoft.AspNet.Server.IIS": "1.0.0-beta6",
         "Microsoft.AspNet.Diagnostics": "1.0.0-beta6",
         "Microsoft.AspNet.Cors": "1.0.0-beta6",
         "Microsoft.Framework.Configuration.Json": "1.0.0-beta6",
         "Microsoft.Framework.Logging.Debug": "1.0.0-beta6",
-        "Microsoft.ApplicationInsights.AspNet": "1.0.0-beta6",
         "Microsoft.Framework.Caching.Redis": "1.0.0-beta6",
         "Microsoft.Framework.Caching.Memory": "1.0.0-beta6",
 
+        "Microsoft.AspNet.Server.IIS": "1.0.0-beta6",
+        "Kestrel": "1.0.0-beta6",
+
+        "Microsoft.ApplicationInsights.AspNet": "1.0.0-beta6",
+
         "EntityFramework.SqlServer": "7.0.0-beta6",
-        "EntityFramework.Commands": "7.0.0-beta6",
         "Dapper": "1.42.0",
         "Dapper.SqlBuilder": "1.40.0",
 
-        "HtmlAgilityPack": "1.4.9",
         "Autofac.Framework.DependencyInjection": "4.0.0-*",
         "Swashbuckle": "6.0.0-beta6"
     },
 
     "commands": {
-        "ef": "EntityFramework.Commands"
+        "kestrel": "Microsoft.AspNet.Hosting --server Kestrel --server.urls http://localhost:5004"
     },
 
     "frameworks": {

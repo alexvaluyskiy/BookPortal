@@ -1,64 +1,65 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using BookPortal.Core.Framework.Models;
-using Microsoft.Data.Entity;
-using BookPortal.Web.Domain;
 using BookPortal.Web.Models.Responses;
-using Dapper;
+using BookPortal.Web.Repositories;
+using System.Linq;
 using Microsoft.Framework.OptionsModel;
 
 namespace BookPortal.Web.Services
 {
     public class GenresService
     {
-        private readonly BookContext _bookContext;
+        private readonly GenresRepository _genresRepository;
         private readonly IOptions<AppSettings> _options;
 
-        public GenresService(BookContext bookContext, IOptions<AppSettings> options)
+        public GenresService(GenresRepository genresRepository, IOptions<AppSettings> options)
         {
-            _bookContext = bookContext;
+            _genresRepository = genresRepository;
             _options = options;
         }
 
         public async Task<ApiObject<GenrePersonResponse>> GetAuthorGenres(int personId)
         {
-            var query = from gpv in _bookContext.GenrePersonsView
-                        join gw in _bookContext.GenreWorks on gpv.GenreWorkId equals gw.Id
-                        where gpv.PersonId == personId
-                        select new GenrePersonResponse
-                        {
-                            GenreWorkId = gw.Id,
-                            Name = gw.Name,
-                            GenreCount = gpv.GenreCount,
-                            GenreTotal = gpv.GenreTotal
-                        };
+            var genres =  await _genresRepository.GetAuthorGenres(personId);
 
-            query = query.OrderByDescending(c => c.GenreCount);
+            int genreLimit = _options.Options.PersonGenreLimit > 0 ? _options.Options.PersonGenreLimit : 5;
 
-            if (_options.Options.PersonGenreLimit > 0)
-                query = query.Take(_options.Options.PersonGenreLimit);
+            var genreTotal = genres.Sum(c => c.GenreCount);
+            genres.ForEach(c => c.GenreTotal = genreTotal);
 
-            var result = await query.ToListAsync();
-
-            return new ApiObject<GenrePersonResponse>(result);
+            return new ApiObject<GenrePersonResponse>(genres.Take(genreLimit));
         }
 
         public async Task<ApiObject<GenreWorkResponse>> GetWorkGenres(int workId)
         {
-            var genre = await (from gwv in _bookContext.GenreWorksView
-                              join gw in _bookContext.GenreWorks on gwv.GenreWorkId equals gw.Id
-                              where gwv.WorkId == workId
-                              select new GenreWorkResponse
-                              {
-                                  GenreWorkId = gw.Id,
-                                  GenreParentWorkId = gw.ParentGenreWorkId,
-                                  Name = gw.Name,
-                                  Level = gw.Level,
-                                  GenreCount = gwv.GenreCount,
-                                  GenreWorkGroupId = gw.GenreWorkGroupId
-                              }).ToListAsync();
+            List<GenreWorkResponse> genres = await _genresRepository.GetWorkGenres(workId);
+            int totalVoters = await _genresRepository.GetWorkGenresTotalVoters(workId);
 
-            return new ApiObject<GenreWorkResponse>(genre);
+            var tree = GetWorkGenresTree(genres, null, totalVoters);
+
+            return new ApiObject<GenreWorkResponse>(tree);
+        }
+
+        private List<GenreWorkResponse> GetWorkGenresTree(List<GenreWorkResponse> list, int? parent, int totalVoters)
+        {
+            var tempList = list.Where(x => x.GenreParentWorkId == parent && WorkGenresFormula(x.GenreCount, totalVoters)).Select(x => new GenreWorkResponse
+            {
+                GenreWorkId = x.GenreWorkId,
+                Name = x.Name,
+                GenreCount = x.GenreCount,
+                GenreTotal = totalVoters,
+                GenreWorkGroupId = parent == null ? x.GenreWorkGroupId : null,
+                Genres = GetWorkGenresTree(list, x.GenreWorkId, totalVoters)
+            }).ToList();
+
+            return tempList.Count > 0 ? tempList : null;
+        }
+
+        private bool WorkGenresFormula(int votesCount, int votersCount)
+        {
+            return Math.Round(votesCount * 10.0 / votersCount) >= 5;
         }
     }
 }

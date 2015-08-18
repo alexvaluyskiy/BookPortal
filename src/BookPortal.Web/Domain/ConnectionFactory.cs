@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics;
 
 namespace BookPortal.Web.Domain
 {
@@ -32,7 +31,21 @@ namespace BookPortal.Web.Domain
 
         public void Dispose()
         {
-            _connection?.Close();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _connection?.Close();
+            }
+        }
+
+        ~ConnectionFactory()
+        {
+            Dispose(false);
         }
     }
 }

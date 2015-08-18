@@ -3,7 +3,10 @@
 	[genre_work_id] [int] NOT NULL,
 	[user_id] [int] NOT NULL,
 	[work_id] [int] NOT NULL,
-	CONSTRAINT [PK_GenreWorkUser] PRIMARY KEY CLUSTERED ([genre_work_user_id]),
-	CONSTRAINT [FK_GenreWorkUser_GenreWork_GenreWorkId] FOREIGN KEY ([genre_work_id]) REFERENCES [dbo].[genre_works] ([genre_work_id]),
-	CONSTRAINT [FK_GenreWorkUser_Work_WorkId] FOREIGN KEY ([work_id]) REFERENCES [dbo].[works] ([work_id])
+	CONSTRAINT [PK_genreworkusers] PRIMARY KEY CLUSTERED ([genre_work_user_id]),
+	CONSTRAINT [FK_genreworkusers_genreworks_genreworkid] FOREIGN KEY ([genre_work_id]) REFERENCES [dbo].[genre_works] ([genre_work_id]),
+	CONSTRAINT [FK_genreworkusersr_works_workid] FOREIGN KEY ([work_id]) REFERENCES [dbo].[works] ([work_id])
 )
+GO
+
+CREATE INDEX [IX_genreworkusers_workid] ON [dbo].[genre_work_users] ([work_id])

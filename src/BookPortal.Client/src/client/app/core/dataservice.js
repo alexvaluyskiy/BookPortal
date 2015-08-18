@@ -8,7 +8,7 @@
     dataservice.$inject = ['$http', '$q', 'exception', 'logger', 'localStorageService'];
     /* @ngInject */
     function dataservice($http, $q, exception, logger, localStorageService) {
-        var mainServiceUrl = 'http://localhost:2300';
+        var mainServiceUrl = 'http://aspnet5-bookportal-web.azurewebsites.net';
 
         var service = {
             getPeople: getPeople,
