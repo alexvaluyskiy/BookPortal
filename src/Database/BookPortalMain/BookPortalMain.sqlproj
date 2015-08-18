@@ -58,6 +58,7 @@
   <ItemGroup>
     <Folder Include="Properties" />
     <Folder Include="Tables" />
+    <Folder Include="Stored Procedures" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\languages.sql" />
@@ -93,6 +94,7 @@
     <Build Include="Tables\works.sql" />
     <Build Include="Tables\work_stats.sql" />
     <Build Include="Tables\genre_works_groups.sql" />
+    <Build Include="Stored Procedures\GetMissedIndexes.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="BookPortalMain.refactorlog" />

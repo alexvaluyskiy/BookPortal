@@ -13,6 +13,6 @@
 	[default_language_id] [int] NULL,
 	[notes] [nvarchar](max) NULL,
 	[is_opened] [bit] NOT NULL,
-	CONSTRAINT [PK_Person] PRIMARY KEY CLUSTERED ([person_id]),
-	CONSTRAINT [FK_Person_Country_CountryId] FOREIGN KEY ([country_id]) REFERENCES [dbo].[countries] ([country_id])
+	CONSTRAINT [PK_persons] PRIMARY KEY CLUSTERED ([person_id]),
+	CONSTRAINT [FK_persons_countries_countryid] FOREIGN KEY ([country_id]) REFERENCES [dbo].[countries] ([country_id])
 )

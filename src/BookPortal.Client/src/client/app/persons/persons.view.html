@@ -15,12 +15,6 @@
                                         <td>Страна:</td>
                                         <td><img ng-src="{{::vm.person.countryimageurl}}"/>&nbsp;{{::vm.countries[vm.person.countryid]}}</td>
                                     </tr>
-                                    <tr>
-                                        <td>Жанры:</td>
-                                        <td>
-                                            <span ng-repeat="genre in ::vm.person.genres">{{genre.name}} ({{genre.genrecount}} из {{genre.genretotal}}){{$last ? '' : ', '}}</span>
-                                        </td>
-                                    </tr>
                                     <tr ng-if="vm.person.birthdate">
                                         <td>Дата рождения:</td>
                                         <td ng-bind="::vm.person.birthdate"></td>
@@ -28,6 +22,16 @@
                                     <tr ng-if="vm.person.deathdate">
                                         <td>Дата смерти:</td>
                                         <td ng-bind="::vm.person.deathdate"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Жанры:</td>
+                                        <td>
+                                            <span ng-repeat="genre in ::vm.person.genres">{{genre.name}} ({{genre.genrecount}} из {{genre.genretotal}}){{$last ? '' : ', '}}</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Псевдонимы:</td>
+                                        <td>NOT IMPLEMENTED YET</td>
                                     </tr>
                                 </table>
 
@@ -38,6 +42,28 @@
                                 <div ng-if="vm.person.notes" class="person-info-bio-notes">
                                     <h3>Примечание к биографии:</h3>
                                     <div ng-bind="::vm.person.notes"></div>
+                                </div>
+
+                                <div class="person-info-awards">
+                                    <h3>Последние награды и премии:</h3>
+                                    <div>
+                                        <table>
+                                            <tr class="{{award.contestworkiswinner === true ? 'award-nom' : ''}} {{award.awardisopened !== true ? 'cw_nomi2' : ''}}" ng-repeat="award in vm.person.awards">
+                                                <td><img ng-src="{{award.awardicon}}" title="{{award.awardfullname}}" alt=""></td>
+                                                <td>
+                                                    <a ui-sref="awardsview({ awardId: award.awardid })">{{award.awardfullname}}</a>
+                                                    <span>{{award.nominationfullname}} {{award.contestworkprefix}} {{award.contestworkpostfix}}</span>
+                                                    <span ng-if="award.contestworkrusname.length > 0 || award.contestworkname.length > 0">
+                                                        <br>→ 
+                                                        <a ng-if="award.contestworkrusname.length > 0" ui-sref="awardsview({ awardId: award.awardid })">{{award.contestworkrusname}}</a>
+                                                        <span ng-if="award.contestworkrusname.length > 0 && award.contestworkname.length > 0"> / </span>
+                                                        <a ng-if="award.contestworkname.length > 0" ui-sref="awardsview({ awardId: award.awardid })">{{award.contestworkname}}</a>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="person-info-award-advanced">› <a href="/<%= $person_info->{type} %><%= $person_info->{id} %>/awards">все премии и номинации</a></div>
                                 </div>
                             </div>
                         </div>

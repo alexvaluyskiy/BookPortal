@@ -35,6 +35,7 @@
 
             getPerson: getPerson,
             getPersonGenres: getPersonGenres,
+            getPersonAwards: getPersonAwards,
             getPersonWorks: getPersonWorks
         };
 
@@ -283,6 +284,18 @@
                 });
         }
 
+        function getPersonAwards(personId) {
+            var url = mainServiceUrl + '/api/persons/' + personId + '/awards';
+
+            return $http.get(url)
+                .then(function (response) {
+                    return _.map(response.data.result.rows, function (item) { return item });
+                })
+                .catch(function (e) {
+                    return exception.catcher('XHR Failed for getPersonAwards')(e);
+                });
+        }
+
         function getPersonWorks(personId) {
             var url = mainServiceUrl + '/api/persons/' + personId + '/works';
 
@@ -294,8 +307,5 @@
                     return exception.catcher('XHR Failed for getPersonWorks')(e);
                 });
         }
-
-
-
     }
 })();

@@ -7,6 +7,12 @@
     -ms-user-select: none;
 }
 
+.opacity(@opacity: 1) {
+    @ieopacity: @opacity * 100;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=@{ieopacity})"; // IE8
+    opacity: @opacity;
+}
+
 /* person info */
 .person-show {
     .paragraph-block p {
@@ -588,5 +594,85 @@ div.autor-works {
                 }
             }
         }
+    }
+}
+
+
+/* Person awards on the person page and on the another page */
+.person-info-awards {
+    margin-top: 15px;
+
+    & > h3 {
+        font-weight: bold;
+    }
+
+    & > div {
+        margin-left: 10px;
+
+        table {
+            width: 100%;
+            border-width: 0px;
+            border-spacing: 0px;
+            border-collapse: separate;
+
+            tr {
+                vertical-align: middle;
+                height: 40px;
+                max-height: 40px;
+
+                td {
+                    text-align: center;
+                    vertical-align: middle;
+                    width: 45px;
+                    border-bottom: 1px solid #D8E1E6;
+
+                    & + td {
+                        text-align: left;
+                        width: auto;
+                        border-bottom: 1px solid #D8E1E6;
+                    }
+
+                    img {
+                        max-width: 40px;
+                        max-height: 30px
+                    }
+                }
+
+                &.award_nom {
+                    img {
+                        .opacity(0.5);
+                    }
+
+                    td {
+                        color: gray;
+                    }
+
+                    a {
+                        color: #556D84;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/* person awards page */
+.person-awards {
+    .person-awards-title {
+        height: 42px;
+
+        img {
+            float: left;
+        }
+
+        p {
+            font-weight: bold;
+            font-size: small;
+            padding: 13px 0;
+        }
+    }
+
+    .person-info-awards {
+        margin-top: 15px;
     }
 }
