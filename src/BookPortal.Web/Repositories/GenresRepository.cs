@@ -21,10 +21,10 @@ namespace BookPortal.Web.Repositories
             _memoryCache = memoryCache;
         }
 
-        public async Task<ApiObject<GenreWorksGroupResponse>> GetGenreWorksGroups()
+        public async Task<List<GenreWorksGroupResponse>> GetGenreWorksGroupsAsync()
         {
-            ApiObject<GenreWorksGroupResponse> value;
-            string cacheKey = "genreworksgroups";
+            List<GenreWorksGroupResponse> value;
+            string cacheKey = "genre:work:sgroups";
 
             if (!_memoryCache.TryGetValue(cacheKey, out value))
             {
@@ -33,7 +33,7 @@ namespace BookPortal.Web.Repositories
                 var connection = _connectionFactory.GetDbConnection;
                 var genreworkgroup = await connection.QueryAsync<GenreWorksGroupResponse>(sql);
 
-                value = new ApiObject<GenreWorksGroupResponse>(genreworkgroup);
+                value = genreworkgroup.ToList();
                 _memoryCache.Set(cacheKey, value, new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1) });
             }
 
