@@ -58,7 +58,7 @@ namespace BookPortal.Web.Controllers
 
         [HttpGet("{personId}/works")]
         [Produces(typeof(IEnumerable<WorkResponse>))]
-        public async Task<IActionResult> GetWorks(int personId, int? userId)
+        public async Task<IActionResult> GetWorks(int personId, int userId = 0)
         {
             var works = await _worksService.GetWorksAsync(personId, userId);
 

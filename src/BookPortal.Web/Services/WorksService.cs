@@ -30,7 +30,7 @@ namespace BookPortal.Web.Services
             _personsRepository = personsRepository;
         }
 
-        public async Task<ApiObject<WorkResponse>> GetWorksAsync(int personId, int? userId)
+        public async Task<ApiObject<WorkResponse>> GetWorksAsync(int personId, int userId)
         {
             // get work types
             var worktypes = await _workTypesRepository.GetWorkTypesDictionaryAsync();
@@ -40,7 +40,21 @@ namespace BookPortal.Web.Services
             var workIds = workLinks.Select(c => c.WorkId).Distinct().ToList();
 
             // marks
-            var marks = await _marksRepository.GetPersonMarksAsync(workIds, userId);
+            var marks = await _marksRepository.GetWorkMarkAsync(workIds.ToArray());
+            var workMarks = marks.ToDictionary(c => c.WorkId, c => c);
+            if (marks.Count > 0 && userId > 0)
+            {
+                var userMarks = await _marksRepository.GetUserMarkAsync(userId, workIds.ToArray());
+                foreach (var userMark in userMarks)
+                {
+                    MarkResponse workMarkTemp;
+                    workMarks.TryGetValue(userMark.WorkId, out workMarkTemp);
+                    if (workMarkTemp != null)
+                    {
+                        workMarks[userMark.WorkId].UserMark = userMark.UserMark;
+                    }
+                }
+            }
 
             // get all works
             var worksRaw = await _worksRepository.GetWorksByIdsAsync(workIds);
@@ -79,11 +93,11 @@ namespace BookPortal.Web.Services
                     continue;
                 }
 
-                var workResponse = CreateWorkResponse(work, workType, peopleDic, workLink, personId, marks);
+                var workResponse = CreateWorkResponse(work, workType, peopleDic, workLink, personId, workMarks);
 
                 if (work.ShowSubworksInBiblio == 1 || (work.ShowSubworksInBiblio != 2 && workType.IsNode) || work.WorkTypeId == 50)
                 {
-                    GetSubworks(workLinks, work, workResponse, worksRaw, worktypes, peopleDic, personId, marks);
+                    GetSubworks(workLinks, work, workResponse, worksRaw, worktypes, peopleDic, personId, workMarks);
                 }
 
                 works.Add(workResponse);
@@ -192,9 +206,17 @@ namespace BookPortal.Web.Services
             return _worksRepository.GetWorkAsync(workId);
         }
 
-        public Task<MarkResponse> GetWorkMarkAsync(int workId, int userId)
+        public async Task<MarkResponse> GetWorkMarkAsync(int workId, int userId)
         {
-            return _marksRepository.GetWorkMarkAsync(workId, userId);
+            var workMark = (await _marksRepository.GetWorkMarkAsync(workId)).SingleOrDefault();
+
+            if (workMark != null)
+            {
+                var userMark = (await _marksRepository.GetUserMarkAsync(userId, workId)).SingleOrDefault();
+                workMark.UserMark = userMark?.UserMark;
+            }
+
+            return workMark;
         }
     }
 }
