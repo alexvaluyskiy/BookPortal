@@ -11,14 +11,14 @@
         var vm = this;
         vm.title = 'Персона';
         vm.personId = $stateParams.personId || 1;
-        vm.imagesCdnUrl = "http://data.fantlab.org/images/";
+        vm.imagesCdnUrl = 'http://data.fantlab.org/images/';
 
         vm.sortTypes = [
-          { sortName: "по году публикации", sortValue: "year" },
-          { sortName: "по рейтингу", sortValue: "rating" },
-          { sortName: "по количеству оценок", sortValue: "markscount" },
-          { sortName: "по русскому названию", sortValue: "rusname" },
-          { sortName: "по оригинальному названию", sortValue: "name" }
+          { sortName: 'по году публикации', sortValue: 'year' },
+          { sortName: 'по рейтингу', sortValue: 'rating' },
+          { sortName: 'по количеству оценок', sortValue: 'markscount' },
+          { sortName: 'по русскому названию', sortValue: 'rusname' },
+          { sortName: 'по оригинальному названию', sortValue: 'name' }
         ];
 
         var sortColumns = [
@@ -34,16 +34,16 @@
 
         vm.changeSort = function () {
             switch (vm.selectedSortType.sortValue) {
-                case "rating":
+                case 'rating':
                     vm.orderByDefinition = sortColumns[1];
                     break;
-                case "markscount":
+                case 'markscount':
                     vm.orderByDefinition = sortColumns[2];
                     break;
-                case "rusname":
+                case 'rusname':
                     vm.orderByDefinition = sortColumns[3];
                     break;
-                case "name":
+                case 'name':
                     vm.orderByDefinition = sortColumns[4];
                     break;
                 default:
@@ -58,7 +58,7 @@
                 var promises = [
                     getPersonWorks(vm.personId),
                     getPersonGenres(vm.personId),
-                    getPersonAwards(vm.personId),
+                    //getPersonAwards(vm.personId),
                     getCountries(),
                     getWorkTypes()
                 ];
@@ -74,10 +74,12 @@
                 vm.person.personimageurl = vm.imagesCdnUrl + 'autors/' + vm.person.personid;
                 vm.person.countryimageurl = vm.imagesCdnUrl + 'flags/' +vm.person.countryid + '.png';
 
-                if (vm.person.birthdate)
+                if (vm.person.birthdate) {
                     vm.person.birthdate = moment(vm.person.birthdate).locale('ru').format('LL');
-                if (vm.person.deathdate)
+                }
+                if (vm.person.deathdate) {
                     vm.person.deathdate = moment(vm.person.deathdate).locale('ru').format('LL');
+                }
 
                 vm.title = 'Персона: ' + vm.person.name;
                 return vm.person;
@@ -95,8 +97,8 @@
                 data = Object
                       .keys(data)
                       .sort(function(a, b) {
-                          if (+a < +b) return -1;
-                          if (+a > +b) return 1;
+                          if (+a < +b) { return -1; }
+                          if (+a > +b) { return 1; }
                           return 0;
                       })
                       .map(function (key) { return data[key]; });

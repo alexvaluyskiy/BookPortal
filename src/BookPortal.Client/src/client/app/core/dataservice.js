@@ -58,15 +58,17 @@
         }
 
         function getCountries() {
-            var countries = localStorageService.get("countries");
+            var countries = localStorageService.get('countries');
 
             if (countries === null) {
                 var url = mainServiceUrl + '/api/countries';
 
                 return $http.get(url)
                     .then(function(response) {
-                        countries = _.reduce(response.data.result.rows, function(m, x) { m[x.countryid] = x.name; return m; }, {});
-                        localStorageService.set("countries", countries);
+                        countries = _.reduce(response.data.result.rows, function (m, x) {
+                            m[x.countryid] = x.name; return m;
+                        }, {});
+                        localStorageService.set('countries', countries);
                         return countries;
                     })
                     .catch(function(e) {
@@ -78,15 +80,17 @@
         }
 
         function getLanguages() {
-            var languages = localStorageService.get("languages");
+            var languages = localStorageService.get('languages');
 
             if (languages === null) {
                 var url = mainServiceUrl + '/api/languages';
 
                 return $http.get(url)
                     .then(function (response) {
-                        languages = _.reduce(response.data.result.rows, function (m, x) { m[x.languageid] = x.name; return m; }, {});
-                        localStorageService.set("languages", languages);
+                        languages = _.reduce(response.data.result.rows, function (m, x) {
+                            m[x.languageid] = x.name; return m;
+                        }, {});
+                        localStorageService.set('languages', languages);
                         return languages;
                     })
                     .catch(function (e) {
@@ -98,15 +102,17 @@
         }
 
         function getWorkTypes() {
-            var worktypes = localStorageService.get("worktypes");
+            var worktypes = localStorageService.get('worktypes');
 
             if (worktypes === null) {
                 var url = mainServiceUrl + '/api/worktypes';
 
                 return $http.get(url)
                     .then(function (response) {
-                        worktypes = _.reduce(response.data.result.rows, function (m, x) { m[x.worktypeid] = x; return m; }, {});
-                        localStorageService.set("worktypes", worktypes);
+                        worktypes = _.reduce(response.data.result.rows, function (m, x) {
+                            m[x.worktypeid] = x; return m;
+                        }, {});
+                        localStorageService.set('worktypes', worktypes);
                         return worktypes;
                     })
                     .catch(function (e) {
@@ -127,7 +133,7 @@
 
             return $http.get(url)
                 .then(function (response) {
-                    return _.map(response.data.result.rows, function (item) { return item });
+                    return _.map(response.data.result.rows, function (item) { return item; });
                 })
                 .catch(function (e) {
                     return exception.catcher('XHR Failed for getAwards')(e);
@@ -175,11 +181,11 @@
         function getSerieEditions(serieId, sortType) {
             var url = mainServiceUrl + '/api/series/' + serieId + '/editions';
 
-            url = url + "?sort=" + sortType;
+            url = url + '?sort=' + sortType;
 
             return $http.get(url)
                 .then(function (response) {
-                    return _.map(response.data.result.rows, function (item) { return item });
+                    return _.map(response.data.result.rows, function (item) { return item; });
                 })
                 .catch(function (e) {
                     return exception.catcher('XHR Failed for getSerieEditions')(e);
@@ -204,7 +210,7 @@
 
             return $http.get(url)
                 .then(function (response) {
-                    return _.map(response.data.result.rows, function (item) { return item });
+                    return _.map(response.data.result.rows, function (item) { return item; });
                 })
                 .catch(function (e) {
                     return exception.catcher('XHR Failed for getWorkTranslations')(e);
@@ -216,7 +222,7 @@
 
             return $http.get(url)
                 .then(function (response) {
-                    return _.map(response.data.result.rows, function (item) { return item });
+                    return _.map(response.data.result.rows, function (item) { return item; });
                 })
                 .catch(function (e) {
                     return exception.catcher('XHR Failed for getWorkGenres')(e);
@@ -228,7 +234,7 @@
 
             return $http.get(url)
                 .then(function (response) {
-                    return _.map(response.data.result.rows, function (item) { return item });
+                    return _.map(response.data.result.rows, function (item) { return item; });
                 })
                 .catch(function (e) {
                     return exception.catcher('XHR Failed for getWorkAwards')(e);
@@ -240,7 +246,7 @@
 
             return $http.get(url)
                 .then(function (response) {
-                    return _.map(response.data.result.rows, function (item) { return item });
+                    return _.map(response.data.result.rows, function (item) { return item; });
                 })
                 .catch(function (e) {
                     return exception.catcher('XHR Failed for getWorkEditions')(e);
@@ -252,7 +258,7 @@
 
             return $http.get(url)
                 .then(function (response) {
-                    return _.map(response.data.result.rows, function (item) { return item });
+                    return _.map(response.data.result.rows, function (item) { return item; });
                 })
                 .catch(function (e) {
                     return exception.catcher('XHR Failed for getWorkReviews')(e);
@@ -277,7 +283,7 @@
 
             return $http.get(url)
                 .then(function (response) {
-                    return _.map(response.data.result.rows, function (item) { return item });
+                    return _.map(response.data.result.rows, function (item) { return item; });
                 })
                 .catch(function (e) {
                     return exception.catcher('XHR Failed for getPersonGenres')(e);
@@ -289,7 +295,7 @@
 
             return $http.get(url)
                 .then(function (response) {
-                    return _.map(response.data.result.rows, function (item) { return item });
+                    return _.map(response.data.result.rows, function (item) { return item; });
                 })
                 .catch(function (e) {
                     return exception.catcher('XHR Failed for getPersonAwards')(e);
@@ -301,7 +307,7 @@
 
             return $http.get(url)
                 .then(function (response) {
-                    return _.map(response.data.result.rows, function (item) { return item });
+                    return _.map(response.data.result.rows, function (item) { return item; });
                 })
                 .catch(function (e) {
                     return exception.catcher('XHR Failed for getPersonWorks')(e);

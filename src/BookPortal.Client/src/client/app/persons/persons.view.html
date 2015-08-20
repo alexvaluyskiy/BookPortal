@@ -38,8 +38,8 @@
                                 <div class="person-info-bio paragraph-block clearfix">
                                     <p>{{::vm.person.biography}}</p>
                                 </div>
-                                <p ng-if="vm.person.biographysource" class="person-info-bio-copyright">© {{::vm.person.biographysource}}</p>
-                                <div ng-if="vm.person.notes" class="person-info-bio-notes">
+                                <p ng-if="::vm.person.biographysource" class="person-info-bio-copyright">© {{::vm.person.biographysource}}</p>
+                                <div ng-if="::vm.person.notes" class="person-info-bio-notes">
                                     <h3>Примечание к биографии:</h3>
                                     <div ng-bind="::vm.person.notes"></div>
                                 </div>
