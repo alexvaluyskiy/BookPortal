@@ -75,13 +75,13 @@
                             <div class="work-type-section plans-author">
                                 <h2><span>{{::vm.person.name}}.</span> <span>Планы автора</span><span class='rating-title'>Рейтинг</span></h2>
                                 <ul class="works-list">
-                                    <personwork ng-repeat="work in vm.person.worksinplans" data-work="work" data-worktype="vm.worktypes[work.worktypelevel]" data-level="1"></personwork>
+                                    <person-work ng-repeat="work in vm.person.worksinplans" data-work="work" data-worktype="vm.worktypes[work.worktypelevel]" data-level="1"></person-work>
                                 </ul>
                             </div>
                             <div ng-repeat="worktype in vm.person.works" class="work-type-section">
                                 <h2><span>{{::vm.person.name}}.</span> <span>{{ ::vm.worktypes[worktype[0].worktypelevel].name }}</span><span class='rating-title'>Рейтинг</span></h2>
                                 <ul class="works-list {{vm.worktypes[worktype[0].worktypelevel].isnode ? 'worktypenode' : 'worktypeplain'}}">
-                                    <personwork ng-repeat="work in worktype | orderBy:vm.orderByDefinition" data-work="work" data-worktype="vm.worktypes[work.worktypelevel]" data-level="1"></personwork>
+                                    <person-work ng-repeat="work in worktype | orderBy:vm.orderByDefinition" data-work="work" data-worktype="vm.worktypes[work.worktypelevel]" data-level="1"></person-work>
                                 </ul>
                             </div>
                         </div>

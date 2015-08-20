@@ -1,0 +1,33 @@
+<li data-cycle="{{vm.work.root_cycle_work_id > 0 ? 1 : 0}}">
+    <div ng-if="::vm.showlefttoolbar" class="left-toolbar">
+        <span ng-bind="::vm.work.year" class="year"></span>
+        <a ng-if="::vm.work.root_cycle_work_id" ui-sref="worksview({ workId: vm.work.root_cycle_work_id })"
+           class="in-cycle" title="Входит в роман «{{::vm.work.root_cycle_work_name}}»"></a>
+        <a ng-if="::!vm.work.root_cycle_work_id" href="#" class="in-cycle">входит в цикл</a>
+    </div>
+    <div class="dots">
+        <h3 class="work-title">
+            <span class="white-bg">
+                <span ng-if="::vm.showisaddition" class="plus">+</span>
+                <a ng-if="::vm.hasrusname" ui-sref="worksview({ workId: vm.work.workid })" ng-bind="::vm.work.rusname" class="ru"></a>
+                <span ng-if="::vm.hasfullname"> / </span>
+                <a ng-if="::vm.hasname" ui-sref="worksview({ workId: vm.work.workid })" ng-bind="::vm.work.name" class="en"></a>
+                <span ng-if="::!vm.work.workid" ng-bind="::vm.work.innactivename"></span>
+                <span ng-if="::vm.work.altname" class="about-work">[= {{::vm.work.altname}}]</span>
+                <span ng-if="::vm.showadditionalyear">({{::vm.work.year}})</span>
+                <span ng-if="::vm.work.coauthors">// {{::vm.work.coauthors}}</span>
+                <span ng-if="::vm.work.additionalinfo" class="about-work">, {{::vm.work.additionalinfo}}</span>
+                <span ng-if="::vm.work.bonustext" class="about-work">[{{::vm.work.bonustext}}]</span>
+            </span>
+        </h3>
+    </div>
+    <div class="rating">
+        <span ng-if="::vm.work.rating" class="evaluation">{{vm.work.rating}} ({{vm.work.votescount}})</span>
+        <span ng-if="::!vm.work.rating" class="evaluation">&nbsp;</span>
+        <div class="autor-mark" data-enabled="2">{{vm.work.usermark}}</div>
+        <span class="comments">{{::vm.work.commentscount}}</span>
+    </div>
+    <ul class="works-part">
+        <person-work ng-repeat="work in ::vm.work.childworks" data-work="work" data-level="2"></person-work>
+    </ul>
+</li>

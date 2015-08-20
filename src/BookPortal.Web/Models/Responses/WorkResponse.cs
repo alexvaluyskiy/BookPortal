@@ -36,9 +36,9 @@ namespace BookPortal.Web.Models.Responses
 
         public object GroupIndex { get; set; }
 
-        public string PublishType { get; set; }
+        public int? PublishType { get; set; }
 
-        public string NotFinished { get; set; }
+        public bool? NotFinished { get; set; }
 
         public bool? InPlans { get; set; }
 
@@ -53,7 +53,7 @@ namespace BookPortal.Web.Models.Responses
         public IReadOnlyList<GenreWorkResponse> Genres { get; set; }
         public int VotesCount { get; set; }
         public double Rating { get; set; }
-        public bool IsAddition { get; set; }
+        public bool? IsAddition { get; set; }
         public string BonusText { get; set; }
         public string CoAuthorType { get; set; }
         public int? UserMark { get; set; }

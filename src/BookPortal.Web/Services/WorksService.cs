@@ -140,51 +140,53 @@ namespace BookPortal.Web.Services
                 workResponse.WorkId = work.Id;
             }
 
-            workResponse.RusName = work.RusName;
-            workResponse.Name = work.Name;
-            workResponse.AltName = work.AltName;
+            if (!string.IsNullOrEmpty(work.RusName))
+                workResponse.RusName = work.RusName;
+
+            if (!string.IsNullOrEmpty(work.Name))
+                workResponse.Name = work.Name;
+
+            if (!string.IsNullOrEmpty(work.AltName))
+                workResponse.AltName = work.AltName;
+
             workResponse.Year = work.Year;
             workResponse.WorkTypeLevel = workType.Level;
-            workResponse.WorkTypeName = workType.NameSingle;
-            workResponse.InPlans = work.InPlans;
-
-            var people = peopleDic.GetValueOrDefault(work.Id);
-            if (people != null)
+            if (work.InPlans)
             {
-                workResponse.Persons = people.Where(c => c.PersonId != personId).ToList();
+                workResponse.InPlans = true;
+                workResponse.WorkTypeName = workType.NameSingle;
             }
 
-            // TODO: coauthors type
-            if (workResponse.Persons?.Count > 0)
-            {
-                workResponse.CoAuthorType = "coauthor";
-            }
-
-            // TODO: check for feminine or masculine form
             if (work.NotFinished)
+                workResponse.NotFinished = true;
+                
+            var people = peopleDic.GetValueOrDefault(work.Id);
+            var coauthorsPeople = people?.Where(c => c.PersonId != personId).ToList();
+            if (coauthorsPeople?.Count > 0)
             {
-                workResponse.NotFinished = "не окончен";
+                workResponse.Persons = coauthorsPeople;
+
+                if (!coauthorsPeople.SequenceEqual(people))
+                {
+                    workResponse.CoAuthorType = "coauthor";
+                }
+                else
+                {
+                    // 17: anthologies
+                    workResponse.CoAuthorType = workType.WorkTypeId == 17 ? "editor" : "author";
+                }
             }
 
-            switch (work.PublishType)
-            {
-                case PublishType.NotPublished:
-                    workResponse.PublishType = "не опубликован";
-                    break;
-                case PublishType.Network:
-                    workResponse.PublishType = "сетевая публикация";
-                    break;
-                case PublishType.Other:
-                    workResponse.PublishType = "доступен в сети";
-                    break;
-            }
+            workResponse.PublishType = work.PublishType != 1 ? (int?) work.PublishType : null;
 
-            if (workLink != null)
-            {
-                workResponse.GroupIndex = workLink.GroupIndex;
+            // word links text
+            workResponse.GroupIndex = workLink.GroupIndex;
+
+            if (workLink.IsAddition)
                 workResponse.IsAddition = workLink.IsAddition;
+
+            if (!string.IsNullOrEmpty(workLink.BonusText))
                 workResponse.BonusText = workLink.BonusText;
-            }
 
             var workMark = marks.GetValueOrDefault(work.Id);
             if (workMark != null)
