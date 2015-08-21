@@ -9,4 +9,4 @@
 )
 GO
 
-CREATE INDEX [IX_genreworkusers_workid] ON [dbo].[genre_work_users] ([work_id])
+CREATE INDEX [IX_genreworkusers_workid] ON [dbo].[genre_work_users] ([work_id]) INCLUDE ([user_id])

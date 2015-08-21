@@ -6,7 +6,7 @@
         .controller('SeriesViewController', SeriesViewController);
 
     function Serie(data) {
-        var imagesCdnUrl = "http://data.fantlab.org/images/";
+        var imagesCdnUrl = 'http://data.fantlab.org/images/';
 
     }
 
@@ -19,10 +19,10 @@
         vm.serieId = $stateParams.serieId || 2;
 
         vm.sortTypes = [
-          { sortName: "по умолчанию", sortValue: "order" },
-          { sortName: "по названию", sortValue: "name" },
-          { sortName: "по автору", sortValue: "authors" },
-          { sortName: "по году", sortValue: "year" }
+          { sortName: 'по умолчанию', sortValue: 'order' },
+          { sortName: 'по названию', sortValue: 'name' },
+          { sortName: 'по автору', sortValue: 'authors' },
+          { sortName: 'по году', sortValue: 'year' }
         ];
 
         vm.selectedSortType = vm.sortTypes[1];

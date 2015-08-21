@@ -1,10 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
-  <Operation Name="Rename Refactor" Key="da9bd888-d491-4c40-af07-d5dd6a98f7b7" ChangeDateTime="08/17/2015 12:39:28">
-    <Property Name="ElementName" Value="[dbo].[work_stats].[IX_work_stats_Column]" />
-    <Property Name="ElementType" Value="SqlIndex" />
-    <Property Name="ParentElementName" Value="[dbo].[work_stats]" />
-    <Property Name="ParentElementType" Value="SqlTable" />
-    <Property Name="NewName" Value="[IX_workstats_workid]" />
-  </Operation>
+
 </Operations>

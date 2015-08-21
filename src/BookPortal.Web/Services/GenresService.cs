@@ -20,6 +20,13 @@ namespace BookPortal.Web.Services
             _options = options;
         }
 
+        public async Task<ApiObject<GenreWorksGroupResponse>> GetGenreWorksGroups()
+        {
+            var genres = await _genresRepository.GetGenreWorksGroupsAsync();
+
+            return new ApiObject<GenreWorksGroupResponse>(genres);
+        }
+
         public async Task<ApiObject<GenrePersonResponse>> GetAuthorGenres(int personId)
         {
             var genres =  await _genresRepository.GetAuthorGenres(personId);

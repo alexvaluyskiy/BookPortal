@@ -30,7 +30,7 @@ namespace BookPortal.Web.Domain.Models
         public string Description { get; set; }
 
         [Column("publish_type")]
-        public PublishType PublishType { get; set; } = PublishType.NotPublished;
+        public int PublishType { get; set; }
 
         [Column("not_finished")]
         public bool NotFinished { get; set; }

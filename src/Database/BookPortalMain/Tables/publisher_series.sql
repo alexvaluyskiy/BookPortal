@@ -6,3 +6,10 @@
 	CONSTRAINT [FK_PublisherSerie_Publisher_PublisherId] FOREIGN KEY ([publisher_id]) REFERENCES [dbo].[publishers] ([publisher_id]),
 	CONSTRAINT [FK_PublisherSerie_Serie_SerieId] FOREIGN KEY([serie_id]) REFERENCES [dbo].[series] ([serie_id])
 )
+GO
+
+CREATE INDEX [IX_publisherseries_serieid] ON [dbo].[publisher_series] ([serie_id])
+
+GO
+
+CREATE INDEX [IX_publisherseries_publisherid] ON [dbo].[publisher_series] ([publisher_id])

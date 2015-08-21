@@ -5,19 +5,20 @@
         .module('app.persons.view')
         .controller('PersonsViewController', PersonsViewController);
 
-    PersonsViewController.$inject = ['$http', '$q', 'dataservice', 'logger', '$stateParams'];
+    PersonsViewController.$inject = ['$q', 'dataservice', 'logger', '$stateParams'];
     /* @ngInject */
-    function PersonsViewController($http, $q, dataservice, logger, $stateParams) {
+    function PersonsViewController($q, dataservice, logger, $stateParams) {
         var vm = this;
         vm.title = 'Персона';
         vm.personId = $stateParams.personId || 1;
+        vm.imagesCdnUrl = 'http://data.fantlab.org/images/';
 
         vm.sortTypes = [
-          { sortName: "по году публикации", sortValue: "year" },
-          { sortName: "по рейтингу", sortValue: "rating" },
-          { sortName: "по количеству оценок", sortValue: "markscount" },
-          { sortName: "по русскому названию", sortValue: "rusname" },
-          { sortName: "по оригинальному названию", sortValue: "name" }
+          { sortName: 'по году публикации', sortValue: 'year' },
+          { sortName: 'по рейтингу', sortValue: 'rating' },
+          { sortName: 'по количеству оценок', sortValue: 'markscount' },
+          { sortName: 'по русскому названию', sortValue: 'rusname' },
+          { sortName: 'по оригинальному названию', sortValue: 'name' }
         ];
 
         var sortColumns = [
@@ -33,16 +34,16 @@
 
         vm.changeSort = function () {
             switch (vm.selectedSortType.sortValue) {
-                case "rating":
+                case 'rating':
                     vm.orderByDefinition = sortColumns[1];
                     break;
-                case "markscount":
+                case 'markscount':
                     vm.orderByDefinition = sortColumns[2];
                     break;
-                case "rusname":
+                case 'rusname':
                     vm.orderByDefinition = sortColumns[3];
                     break;
-                case "name":
+                case 'name':
                     vm.orderByDefinition = sortColumns[4];
                     break;
                 default:
@@ -56,6 +57,8 @@
             getPerson(vm.personId).then(function () {
                 var promises = [
                     getPersonWorks(vm.personId),
+                    getPersonGenres(vm.personId),
+                    //getPersonAwards(vm.personId),
                     getCountries(),
                     getWorkTypes()
                 ];
@@ -67,16 +70,16 @@
 
         function getPerson(personId) {
             return dataservice.getPerson(personId).then(function (data) {
-                var imagesCdnUrl = "http://data.fantlab.org/images/";
-
                 vm.person = data;
-                vm.person.personimageurl = imagesCdnUrl + 'autors/' + vm.person.personid;
-                vm.person.countryimageurl = imagesCdnUrl + 'flags/' + vm.person.countryid + '.png';
+                vm.person.personimageurl = vm.imagesCdnUrl + 'autors/' + vm.person.personid;
+                vm.person.countryimageurl = vm.imagesCdnUrl + 'flags/' +vm.person.countryid + '.png';
 
-                if (vm.person.birthdate)
+                if (vm.person.birthdate) {
                     vm.person.birthdate = moment(vm.person.birthdate).locale('ru').format('LL');
-                if (vm.person.deathdate)
+                }
+                if (vm.person.deathdate) {
                     vm.person.deathdate = moment(vm.person.deathdate).locale('ru').format('LL');
+                }
 
                 vm.title = 'Персона: ' + vm.person.name;
                 return vm.person;
@@ -85,28 +88,53 @@
 
         function getPersonWorks(personId) {
             return dataservice.getPersonWorks(personId).then(function (data) {
-                // processing element before rendering
-                data = _.map(data, function (item) {
-                    return item;
-                });
-
                 // filtering in plans works
                 vm.person.worksinplans = _.filter(data, function (item) { return item.inplans === true; });
 
-                // processing another works
+                // processing and grouping another works
                 data = _.filter(data, function (item) { return item.inplans !== true; });
                 data = _.groupBy(data, function (item) { return item.worktypelevel; });
                 data = Object
                       .keys(data)
                       .sort(function(a, b) {
-                          if (+a < +b) return -1;
-                          if (+a > +b) return 1;
+                          if (+a < +b) { return -1; }
+                          if (+a > +b) { return 1; }
                           return 0;
                       })
                       .map(function (key) { return data[key]; });
 
                 vm.person.works = data;
                 return vm.person.works;
+            });
+        }
+
+        function getPersonGenres(personId) {
+            return dataservice.getPersonGenres(personId).then(function (data) {
+                vm.person.genres = data;
+                return vm.person.genres;
+            });
+        }
+
+        function getPersonAwards(personId) {
+            return dataservice.getPersonAwards(personId).then(function (data) {
+                vm.person.awards = _.map(data, function (item) {
+                    item.awardicon = vm.imagesCdnUrl + '/awards/icons/' + item.awardid + '_icon';
+
+                    if (item.awardrusname && item.awardname) {
+                        item.awardfullname = item.awardrusname + ' / ' + item.awardname;
+                    } else if (item.awardrusname) {
+                        item.awardfullname = item.awardrusname;
+                    } else {
+                        item.awardfullname = item.awardname;
+                    }
+
+                    item.nominationfullname = item.nominationrusname || item.nominationname;
+
+
+
+                    return item;
+                });
+                return vm.person.awards;
             });
         }
 
