@@ -16,6 +16,12 @@
                 "System.Linq": "4.0.0.0",
                 "System.Net.Http": "4.0.0.0"
             }
+        },
+        "dnxcore50": {
+            "dependencies": {
+                "System.Linq": "4.0.0-*",
+                "System.Net.Http":  "4.0.0-*"
+            }
         }
     }
 }

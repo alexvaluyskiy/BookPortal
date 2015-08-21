@@ -18,6 +18,7 @@ namespace System.Data.SqlClient
 #endif
         }
 
+        [Obsolete]
         public static T GetValue<T>(this SqlDataReader theReader, string theColumnName)
         {
             // Read the value out of the reader by string (column name); returns object
