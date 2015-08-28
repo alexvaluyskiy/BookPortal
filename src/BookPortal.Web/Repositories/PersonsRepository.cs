@@ -17,7 +17,7 @@ namespace BookPortal.Web.Repositories
             _connectionFactory = connectionFactory;
         }
 
-        public async Task<Dictionary<int, List<PersonResponse>>> GetPersonsByIdsAsync(IEnumerable<int> workIds)
+        public async Task<Dictionary<int, List<PersonResponse>>> GetPersonsByWorksIdsAsync(IEnumerable<int> workIds)
         {
             var connection = _connectionFactory.GetDbConnection;
             var peopleSql = @"

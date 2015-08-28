@@ -13,13 +13,6 @@
                 "System.Data": "4.0.0.0",
                 "System.Runtime.Serialization": "4.0.0.0"
             }
-        },
-        "dnxcore50": {
-            "dependencies": {
-                "System.Data.Common": "4.0.0-*",
-                "System.Data.SqlClient": "4.0.0-*",
-                "System.Runtime.Serialization.Primitives": "4.0.0-*"
-            }
         }
     }
 }
