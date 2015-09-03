@@ -4,15 +4,14 @@
     "authors": [ "Alex Valuyskiy" ],
 
     "dependencies": {
-        "Microsoft.AspNet.Http.Abstractions": "1.0.0-beta6", 
-        "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta6",
-        "Microsoft.Framework.DependencyInjection.Abstractions": "1.0.0-beta6",
-        "Microsoft.ApplicationInsights.AspNet": "1.0.0-beta6",
+        "Microsoft.AspNet.Http.Abstractions": "1.0.0-beta7", 
+        "Microsoft.Framework.Logging.Abstractions": "1.0.0-beta7",
+        "Microsoft.Framework.DependencyInjection.Abstractions": "1.0.0-beta7",
+        "Microsoft.ApplicationInsights.AspNet": "1.0.0-beta7",
         "Newtonsoft.Json": "7.0.1"
     },
 
     "frameworks": {
-        "dnx451": { },
-        "dnxcore50": { }
+        "dnx451": { }
     }
 }

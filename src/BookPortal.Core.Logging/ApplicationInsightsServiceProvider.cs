@@ -18,5 +18,10 @@ namespace BookPortal.Core.Logging
         {
             return new ApplicationInsightsLogger(_telemetryClient, _minLevel);
         }
+
+        public void Dispose()
+        {
+
+        }
     }
 }

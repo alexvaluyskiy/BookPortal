@@ -6,10 +6,9 @@ using Microsoft.Data.Entity;
 using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
-using System.Linq;
 using BookPortal.Core.Framework;
 using BookPortal.Core.Framework.Filters;
-using Microsoft.Framework.Runtime;
+using Microsoft.Dnx.Runtime;
 
 namespace BookPortal.CloudConfig
 {
@@ -27,11 +26,10 @@ namespace BookPortal.CloudConfig
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().Configure<MvcOptions>(options =>
+            services.AddMvc(options =>
             {
                 // setup json output serializer
-                var formatter = options.OutputFormatters.SingleOrDefault(c => c.GetType() == typeof(JsonOutputFormatter));
-                options.OutputFormatters.Remove(formatter);
+                options.OutputFormatters.Clear();
                 options.OutputFormatters.Add(JsonFormatterFactory.Create());
 
                 // add filters
@@ -41,7 +39,7 @@ namespace BookPortal.CloudConfig
             services.AddEntityFramework()
                .AddSqlServer()
                .AddDbContext<ConfigContext>(options =>
-                    options.UseSqlServer(Configuration.Get("Data:DefaultConnection:ConnectionString")));
+                    options.UseSqlServer(Configuration.GetSection("Data:DefaultConnection:ConnectionString").Value));
         }
 
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)

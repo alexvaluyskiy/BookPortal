@@ -6,7 +6,7 @@
     ],
 
     "dependencies": {
-        "Microsoft.Framework.Configuration": "1.0.0-beta6",
+        "Microsoft.Framework.Configuration": "1.0.0-beta7",
         "Newtonsoft.Json": "7.0.1"
     },
 
@@ -15,12 +15,6 @@
             "frameworkAssemblies": {
                 "System.Linq": "4.0.0.0",
                 "System.Net.Http": "4.0.0.0"
-            }
-        },
-        "dnxcore50": {
-            "dependencies": {
-                "System.Linq": "4.0.0-*",
-                "System.Net.Http":  "4.0.0-*"
             }
         }
     }

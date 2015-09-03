@@ -4,7 +4,7 @@
     "authors": [ "Alex Valuyskiy" ],
 
     "dependencies": {
-        "Microsoft.AspNet.Mvc": "6.0.0-beta6"
+        "Microsoft.AspNet.Mvc": "6.0.0-beta7"
     },
 
     "frameworks": {
@@ -12,13 +12,6 @@
             "frameworkAssemblies": {
                 "System.Data": "4.0.0.0",
                 "System.Runtime.Serialization": "4.0.0.0"
-            }
-        },
-        "dnxcore50": {
-            "dependencies": {
-                "System.Data.Common": "4.0.0-*",
-                "System.Data.SqlClient": "4.0.0-*",
-                "System.Runtime.Serialization.Primitives": "4.0.0-*"
             }
         }
     }

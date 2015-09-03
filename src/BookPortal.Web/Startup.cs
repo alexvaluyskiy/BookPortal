@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Reflection;
 using Autofac;
 using Autofac.Framework.DependencyInjection;
@@ -8,17 +7,16 @@ using BookPortal.Core.Framework;
 using BookPortal.Core.Framework.Filters;
 using BookPortal.Core.Logging;
 using BookPortal.Web.Domain;
-using BookPortal.Web.Services;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Data.Entity;
+using Microsoft.Dnx.Runtime;
 using Microsoft.Framework.Caching.Memory;
 using Microsoft.Framework.Caching.Redis;
 using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
-using Microsoft.Framework.Runtime;
 using Swashbuckle.Swagger;
 
 namespace BookPortal.Web
@@ -47,11 +45,11 @@ namespace BookPortal.Web
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.Configure<AppSettings>(Configuration.GetConfigurationSection("AppSettings"));
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
             services.AddCors();
 
-            services.AddMvc().Configure<MvcOptions>(options =>
+            services.AddMvc(options =>
             {
                 // setup json output serializer
                 options.OutputFormatters.Clear();
@@ -78,7 +76,7 @@ namespace BookPortal.Web
             services.AddEntityFramework()
                .AddSqlServer()
                .AddDbContext<BookContext>(options => 
-                    options.UseSqlServer(Configuration.Get("Data:DefaultConnection:ConnectionString")));
+                    options.UseSqlServer(Configuration.GetSection("Data:DefaultConnection:ConnectionString").Value));
 
             services.AddApplicationInsightsTelemetry(Configuration);
 
@@ -98,10 +96,10 @@ namespace BookPortal.Web
 
             builder.RegisterType<ConnectionFactory>()
                 .As<IConnectionFactory>()
-                .WithParameter("connectionString", Configuration.Get("Data:DefaultConnection:ConnectionString"))
+                .WithParameter("connectionString", Configuration.GetSection("Data:DefaultConnection:ConnectionString").Value)
                 .InstancePerLifetimeScope();
 
-            builder.RegisterInstance(new RedisCache(new RedisCacheOptions { Configuration = Configuration.Get("RedisCache") }));
+            builder.RegisterInstance(new RedisCache(new RedisCacheOptions { Configuration = Configuration.GetSection("RedisCache").Value }));
             builder.RegisterType<MemoryCache>().As<IMemoryCache>();
 
             builder.Populate(services);
