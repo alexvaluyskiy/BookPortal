@@ -1,4 +1,6 @@
-﻿using BookPortal.Web.Domain.Models.Types;
+﻿using System.Collections.Generic;
+using BookPortal.Web.Domain.Models;
+using BookPortal.Web.Domain.Models.Types;
 
 namespace BookPortal.Web.Models.Responses
 {
@@ -41,5 +43,7 @@ namespace BookPortal.Web.Models.Responses
         public int? SerieSort { get; set; }
 
         public int Correct { get; set; }
+
+        public List<PersonResponse> Persons { get; set; }
     }
 }

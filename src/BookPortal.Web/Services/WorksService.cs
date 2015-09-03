@@ -60,7 +60,7 @@ namespace BookPortal.Web.Services
             var worksRaw = await _worksRepository.GetWorksByIdsAsync(workIds);
 
             // get all work's people
-            var peopleDic = await _personsRepository.GetPersonsByIdsAsync(workIds);
+            var peopleDic = await _personsRepository.GetPersonsByWorksIdsAsync(workIds);
 
             List<WorkResponse> works = new List<WorkResponse>();
             foreach (var work in worksRaw)

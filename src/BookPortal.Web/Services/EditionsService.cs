@@ -1,21 +1,28 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BookPortal.Core.Framework.Models;
 using Microsoft.Data.Entity;
 using BookPortal.Web.Domain;
+using BookPortal.Web.Domain.Models;
 using BookPortal.Web.Models;
 using BookPortal.Web.Models.Requests;
 using BookPortal.Web.Models.Responses;
+using BookPortal.Web.Repositories;
 
 namespace BookPortal.Web.Services
 {
     public class EditionsService
     {
         private readonly BookContext _bookContext;
+        private readonly EditionsRepository _editionsRepository;
 
-        public EditionsService(BookContext bookContext)
+        public EditionsService(BookContext bookContext, EditionsRepository editionsRepository)
         {
             _bookContext = bookContext;
+            _editionsRepository = editionsRepository;
         }
 
         public async Task<EditionResponse> GetEditionAsync(int editionId)
@@ -98,48 +105,71 @@ namespace BookPortal.Web.Services
             return new ApiObject<EditionResponse>(await editions.ToListAsync());
         }
 
-        // TODO: add Correct field to editions
-        // TODO: fix authors sorting
+        // TODO: read NameSort from database
+        // TODO: read fields: Correct, Publishers
+        // TODO: read edition type from service
         public async Task<ApiObject<EditionResponse>> GetEditionsBySerieAsync(SerieRequest request)
         {
-            var query = from e in _bookContext.Editions
-                        join es in _bookContext.EditionSeries on e.Id equals es.EditionId
-                        where es.SerieId == request.SerieId
-                        select new EditionResponse
-                        {
-                            EditionId = e.Id,
-                            Name = e.Name,
-                            Year = e.Year,
-                            Correct = 1,
-                            SerieSort = es.Sort
-                        };
+            var editions = await _editionsRepository.GetEditionsBySerieAsync(request.SerieId);
 
+            var regexAuthors = new Regex(@"(?:\[autor\=(?<id>\d+)]|)(?<name>[A-zА-я\s]+)(?:\[\/autor\]|)(?:,|$)", RegexOptions.Compiled);
+            var regexDescription = new Regex(@"\[(?:\/|)[A-zА-я0-9=:]+\]", RegexOptions.Compiled);
+            foreach (var edition in editions)
+            {
+                var matches = regexAuthors.Matches(edition.Authors);
+                edition.Authors = null;
+                edition.Persons = new List<PersonResponse>();
+                foreach (Match match in matches)
+                {
+                    PersonResponse person = new PersonResponse();
+                    person.PersonId = match.Groups["id"].Success ? int.Parse(match.Groups["id"].Value) : 0;
+                    person.Name = match.Groups["name"].Success ? match.Groups["name"].Value.Trim() : string.Empty;
+
+                    if (person.Name == "Антология")
+                    {
+                        person.NameSort = string.Empty;
+                    }
+
+                    if (true)
+                    {
+                        person.NameSort = string.Join(" ", person.Name.Split(' ').Reverse());
+                    }
+                    edition.Persons.Add(person);
+                }
+
+                edition.Description = regexDescription.Replace(edition.Description, "");
+            }
+
+            // var personIds = editions.SelectMany(c => c.Persons.Select(p => p.Id)).Distinct();
+
+            IOrderedEnumerable<EditionResponse> sortedEditions;
             switch (request.Sort)
             {
                 case EditionsSort.Name:
-                    query = query.OrderBy(c => c.Name).ThenBy(c => c.Year); ;
+                    sortedEditions = editions.OrderBy(c => c.Name).ThenBy(c => c.SerieSort).ThenBy(c => c.Year);
                     break;
                 case EditionsSort.Authors:
-                    query = query.OrderBy(c => c.Authors).ThenBy(c => c.SerieSort).ThenBy(c => c.Year);
+                    sortedEditions = editions.OrderBy(c => string.Join(", ", c.Persons.Select(p => p.NameSort))).ThenBy(c => c.SerieSort).ThenBy(c => c.Year);
                     break;
                 case EditionsSort.Year:
-                    query = query.OrderBy(c => c.Year).ThenBy(c => c.SerieSort).ThenBy(c => c.Name);
+                    sortedEditions = editions.OrderBy(c => c.Year).ThenBy(c => c.SerieSort).ThenBy(c => c.Name);
                     break;
                 default:
-                    query = query.OrderByDescending(c => c.Year).ThenBy(c => c.SerieSort);
+                    sortedEditions = editions.OrderByDescending(c => c.Year).ThenBy(c => c.SerieSort);
                     break;
             }
 
-            if (request.Offset > 0)
-                query = query.Take(request.Offset);
-
-            if (request.Limit > 0)
-                query = query.Take(request.Limit);
-
-            var totalRows = await _bookContext.EditionSeries.CountAsync(c => c.SerieId == request.SerieId);
-            var result = new ApiObject<EditionResponse>(await query.ToListAsync(), totalRows);
-
-            return result;
+            List<EditionResponse> resultEditions;
+            if (request.Limit > 0 && request.Offset > 0)
+            {
+                resultEditions = sortedEditions.Skip(request.Offset).Take(request.Limit).ToList();
+            }
+            else
+            {
+                resultEditions = sortedEditions.Take(request.Limit).ToList();
+            }
+                
+            return new ApiObject<EditionResponse>(resultEditions, editions.Count);
         }
     }
 }
