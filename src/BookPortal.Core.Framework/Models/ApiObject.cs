@@ -15,13 +15,13 @@ namespace BookPortal.Core.Framework.Models
 
         }
 
-        public ApiObject(IReadOnlyList<T> values)
+        public ApiObject(IList<T> values)
         {
             Values = values;
             TotalRows = Values.Count;
         }
 
-        public ApiObject(IReadOnlyList<T> values, int totalRows)
+        public ApiObject(IList<T> values, int totalRows)
         {
             Values = values;
             TotalRows = totalRows;
@@ -29,6 +29,6 @@ namespace BookPortal.Core.Framework.Models
 
         public int TotalRows { get; set; }
 
-        public IReadOnlyList<T> Values { get; set; }
+        public IList<T> Values { get; set; }
     }
 }

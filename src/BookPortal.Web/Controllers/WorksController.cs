@@ -50,36 +50,6 @@ namespace BookPortal.Web.Controllers
             return this.SingleObject(work);
         }
 
-        [HttpGet("{workId}/summary")]
-        [Produces(typeof(WorkResponse))]
-        [SwaggerResponse(404, "Work is not found")]
-        public async Task<IActionResult> GetWorkSummary(int workId)
-        {
-            var work = await _worksService.GetWorkAsync(workId);
-
-            if (work != null)
-            {
-                var workAwards = await _awardsService.GetWorkAwardsAsync(workId);
-                var workEditions = await _editionsService.GetEditionsByWorkAsync(workId);
-                var workReviews = await _reviewsService.GetReviewsByWorkAsync(new ReviewWorkRequest {WorkId = workId});
-                var workTranslations = await _translationsService.GetWorkTranslationsAsync(workId);
-                var genres = await _genresService.GetWorkGenres(workId);
-
-                work.Awards = workAwards;
-                work.Editions = workEditions.Values;
-                work.Reviews = workReviews.Values;
-                work.Translations = workTranslations;
-                work.Genres = genres.Values;
-            }
-
-            if (work == null)
-            {
-                return this.ErrorObject(404, $"Work (id: {workId}) is not found");
-            }
-
-            return this.SingleObject(work);
-        }
-
         [HttpGet("{workId}/mark")]
         [Produces(typeof(MarkResponse))]
         [SwaggerResponse(404, "Work is not found")]
