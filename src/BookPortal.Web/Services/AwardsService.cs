@@ -9,10 +9,11 @@ using BookPortal.Web.Domain.Models.Types;
 using BookPortal.Web.Models;
 using BookPortal.Web.Models.Requests;
 using BookPortal.Web.Models.Responses;
+using BookPortal.Web.Services.Interfaces;
 
 namespace BookPortal.Web.Services
 {
-    public class AwardsService
+    public class AwardsService : IAwardsService
     {
         private readonly BookContext _bookContext;
 

@@ -5,11 +5,12 @@ using BookPortal.Core.Framework.Models;
 using BookPortal.Web.Models.Responses;
 using BookPortal.Web.Repositories;
 using System.Linq;
+using BookPortal.Web.Services.Interfaces;
 using Microsoft.Framework.OptionsModel;
 
 namespace BookPortal.Web.Services
 {
-    public class GenresService
+    public class GenresService : IGenresService
     {
         private readonly GenresRepository _genresRepository;
         private readonly IOptions<AppSettings> _options;

@@ -4,6 +4,7 @@ using BookPortal.Core.Framework.Models;
 using BookPortal.Web.Models.Requests;
 using BookPortal.Web.Models.Responses;
 using BookPortal.Web.Services;
+using BookPortal.Web.Services.Interfaces;
 using Microsoft.AspNet.Mvc;
 
 namespace BookPortal.Web.Controllers
@@ -11,9 +12,9 @@ namespace BookPortal.Web.Controllers
     [Route("api/persons/{personId}/[controller]")]
     public class TranslationsController : Controller
     {
-        private readonly TranslationsService _translationsService;
+        private readonly ITranslationsService _translationsService;
 
-        public TranslationsController(TranslationsService translationsService)
+        public TranslationsController(ITranslationsService translationsService)
         {
             _translationsService = translationsService;
         }

@@ -10,10 +10,11 @@ using Microsoft.Framework.Caching.Redis;
 using Newtonsoft.Json;
 using Microsoft.Data.Entity;
 using System.Linq;
+using BookPortal.Web.Services.Interfaces;
 
 namespace BookPortal.Web.Services
 {
-    public class RatingsService
+    public class RatingsService : IRatingsService
     {
         private readonly BookContext _bookContext;
         private readonly RedisCache _cache;

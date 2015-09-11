@@ -7,10 +7,11 @@ using BookPortal.Web.Domain;
 using BookPortal.Web.Domain.Models;
 using BookPortal.Web.Models;
 using BookPortal.Web.Models.Responses;
+using BookPortal.Web.Services.Interfaces;
 
 namespace BookPortal.Web.Services
 {
-    public class PublishersService
+    public class PublishersService : IPublishersService
     {
         private readonly BookContext _bookContext;
 

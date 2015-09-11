@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using BookPortal.Web.Models.Responses;
 using BookPortal.Web.Services;
+using BookPortal.Web.Services.Interfaces;
 using Microsoft.AspNet.Mvc;
 using Swashbuckle.Swagger.Annotations;
 
@@ -9,9 +10,9 @@ namespace BookPortal.Web.Controllers
     [Route("api/[controller]")]
     public class EditionsController : Controller
     {
-        private readonly EditionsService _editionsService;
+        private readonly IEditionsService _editionsService;
 
-        public EditionsController(EditionsService editionsService)
+        public EditionsController(IEditionsService editionsService)
         {
             _editionsService = editionsService;
         }

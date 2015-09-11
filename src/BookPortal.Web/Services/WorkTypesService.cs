@@ -2,10 +2,11 @@ using System.Threading.Tasks;
 using BookPortal.Core.Framework.Models;
 using BookPortal.Web.Models.Responses;
 using BookPortal.Web.Repositories;
+using BookPortal.Web.Services.Interfaces;
 
 namespace BookPortal.Web.Services
 {
-    public class WorkTypesService
+    public class WorkTypesService : IWorkTypesService
     {
         private readonly WorkTypesRepository _workTypesRepository;
 

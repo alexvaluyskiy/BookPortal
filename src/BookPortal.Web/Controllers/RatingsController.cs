@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using BookPortal.Web.Domain.Models;
 using BookPortal.Web.Models.Responses;
 using BookPortal.Web.Services;
+using BookPortal.Web.Services.Interfaces;
 using Microsoft.AspNet.Mvc;
 
 namespace BookPortal.Web.Controllers
@@ -10,9 +11,9 @@ namespace BookPortal.Web.Controllers
     [Route("api/[controller]")]
     public class RatingsController : Controller
     {
-        private readonly RatingsService _ratingsService;
+        private readonly IRatingsService _ratingsService;
 
-        public RatingsController(RatingsService ratingsService)
+        public RatingsController(IRatingsService ratingsService)
         {
             _ratingsService = ratingsService;
         }

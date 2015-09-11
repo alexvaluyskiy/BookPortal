@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 using Autofac;
 using Autofac.Framework.DependencyInjection;
@@ -7,6 +8,8 @@ using BookPortal.Core.Framework;
 using BookPortal.Core.Framework.Filters;
 using BookPortal.Core.Logging;
 using BookPortal.Web.Domain;
+using BookPortal.Web.Services;
+using BookPortal.Web.Services.Interfaces;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Mvc;
@@ -86,8 +89,9 @@ namespace BookPortal.Web
 
             // register services
             builder.RegisterAssemblyTypes(dataAccess)
-               .Where(t => t.Name.EndsWith("Service"))
-               .InstancePerLifetimeScope();
+                .Where(t => t.GetInterfaces().Any(i => i.IsAssignableFrom(typeof(IBusinessService))))
+                .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
 
             // register repositories
             builder.RegisterAssemblyTypes(dataAccess)

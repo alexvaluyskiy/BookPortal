@@ -7,10 +7,11 @@ using Microsoft.Data.Entity;
 using BookPortal.Web.Domain;
 using BookPortal.Web.Models;
 using BookPortal.Web.Models.Responses;
+using BookPortal.Web.Services.Interfaces;
 
 namespace BookPortal.Web.Services
 {
-    public class ContestsWorksService
+    public class ContestsWorksService : IContestsWorksService
     {
         private readonly BookContext _bookContext;
 

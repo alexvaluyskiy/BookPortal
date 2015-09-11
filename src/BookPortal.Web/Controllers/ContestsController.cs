@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using BookPortal.Web.Models.Responses;
 using BookPortal.Web.Services;
+using BookPortal.Web.Services.Interfaces;
 using Microsoft.AspNet.Mvc;
 using Swashbuckle.Swagger.Annotations;
 
@@ -10,9 +11,9 @@ namespace BookPortal.Web.Controllers
     [Route("api/awards/{awardid}/[controller]")]
     public class ContestsController : Controller
     {
-        private readonly ContestsService _contestsService;
+        private readonly IContestsService _contestsService;
 
-        public ContestsController(ContestsService contestsService)
+        public ContestsController(IContestsService contestsService)
         {
             _contestsService = contestsService;
         }

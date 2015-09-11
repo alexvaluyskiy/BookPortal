@@ -8,29 +8,50 @@ using BookPortal.Web.Domain.Models;
 using BookPortal.Web.Domain.Models.Types;
 using BookPortal.Web.Models.Responses;
 using BookPortal.Web.Repositories;
+using BookPortal.Web.Services.Interfaces;
+using Microsoft.Framework.Caching.Memory;
 
 namespace BookPortal.Web.Services
 {
-    public class WorksService
+    public class WorksService : IWorksService
     {
         private readonly WorksRepository _worksRepository;
         private readonly MarksRepository _marksRepository;
         private readonly WorkTypesRepository _workTypesRepository;
         private readonly PersonsRepository _personsRepository;
+        private readonly IMemoryCache _memoryCache;
 
         public WorksService(
             WorksRepository worksRepository,
             MarksRepository marksRepository,
             WorkTypesRepository workTypesRepository,
-            PersonsRepository personsRepository)
+            PersonsRepository personsRepository,
+            IMemoryCache memoryCache)
         {
             _worksRepository = worksRepository;
             _marksRepository = marksRepository;
             _workTypesRepository = workTypesRepository;
             _personsRepository = personsRepository;
+            _memoryCache = memoryCache;
         }
 
         public async Task<ApiObject<WorkResponse>> GetWorksAsync(int personId, int userId)
+        {
+            ApiObject<WorkResponse> value;
+            string cacheKey = $"person:{personId}:list";
+
+            if (!_memoryCache.TryGetValue(cacheKey, out value))
+            {
+                var works = await GetWorksInternalAsync(personId, userId);
+
+                value = new ApiObject<WorkResponse>(works);
+                _memoryCache.Set(cacheKey, value, new MemoryCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1) });
+            }
+
+            return value;
+        }
+
+        private async Task<List<WorkResponse>> GetWorksInternalAsync(int personId, int userId)
         {
             // get work types
             var worktypes = await _workTypesRepository.GetWorkTypesDictionaryAsync();
@@ -95,7 +116,8 @@ namespace BookPortal.Web.Services
 
                 var workResponse = CreateWorkResponse(work, workType, peopleDic, workLink, personId, workMarks);
 
-                if (work.ShowSubworksInBiblio == 1 || (work.ShowSubworksInBiblio != 2 && workType.IsNode) || work.WorkTypeId == 50)
+                if (work.ShowSubworksInBiblio == 1 || (work.ShowSubworksInBiblio != 2 && workType.IsNode) ||
+                    work.WorkTypeId == 50)
                 {
                     GetSubworks(workLinks, work, workResponse, worksRaw, worktypes, peopleDic, personId, workMarks);
                 }
@@ -103,7 +125,7 @@ namespace BookPortal.Web.Services
                 works.Add(workResponse);
             }
 
-            return new ApiObject<WorkResponse>(works);
+            return works;
         }
 
         private void GetSubworks(List<WorkLink> workLinks, Work work, WorkResponse workResponse, List<Work> worksRaw, Dictionary<int, WorkTypeResponse> worktypes,

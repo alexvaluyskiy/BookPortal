@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using BookPortal.Web.Models.Requests;
 using BookPortal.Web.Models.Responses;
 using BookPortal.Web.Services;
+using BookPortal.Web.Services.Interfaces;
 using Microsoft.AspNet.Mvc;
 using Swashbuckle.Swagger.Annotations;
 
@@ -11,20 +12,20 @@ namespace BookPortal.Web.Controllers
     [Route("api/[controller]")]
     public class WorksController : Controller
     {
-        private readonly AwardsService _awardsService;
-        private readonly WorksService _worksService;
-        private readonly EditionsService _editionsService;
-        private readonly ReviewsService _reviewsService;
-        private readonly TranslationsService _translationsService;
-        private readonly GenresService _genresService;
+        private readonly IAwardsService _awardsService;
+        private readonly IWorksService _worksService;
+        private readonly IEditionsService _editionsService;
+        private readonly IReviewsService _reviewsService;
+        private readonly ITranslationsService _translationsService;
+        private readonly IGenresService _genresService;
 
         public WorksController(
-            AwardsService awardsService,
-            WorksService worksService,
-            EditionsService editionsService,
-            ReviewsService reviewsService,
-            TranslationsService translationsService,
-            GenresService genresService)
+            IAwardsService awardsService,
+            IWorksService worksService,
+            IEditionsService editionsService,
+            IReviewsService reviewsService,
+            ITranslationsService translationsService,
+            IGenresService genresService)
         {
             _awardsService = awardsService;
             _worksService = worksService;

@@ -8,10 +8,11 @@ using BookPortal.Web.Domain.Models;
 using BookPortal.Web.Models;
 using BookPortal.Web.Models.Requests;
 using BookPortal.Web.Models.Responses;
+using BookPortal.Web.Services.Interfaces;
 
 namespace BookPortal.Web.Services
 {
-    public class TranslationsService
+    public class TranslationsService : ITranslationsService
     {
         private readonly BookContext _bookContext;
 

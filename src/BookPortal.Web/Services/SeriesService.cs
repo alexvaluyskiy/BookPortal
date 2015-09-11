@@ -10,11 +10,12 @@ using BookPortal.Web.Domain.Models.Types;
 using BookPortal.Web.Models;
 using BookPortal.Web.Models.Requests;
 using BookPortal.Web.Models.Responses;
+using BookPortal.Web.Services.Interfaces;
 using Microsoft.Data.Entity;
 
 namespace BookPortal.Web.Services
 {
-    public class SeriesService
+    public class SeriesService : ISeriesService
     {
         private readonly BookContext _bookContext;
 

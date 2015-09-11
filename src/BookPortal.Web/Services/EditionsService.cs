@@ -11,10 +11,11 @@ using BookPortal.Web.Models;
 using BookPortal.Web.Models.Requests;
 using BookPortal.Web.Models.Responses;
 using BookPortal.Web.Repositories;
+using BookPortal.Web.Services.Interfaces;
 
 namespace BookPortal.Web.Services
 {
-    public class EditionsService
+    public class EditionsService : IEditionsService
     {
         private readonly BookContext _bookContext;
         private readonly EditionsRepository _editionsRepository;

@@ -5,10 +5,11 @@ using BookPortal.Core.Framework.Models;
 using Microsoft.Data.Entity;
 using BookPortal.Web.Domain;
 using BookPortal.Web.Models.Responses;
+using BookPortal.Web.Services.Interfaces;
 
 namespace BookPortal.Web.Services
 {
-    public class NominationsService
+    public class NominationsService : INominationsService
     {
         private readonly BookContext _bookContext;
 

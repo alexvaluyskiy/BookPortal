@@ -5,6 +5,7 @@ using BookPortal.Web.Models;
 using BookPortal.Web.Models.Requests;
 using BookPortal.Web.Models.Responses;
 using BookPortal.Web.Services;
+using BookPortal.Web.Services.Interfaces;
 using Microsoft.AspNet.Mvc;
 using Swashbuckle.Swagger.Annotations;
 
@@ -13,12 +14,12 @@ namespace BookPortal.Web.Controllers
     [Route("api/[controller]")]
     public class SeriesController : Controller
     {
-        private readonly SeriesService _seriesService;
-        private readonly EditionsService _editionsService;
+        private readonly ISeriesService _seriesService;
+        private readonly IEditionsService _editionsService;
 
         public SeriesController(
-            SeriesService seriesService,
-            EditionsService editionsService)
+            ISeriesService seriesService,
+            IEditionsService editionsService)
         {
             _seriesService = seriesService;
             _editionsService = editionsService;

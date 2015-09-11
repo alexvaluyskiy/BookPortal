@@ -5,11 +5,12 @@ using BookPortal.Web.Domain;
 using BookPortal.Web.Models.Requests;
 using BookPortal.Web.Models.Responses;
 using BookPortal.Web.Models.Types;
+using BookPortal.Web.Services.Interfaces;
 using Microsoft.Data.Entity;
 
 namespace BookPortal.Web.Services
 {
-    public class ReviewsService
+    public class ReviewsService : IReviewsService
     {
         private readonly BookContext _bookContext;
 
